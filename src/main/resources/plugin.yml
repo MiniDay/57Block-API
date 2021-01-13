@@ -1,0 +1,9 @@
+name: 57Block-API
+version: ${project.version}
+main: net._57block.bukkit.api.BlockAPIPlugin
+api-version: 1.16
+load: STARTUP
+
+authors: [ Hamster3 ]
+description: 五彩方块服务器的API系统
+website: https://www.57block.cn/
