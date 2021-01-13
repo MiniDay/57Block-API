@@ -71,10 +71,7 @@ public class EconomyAPI {
      * @return 成功则返回 true
      */
     public static boolean giveMoney(@NotNull final UUID uuid, final double money) {
-        if (isSetupEconomy()) {
-            return economy.depositPlayer(Bukkit.getOfflinePlayer(uuid), money).transactionSuccess();
-        }
-        return false;
+        return giveMoney(Bukkit.getOfflinePlayer(uuid), money);
     }
 
     /**
@@ -99,10 +96,38 @@ public class EconomyAPI {
      * @return 成功则返回 true
      */
     public static boolean takeMoney(@NotNull final UUID uuid, final double money) {
-        if (isSetupEconomy()) {
-            return economy.withdrawPlayer(Bukkit.getOfflinePlayer(uuid), money).transactionSuccess();
+        return takeMoney(Bukkit.getOfflinePlayer(uuid), money);
+    }
+
+    /**
+     * 设置玩家的余额
+     *
+     * @param player 玩家
+     * @param money  钱的数量
+     * @return 成功则返回 true
+     */
+    public static boolean setMoney(@NotNull OfflinePlayer player, final double money) {
+        if (!isSetupEconomy()) {
+            return false;
         }
-        return false;
+        double v = seeMoney(player);
+        if (v > money) {
+            return takeMoney(player, v - money);
+        } else if (v < money) {
+            return giveMoney(player, money - v);
+        }
+        return true;
+    }
+
+    /**
+     * 设置玩家的余额
+     *
+     * @param uuid  玩家的uuid
+     * @param money 钱的数量
+     * @return 成功则返回 true
+     */
+    public static boolean setMoney(@NotNull final UUID uuid, final double money) {
+        return setMoney(Bukkit.getOfflinePlayer(uuid), money);
     }
 
     /**
@@ -125,10 +150,7 @@ public class EconomyAPI {
      * @return 玩家的钱的数量（若没有安装经济插件则返回NaN
      */
     public static double seeMoney(@NotNull final UUID uuid) {
-        if (!isSetupEconomy()) {
-            return Double.NaN;
-        }
-        return economy.getBalance(Bukkit.getOfflinePlayer(uuid));
+        return seeMoney(Bukkit.getOfflinePlayer(uuid));
     }
 
     /**
@@ -153,9 +175,6 @@ public class EconomyAPI {
      * @return 是否有足够的钱（若没有安装经济插件则直接返回 false
      */
     public static boolean hasMoney(@NotNull final UUID uuid, final double money) {
-        if (!isSetupEconomy()) {
-            return false;
-        }
-        return economy.has(Bukkit.getOfflinePlayer(uuid), money);
+        return hasMoney(Bukkit.getOfflinePlayer(uuid), money);
     }
 }
