@@ -83,11 +83,11 @@ public class CommandMethodInvoker {
 //         但我并未对这些信息进行过测试，具体能提升多少还不得而知
         method.setAccessible(true);
 
-        for (int i = 0; i < subName.length; i++) {
-            subName[i] = subName[i].toLowerCase();
+        for (int i = 0; i < this.subName.length; i++) {
+            this.subName[i] = this.subName[i].toLowerCase();
         }
         for (int i = 0; i < permissions.length; i++) {
-            permissions[i] = permissions[i].toLowerCase();
+            this.permissions[i] = this.permissions[i].toLowerCase();
         }
     }
 
