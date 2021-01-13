@@ -237,8 +237,8 @@ public final class BlockAPIPlugin extends JavaPlugin {
         for (Map.Entry<Plugin, ArrayList<String>> entry : pluginCommandExecutorClassName.entrySet()) {
             Plugin plugin = entry.getKey();
             ArrayList<String> classNames = entry.getValue();
+            logUtils.debug("开始扫描插件 %s", plugin.getName());
             for (String className : classNames) {
-                logUtils.debug("开始扫描插件 %s", plugin.getName());
                 try {
                     Class<?> clazz = (Class<?>) findClassMethod.invoke(classLoader, className);
                     CommandExecutor annotation = clazz.getAnnotation(CommandExecutor.class);
