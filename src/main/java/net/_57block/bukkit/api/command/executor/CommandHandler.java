@@ -21,9 +21,12 @@ import java.util.stream.Collectors;
  */
 public class CommandHandler extends org.bukkit.command.Command {
     private final ArrayList<CommandMethodInvoker> invokers;
+    private final String[] permissions;
 
-    private CommandHandler(@NotNull String name, @NotNull String description, @NotNull String usage, @NotNull List<String> aliases, @NotNull Object executor) {
+    private CommandHandler(@NotNull String name, @NotNull String description, @NotNull String usage, @NotNull List<String> aliases, @NotNull String[] permissions, @NotNull Object executor) {
         super(name, description, usage, aliases);
+        this.permissions = permissions;
+
         invokers = new ArrayList<>();
         Class<?> executorClass = executor.getClass();
         List<Method> methods = Arrays.asList(executorClass.getDeclaredMethods());
@@ -57,7 +60,7 @@ public class CommandHandler extends org.bukkit.command.Command {
         if (annotation == null) {
             throw new IllegalArgumentException("只有添加了 CommandExecutor 注解的类才能用于构建 CommandHandler 对象!");
         }
-        String name = annotation.name();
+        String name = annotation.name().toLowerCase();
 
         StringBuilder description = new StringBuilder();
         for (String s : annotation.description()) {
@@ -74,6 +77,7 @@ public class CommandHandler extends org.bukkit.command.Command {
                 description.toString(),
                 usage.toString(),
                 Arrays.asList(annotation.aliases()),
+                annotation.permission(),
                 commandExecutor
         );
     }
@@ -81,25 +85,14 @@ public class CommandHandler extends org.bukkit.command.Command {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         long startTime = System.currentTimeMillis();
-        for (CommandMethodInvoker invoker : invokers) {
-            if (invoker.execCommand(sender, this, label, args)) {
-                BlockAPIPlugin.getLogUtils().debug(
-                        "命令 [/%s %s] 执行完成，共计耗时: %d ms",
-                        getName(),
-                        StringUtils.join(args, " "),
-                        System.currentTimeMillis() - startTime
-                );
-                return true;
-            }
-        }
-        sender.sendMessage(usageMessage);
+        runCommand(sender, label, args);
         BlockAPIPlugin.getLogUtils().debug(
                 "命令 [/%s %s] 执行完成，共计耗时: %d ms",
                 getName(),
                 StringUtils.join(args, " "),
                 System.currentTimeMillis() - startTime
         );
-        return false;
+        return true;
     }
 
     @NotNull
@@ -135,4 +128,19 @@ public class CommandHandler extends org.bukkit.command.Command {
         );
         return list;
     }
+
+    private void runCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+        for (String permission : permissions) {
+            if (!sender.hasPermission(permission)) {
+                return;
+            }
+        }
+        for (CommandMethodInvoker invoker : invokers) {
+            if (invoker.execCommand(sender, this, label, args)) {
+                return;
+            }
+        }
+        sender.sendMessage(usageMessage);
+    }
+
 }
