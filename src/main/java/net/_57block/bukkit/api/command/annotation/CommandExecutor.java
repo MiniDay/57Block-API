@@ -8,6 +8,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CommandExecutor {
+    /**
+     * 命令名称，读取后会自动转换成小写
+     *
+     * @return 命令名称
+     */
     String name();
 
     String[] description() default {};

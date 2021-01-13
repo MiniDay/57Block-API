@@ -8,6 +8,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Command {
+    /**
+     * 子命令名称，会自动转换成小写
+     *
+     * @return 子命令
+     */
     String[] subName() default {};
 
     String[] permission() default {};
