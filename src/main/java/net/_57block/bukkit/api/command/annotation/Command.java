@@ -9,11 +9,20 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Command {
     /**
-     * 子命令名称，会自动转换成小写
+     * 子命令名称
+     * <p>
+     * 读取后会自动转换成全小写
      *
-     * @return 子命令
+     * @return 子命令名称
      */
     String[] subName() default {};
 
+    /**
+     * 执行该命令需要的权限
+     * <p>
+     * 读取后会自动转换成全小写
+     *
+     * @return 权限列表
+     */
     String[] permission() default {};
 }

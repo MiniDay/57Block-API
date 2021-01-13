@@ -91,7 +91,7 @@ public class CommandHandler extends org.bukkit.command.Command {
                 name,
                 description.toString(),
                 usage.toString(),
-                Arrays.asList(annotation.aliases().clone()),
+                Arrays.asList(annotation.aliases()),
                 annotation.permission(),
                 commandExecutor
         );
