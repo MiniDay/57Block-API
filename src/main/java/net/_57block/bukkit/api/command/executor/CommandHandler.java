@@ -23,6 +23,16 @@ public class CommandHandler extends org.bukkit.command.Command {
     private final ArrayList<CommandMethodInvoker> invokers;
     private final String[] permissions;
 
+    /**
+     * CommandHandler 的构造方法
+     *
+     * @param name        命令的名称
+     * @param description 命令的描述
+     * @param usage       命令的使用方法
+     * @param aliases     命令的别名列表
+     * @param permissions 命令的权限列表
+     * @param executor    命令执行器实例
+     */
     private CommandHandler(@NotNull String name, @NotNull String description, @NotNull String usage, @NotNull List<String> aliases, @NotNull String[] permissions, @NotNull Object executor) {
         super(
                 name.toLowerCase(),
@@ -32,37 +42,12 @@ public class CommandHandler extends org.bukkit.command.Command {
                 aliases.stream().map(String::toLowerCase).collect(Collectors.toList())
         );
         this.permissions = permissions;
-
         invokers = new ArrayList<>();
-        Class<?> executorClass = executor.getClass();
-        List<Method> methods = Arrays.asList(executorClass.getDeclaredMethods());
-        Collections.reverse(methods);
-        for (Method method : methods) {
-            BlockAPIPlugin.getLogUtils().debug(
-                    "%s::%s(%s);",
-                    executorClass,
-                    method.getName(),
-                    StringUtils.join(Arrays.stream(method.getParameterTypes()).map(Class::getSimpleName).toArray(), ", ")
-            );
-            Command annotation = method.getAnnotation(Command.class);
-            if (annotation == null) {
-                continue;
-            }
-            try {
-                CommandMethodInvoker invoker = new CommandMethodInvoker(
-                        executor,
-                        method,
-                        annotation.subName(),
-                        annotation.permission()
-                );
-                invokers.add(invoker);
-            } catch (Exception e) {
-                BlockAPIPlugin.getLogUtils().error(e, "在构建命令执行器 %s 的命令 %s 时出现了一个错误: ", executorClass, method.getName());
-            }
-        }
+
+        generatorClassInvokers(executor);
 
         if (invokers.isEmpty()) {
-            BlockAPIPlugin.getLogUtils().warning("命令执行器 %s 中没有扫描到任何命令执行方法!", executorClass.getSimpleName());
+            BlockAPIPlugin.getLogUtils().warning("  命令执行器 %s 中没有扫描到任何命令执行方法! （忘记添加 @Command 了？）", executor.getClass().getSimpleName());
         }
 
         for (int i = 0; i < this.permissions.length; i++) {
@@ -70,31 +55,102 @@ public class CommandHandler extends org.bukkit.command.Command {
         }
     }
 
-    public static CommandHandler generatorCommandHandler(Object commandExecutor) {
-        CommandExecutor annotation = commandExecutor.getClass().getAnnotation(CommandExecutor.class);
+    /**
+     * 传入一个添加了 CommandExecutor 注解的类
+     * <p>
+     * 返回一个 CommandHandler 对象
+     *
+     * @param executorClass 添加了 CommandExecutor 注解的类
+     * @return CommandHandler 对象
+     * @throws IllegalAccessException 如果传入的类的没有公共权限修饰符的构造方法则会抛出该错误
+     * @throws InstantiationException 如果传入的类的没有无参的构造方法则会抛出该错误
+     */
+    public static CommandHandler generatorCommandHandler(Class<?> executorClass) throws IllegalAccessException, InstantiationException {
+        CommandExecutor annotation = executorClass.getAnnotation(CommandExecutor.class);
         if (annotation == null) {
             throw new IllegalArgumentException("只有添加了 CommandExecutor 注解的类才能用于构建 CommandHandler 对象!");
         }
-        String name = annotation.name();
-
-        StringBuilder description = new StringBuilder();
-        for (String s : annotation.description()) {
-            description.append(s);
-        }
-
-        StringBuilder usage = new StringBuilder();
-        for (String s : annotation.usage()) {
-            usage.append(s);
-        }
 
         return new CommandHandler(
-                name,
-                description.toString(),
-                usage.toString(),
+                annotation.name(),
+                StringUtils.join(annotation.description(), " "),
+                StringUtils.join(annotation.usage(), " "),
                 Arrays.asList(annotation.aliases()),
                 annotation.permission(),
-                commandExecutor
+                executorClass.newInstance()
         );
+    }
+
+    /**
+     * 传入一个 CommandExecutor 实例
+     * <p>
+     * 把它的命令方法的执行器添加到 invokers 中
+     *
+     * @param executor   CommandExecutor 实例
+     * @param addSubName 子命令前缀，这些参数会添加在 Command 注解中 subName 的前面
+     */
+    private void generatorMethodInvokers(@NotNull Object executor, @NotNull String... addSubName) {
+        Class<?> executorClass = executor.getClass();
+
+        List<Method> methods = Arrays.asList(executorClass.getDeclaredMethods());
+        Collections.reverse(methods);
+
+        for (Method method : methods) {
+            Command annotation = method.getAnnotation(Command.class);
+            if (annotation == null) {
+                continue;
+            }
+            BlockAPIPlugin.getLogUtils().debug(
+                    "    %s::%s(%s);",
+                    executorClass,
+                    method.getName(),
+                    StringUtils.join(Arrays.stream(method.getParameterTypes()).map(Class::getSimpleName).toArray(), ", ")
+            );
+
+            ArrayList<String> list = new ArrayList<>();
+            list.addAll(Arrays.asList(addSubName));
+            list.addAll(Arrays.asList(annotation.subName()));
+
+            try {
+                CommandMethodInvoker invoker = new CommandMethodInvoker(
+                        executor,
+                        method,
+                        list.toArray(new String[0]),
+                        annotation.permission()
+                );
+                invokers.add(invoker);
+            } catch (Exception e) {
+                BlockAPIPlugin.getLogUtils().error(e, "  在构建命令执行器 %s 的命令 %s 时出现了一个错误: ", executorClass, method.getName());
+            }
+        }
+    }
+
+    /**
+     * 传入一个 CommandExecutor 的实例
+     * <p>
+     * 把这它的命令方法的执行器添加到 invokers 中
+     * <p>
+     * 并递归搜索它的内部类
+     *
+     * @param executor   CommandExecutor 实例
+     * @param addSubName 子命令前缀，也许这个传入的类是另一个 CommandExecutor 的内部类？
+     */
+    private void generatorClassInvokers(Object executor, String... addSubName) {
+        Class<?> executorClass = executor.getClass();
+        CommandExecutor commandExecutor = executorClass.getAnnotation(CommandExecutor.class);
+        if (commandExecutor == null) {
+            return;
+        }
+        BlockAPIPlugin.getLogUtils().debug("  找到命令执行器类: %s", executorClass.getSimpleName());
+
+        generatorMethodInvokers(executor, addSubName);
+
+        String[] copyOf = Arrays.copyOf(addSubName, addSubName.length + 1);
+        copyOf[addSubName.length] = commandExecutor.name();
+
+        for (Class<?> innerClass : executorClass.getDeclaredClasses()) {
+            generatorClassInvokers(innerClass, copyOf);
+        }
     }
 
     @Override
@@ -144,6 +200,13 @@ public class CommandHandler extends org.bukkit.command.Command {
         return list;
     }
 
+    /**
+     * 执行命令
+     *
+     * @param sender 命令执行者
+     * @param label  命令别名
+     * @param args   命令附加参数
+     */
     private void runCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         for (String permission : permissions) {
             if (!sender.hasPermission(permission)) {

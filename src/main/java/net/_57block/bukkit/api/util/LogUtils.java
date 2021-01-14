@@ -232,7 +232,7 @@ public class LogUtils {
      *
      * @param e 异常对象
      */
-    public void error(@NotNull Exception e) {
+    public void error(@NotNull Throwable e) {
         if (logger != null) {
             e.printStackTrace();
         }
@@ -247,7 +247,7 @@ public class LogUtils {
      * @param e       异常对象
      * @param message 附加描述消息
      */
-    public void error(@NotNull Exception e, @NotNull String message) {
+    public void error(@NotNull Throwable e, @NotNull String message) {
         warning(message);
         error(e);
     }
@@ -260,7 +260,7 @@ public class LogUtils {
      * @param params  参数
      * @see String#format(String, Object...)
      */
-    public void error(@NotNull Exception e, @NotNull String message, @NotNull Object... params) {
+    public void error(@NotNull Throwable e, @NotNull String message, @NotNull Object... params) {
         warning(message, params);
         error(e);
     }

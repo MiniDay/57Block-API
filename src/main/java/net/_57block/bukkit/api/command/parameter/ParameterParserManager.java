@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 
@@ -39,6 +40,9 @@ public class ParameterParserManager {
      * @return 注册成功则返回 true
      */
     public static boolean registerParser(@NotNull Class<?> parameterClass, @NotNull Class<? extends ParameterParser> parserClass) {
+        if (!checkParser(parserClass)) {
+            throw new IllegalArgumentException("ParameterParser 类必须拥有一个公共无参的构造方法!");
+        }
         if (supportParameters.containsKey(parameterClass)) {
             BlockAPIPlugin.getLogUtils().warning(
                     "无法注册 %s 为 %s 类型的解析器，因为已经存在另一个解析器 %s 用于解析该类型参数了.",
@@ -156,7 +160,7 @@ public class ParameterParserManager {
      */
     private static boolean checkParser(Class<? extends ParameterParser> parserClass) {
         for (Constructor<?> constructor : parserClass.getConstructors()) {
-            if (!constructor.isAccessible()) {
+            if (!Modifier.isPublic(constructor.getModifiers())) {
                 continue;
             }
             if (constructor.getParameterCount() > 1) {

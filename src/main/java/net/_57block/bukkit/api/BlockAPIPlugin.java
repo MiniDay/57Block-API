@@ -194,15 +194,15 @@ public final class BlockAPIPlugin extends JavaPlugin {
             if (commandScan == null) {
                 continue;
             }
+            scanPackages.addAll(Arrays.asList(commandScan.value()));
             logUtils.debug("已添加插件 %s 需要扫描的包: ", plugin.getName());
             for (String s : commandScan.value()) {
                 logUtils.debug(s);
             }
-            scanPackages.addAll(Arrays.asList(commandScan.value()));
         }
         logUtils.debug("==================================================");
 
-        HashMap<Plugin, ArrayList<String>> pluginCommandExecutorClassName = new HashMap<>();
+        HashMap<Plugin, ArrayList<String>> scanPlugin = new HashMap<>();
         try {
             Method getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
             getFileMethod.setAccessible(true);
@@ -213,6 +213,7 @@ public final class BlockAPIPlugin extends JavaPlugin {
                 Enumeration<JarEntry> entries = new JarFile((File) getFileMethod.invoke(plugin)).entries();
 
                 ArrayList<String> classNames = new ArrayList<>();
+
                 while (entries.hasMoreElements()) {
                     JarEntry entry = entries.nextElement();
                     String entryName = entry.getName();
@@ -228,13 +229,16 @@ public final class BlockAPIPlugin extends JavaPlugin {
                     }
                 }
 
-                pluginCommandExecutorClassName.put(plugin, classNames);
+                if (classNames.isEmpty()) {
+                    continue;
+                }
+                scanPlugin.put(plugin, classNames);
             }
         } catch (Exception e) {
             logUtils.error(e, "从插件的Java包中扫描命令执行器时遇到了一个异常: ");
         }
 
-        for (Map.Entry<Plugin, ArrayList<String>> entry : pluginCommandExecutorClassName.entrySet()) {
+        for (Map.Entry<Plugin, ArrayList<String>> entry : scanPlugin.entrySet()) {
             Plugin plugin = entry.getKey();
             ArrayList<String> classNames = entry.getValue();
             logUtils.debug("开始扫描插件 %s", plugin.getName());
@@ -245,11 +249,10 @@ public final class BlockAPIPlugin extends JavaPlugin {
                     if (annotation == null) {
                         continue;
                     }
-                    logUtils.debug("从插件 %s 中找到命令执行器类: %s", plugin.getName(), clazz.getSimpleName());
-                    CommandHandler handler = CommandHandler.generatorCommandHandler(clazz.newInstance());
+                    CommandHandler handler = CommandHandler.generatorCommandHandler(clazz);
                     commandMap.register(plugin.getName(), handler);
-                    handler.register(commandMap);
-                } catch (Exception e) {
+//                    handler.register(commandMap);
+                } catch (Exception | Error e) {
                     logUtils.error(e, "初始化插件 %s 的命令管理器 %s 时遇到了一个错误: ", plugin.getName(), className);
                 }
 
