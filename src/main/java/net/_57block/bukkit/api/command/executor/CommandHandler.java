@@ -98,8 +98,8 @@ public class CommandHandler extends org.bukkit.command.Command {
                 continue;
             }
             BlockAPIPlugin.getLogUtils().debug(
-                    "    %s::%s(%s);",
-                    executorClass,
+                    "    已读取方法 %s::%s(%s);",
+                    executorClass.getSimpleName(),
                     method.getName(),
                     StringUtils.join(Arrays.stream(method.getParameterTypes()).map(Class::getSimpleName).toArray(), ", ")
             );
@@ -107,7 +107,6 @@ public class CommandHandler extends org.bukkit.command.Command {
             ArrayList<String> subName = new ArrayList<>();
             subName.addAll(Arrays.asList(addSubName));
             subName.addAll(Arrays.asList(annotation.subName()));
-            System.out.println(subName);
 
             ArrayList<String> permission = new ArrayList<>();
             permission.addAll(Arrays.asList(addPermission));
@@ -140,7 +139,7 @@ public class CommandHandler extends org.bukkit.command.Command {
      */
     private void generatorClassInvokers(@NotNull Object executor, @NotNull String[] addSubName, @NotNull String[] addPermission) {
         Class<?> executorClass = executor.getClass();
-        BlockAPIPlugin.getLogUtils().debug("  找到命令执行器类: %s", executorClass.getSimpleName());
+        BlockAPIPlugin.getLogUtils().debug("  扫描到命令执行器 %s", executorClass.getName());
 
         generatorMethodInvokers(executor, addSubName, addPermission);
 

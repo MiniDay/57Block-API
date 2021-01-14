@@ -6,6 +6,7 @@ import net._57block.bukkit.api.command.executor.CommandHandler;
 import net._57block.bukkit.api.command.parameter.ParameterParserManager;
 import net._57block.bukkit.api.command.parameter.parser.*;
 import net._57block.bukkit.api.command.parameter.parser.bukkit.*;
+import net._57block.bukkit.api.listener.MainListener;
 import net._57block.bukkit.api.util.EconomyAPI;
 import net._57block.bukkit.api.util.LogUtils;
 import net._57block.bukkit.api.util.PointAPI;
@@ -51,8 +52,6 @@ public final class BlockAPIPlugin extends JavaPlugin {
 
         initLogUtil();
         logUtils.info("==================================================");
-        initParameterParser();
-        logUtils.info("==================================================");
         loadLibraries();
         logUtils.info("==================================================");
 
@@ -67,14 +66,18 @@ public final class BlockAPIPlugin extends JavaPlugin {
         EconomyAPI.reloadEconomyHook();
         PointAPI.reloadPlayerPointAPIHook();
         logUtils.info("==================================================");
+        initParameterParser();
+        logUtils.info("==================================================");
         initCommand();
         logUtils.info("==================================================");
+        Bukkit.getPluginManager().registerEvents(new MainListener(), this);
 
         logUtils.info("插件启动完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
     }
 
     @Override
     public void onDisable() {
+        logUtils.flush();
     }
 
     @Override
@@ -93,6 +96,38 @@ public final class BlockAPIPlugin extends JavaPlugin {
         LogUtils.DEFAULT_CONFIG = YamlConfiguration.loadConfiguration(defaultLogSettingsFile);
 
         logUtils = new LogUtils(this);
+    }
+
+    /**
+     * 加载存放于 plugins/57Block-API/libs 中的第三方库文件
+     * 仅 .jar 文件会被加载
+     */
+    private void loadLibraries() {
+        logUtils.info("开始加载第三方库.");
+        try {
+            ClassLoader loader = getClassLoader();
+            Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+            method.setAccessible(true);
+            File libFolder = new File(getDataFolder(), "libs");
+            if (libFolder.mkdirs()) {
+                logUtils.info("创建第三方库存放文件夹...");
+            }
+            File[] files = libFolder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    String fileName = file.getName();
+                    if (!fileName.endsWith(".jar")) {
+                        logUtils.warning("跳过加载非 jar 拓展名的第三方库: %s", fileName);
+                        continue;
+                    }
+                    method.invoke(loader, file.toURI().toURL());
+                    logUtils.info("已加载第三方库: %s", fileName);
+                }
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | MalformedURLException e) {
+            logUtils.error(e, "加载第三方库时遇到了一个错误: ");
+        }
+        logUtils.info("第三方库加载完成.");
     }
 
     /**
@@ -129,38 +164,6 @@ public final class BlockAPIPlugin extends JavaPlugin {
         ParameterParserManager.registerParser(CommandSender.class, CommandSenderParser.class);
         ParameterParserManager.registerParser(World.class, WorldParser.class);
         logUtils.info("默认命令参数解析器注册完成.");
-    }
-
-    /**
-     * 加载存放于 plugins/57Block-API/libs 中的第三方库文件
-     * 仅 .jar 文件会被加载
-     */
-    private void loadLibraries() {
-        logUtils.info("开始加载第三方库.");
-        try {
-            ClassLoader loader = getClassLoader();
-            Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-            method.setAccessible(true);
-            File libFolder = new File(getDataFolder(), "libs");
-            if (libFolder.mkdirs()) {
-                logUtils.info("创建第三方库存放文件夹...");
-            }
-            File[] files = libFolder.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    String fileName = file.getName();
-                    if (!fileName.endsWith(".jar")) {
-                        logUtils.warning("跳过加载非 jar 拓展名的第三方库: %s", fileName);
-                        continue;
-                    }
-                    method.invoke(loader, file.toURI().toURL());
-                    logUtils.info("已加载第三方库: %s", fileName);
-                }
-            }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | MalformedURLException e) {
-            logUtils.error(e, "加载第三方库时遇到了一个错误: ");
-        }
-        logUtils.info("第三方库加载完成.");
     }
 
     /**

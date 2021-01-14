@@ -14,12 +14,14 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 public class EconomyAPI {
+    private static boolean vaultEnabled;
     private static Economy economy;
 
     /**
      * 重载 Vault 经济系统挂接
      */
     public static void reloadEconomyHook() {
+        vaultEnabled = Bukkit.getPluginManager().isPluginEnabled("Vault");
         if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
             RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
             if (economyProvider != null) {
@@ -32,12 +34,21 @@ public class EconomyAPI {
     }
 
     /**
+     * 返回服务器是否安装了 Vault 插件
+     *
+     * @return true 代表服务器已安装
+     */
+    public static boolean isSetupVault() {
+        return vaultEnabled;
+    }
+
+    /**
      * 返回服务器是否安装了经济插件
      *
      * @return true代表安装了，false代表未安装
      */
     public static boolean isSetupEconomy() {
-        return economy != null;
+        return vaultEnabled && economy != null;
     }
 
     /**
@@ -132,9 +143,11 @@ public class EconomyAPI {
 
     /**
      * 检查玩家有多少钱
+     * <p>
+     * 若没有安装经济插件则返回NaN
      *
      * @param player 玩家
-     * @return 玩家的钱的数量（若没有安装经济插件则返回NaN
+     * @return 玩家的余额
      */
     public static double seeMoney(@NotNull final OfflinePlayer player) {
         if (!isSetupEconomy()) {
@@ -145,9 +158,11 @@ public class EconomyAPI {
 
     /**
      * 检查玩家有多少钱
+     * <p>
+     * 若没有安装经济插件则返回NaN
      *
      * @param uuid 玩家的uuid
-     * @return 玩家的钱的数量（若没有安装经济插件则返回NaN
+     * @return 玩家的余额
      */
     public static double seeMoney(@NotNull final UUID uuid) {
         return seeMoney(Bukkit.getOfflinePlayer(uuid));
