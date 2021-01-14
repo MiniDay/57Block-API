@@ -198,12 +198,12 @@ public final class BlockAPIPlugin extends JavaPlugin {
                 continue;
             }
             scanPackages.addAll(Arrays.asList(commandScan.value()));
-            logUtils.debug("已添加插件 %s 需要扫描的包: ", plugin.getName());
+            logUtils.info("已添加插件 %s 需要扫描的包: ", plugin.getName());
             for (String s : commandScan.value()) {
-                logUtils.debug(s);
+                logUtils.info(s);
             }
         }
-        logUtils.debug("==================================================");
+        logUtils.info("==================================================");
 
         HashMap<Plugin, ArrayList<String>> scanPlugin = new HashMap<>();
         try {
@@ -244,7 +244,7 @@ public final class BlockAPIPlugin extends JavaPlugin {
         for (Map.Entry<Plugin, ArrayList<String>> entry : scanPlugin.entrySet()) {
             Plugin plugin = entry.getKey();
             ArrayList<String> classNames = entry.getValue();
-            logUtils.debug("开始扫描插件 %s", plugin.getName());
+            logUtils.info("开始扫描插件 %s", plugin.getName());
             for (String className : classNames) {
                 try {
                     Class<?> clazz = (Class<?>) findClassMethod.invoke(classLoader, className);

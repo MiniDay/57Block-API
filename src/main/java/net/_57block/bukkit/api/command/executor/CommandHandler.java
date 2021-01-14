@@ -97,7 +97,7 @@ public class CommandHandler extends org.bukkit.command.Command {
             if (annotation == null) {
                 continue;
             }
-            BlockAPIPlugin.getLogUtils().debug(
+            BlockAPIPlugin.getLogUtils().info(
                     "    已读取方法 %s::%s(%s);",
                     executorClass.getSimpleName(),
                     method.getName(),
@@ -139,7 +139,7 @@ public class CommandHandler extends org.bukkit.command.Command {
      */
     private void generatorClassInvokers(@NotNull Object executor, @NotNull String[] addSubName, @NotNull String[] addPermission) {
         Class<?> executorClass = executor.getClass();
-        BlockAPIPlugin.getLogUtils().debug("  扫描到命令执行器 %s", executorClass.getName());
+        BlockAPIPlugin.getLogUtils().info("  扫描到命令执行器 %s", executorClass.getName());
 
         generatorMethodInvokers(executor, addSubName, addPermission);
 
@@ -204,7 +204,6 @@ public class CommandHandler extends org.bukkit.command.Command {
             List<String> tab = invoker.tabComplete(sender, this, alias, args, location);
             if (tab != null) {
                 list.addAll(tab);
-                BlockAPIPlugin.getLogUtils().debug("%s: %s", invoker, tab);
             }
         }
 
