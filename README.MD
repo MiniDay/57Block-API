@@ -4,7 +4,9 @@
 
 # todo list
 
-- 完善 CommandAPI，让添加 static 方法的 CommandExecutor 可以无需构造对象（可能可以改善性能）
+- 完善 CommandAPI
+    - 让添加 static 方法的 CommandExecutor 可以无需构造对象（可能可以改善性能）
+    - 添加一个 Help 方法，当所有命令均未成功匹配参数时执行该方法
 
 # 方便易用的日志记录器
 

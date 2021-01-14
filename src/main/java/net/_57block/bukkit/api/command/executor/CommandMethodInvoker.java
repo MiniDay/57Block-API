@@ -92,17 +92,19 @@ public class CommandMethodInvoker {
     }
 
     public boolean execCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        // 判断 subName 是否匹配
+        // 判断 subName 长度是否匹配
         if (subName.length > args.length) {
             return false;
         }
+
+        // 判断 subName 长度是否匹配
         for (int i = 0; i < subName.length; i++) {
             if (!subName[i].equalsIgnoreCase(args[i])) {
                 return false;
             }
         }
 
-        // 判断是否有权限
+        // 判断用户是否拥有全部的权限
         for (String permission : permissions) {
             if (!sender.hasPermission(permission)) {
                 return false;

@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
  */
 public class CommandHandler extends org.bukkit.command.Command {
     private final ArrayList<CommandMethodInvoker> invokers;
-    private final String[] permissions;
 
     /**
      * CommandHandler 的构造方法
@@ -42,17 +41,12 @@ public class CommandHandler extends org.bukkit.command.Command {
                 // 把 aliases 转换成小写
                 aliases.stream().map(String::toLowerCase).collect(Collectors.toList())
         );
-        this.permissions = permissions;
         invokers = new ArrayList<>();
 
-        generatorClassInvokers(executor);
+        generatorClassInvokers(executor, new String[0], permissions);
 
         if (invokers.isEmpty()) {
             BlockAPIPlugin.getLogUtils().warning("  命令执行器 %s 中没有扫描到任何命令执行方法! （忘记添加 @Command 了？）", executor.getClass().getSimpleName());
-        }
-
-        for (int i = 0; i < this.permissions.length; i++) {
-            this.permissions[i] = this.permissions[i].toLowerCase();
         }
     }
 
@@ -88,10 +82,11 @@ public class CommandHandler extends org.bukkit.command.Command {
      * <p>
      * 把它的命令方法的执行器添加到 invokers 中
      *
-     * @param executor   CommandExecutor 实例
-     * @param addSubName 子命令前缀，这些参数会添加在 Command 注解中 subName 的前面
+     * @param executor      CommandExecutor 实例
+     * @param addSubName    子命令前缀，这些参数会添加在 Command 注解中 subName 的前面
+     * @param addPermission 命令权限追加，这些参数会添加在 Command 注解中 permission 的前面
      */
-    private void generatorMethodInvokers(@NotNull Object executor, @NotNull String... addSubName) {
+    private void generatorMethodInvokers(@NotNull Object executor, @NotNull String[] addSubName, @NotNull String[] addPermission) {
         Class<?> executorClass = executor.getClass();
 
         List<Method> methods = Arrays.asList(executorClass.getDeclaredMethods());
@@ -109,16 +104,21 @@ public class CommandHandler extends org.bukkit.command.Command {
                     StringUtils.join(Arrays.stream(method.getParameterTypes()).map(Class::getSimpleName).toArray(), ", ")
             );
 
-            ArrayList<String> list = new ArrayList<>();
-            list.addAll(Arrays.asList(addSubName));
-            list.addAll(Arrays.asList(annotation.subName()));
+            ArrayList<String> subName = new ArrayList<>();
+            subName.addAll(Arrays.asList(addSubName));
+            subName.addAll(Arrays.asList(annotation.subName()));
+            System.out.println(subName);
+
+            ArrayList<String> permission = new ArrayList<>();
+            permission.addAll(Arrays.asList(addPermission));
+            permission.addAll(Arrays.asList(annotation.permission()));
 
             try {
                 CommandMethodInvoker invoker = new CommandMethodInvoker(
                         executor,
                         method,
-                        list.toArray(new String[0]),
-                        annotation.permission()
+                        subName.toArray(new String[0]),
+                        permission.toArray(new String[0])
                 );
                 invokers.add(invoker);
             } catch (Exception e) {
@@ -134,31 +134,41 @@ public class CommandHandler extends org.bukkit.command.Command {
      * <p>
      * 并递归搜索它的内部类
      *
-     * @param executor   CommandExecutor 实例
-     * @param addSubName 子命令前缀，也许这个传入的类是另一个 CommandExecutor 的内部类？
+     * @param executor      CommandExecutor 实例
+     * @param addSubName    子命令前缀，也许这个传入的类是另一个 CommandExecutor 的内部类？
+     * @param addPermission 命令权限追加，也许这个传入的类是另一个 CommandExecutor 的内部类？
      */
-    private void generatorClassInvokers(@NotNull Object executor, @NotNull String... addSubName) {
+    private void generatorClassInvokers(@NotNull Object executor, @NotNull String[] addSubName, @NotNull String[] addPermission) {
         Class<?> executorClass = executor.getClass();
-        CommandExecutor commandExecutor = executorClass.getAnnotation(CommandExecutor.class);
-        if (commandExecutor == null) {
-            return;
-        }
         BlockAPIPlugin.getLogUtils().debug("  找到命令执行器类: %s", executorClass.getSimpleName());
 
-        generatorMethodInvokers(executor, addSubName);
-
-        String[] copyOf = Arrays.copyOf(addSubName, addSubName.length + 1);
-        copyOf[addSubName.length] = commandExecutor.name();
+        generatorMethodInvokers(executor, addSubName, addPermission);
 
         for (Class<?> innerClass : executorClass.getDeclaredClasses()) {
+            CommandExecutor annotation = innerClass.getAnnotation(CommandExecutor.class);
+            if (annotation == null) {
+                continue;
+            }
             if (!Modifier.isStatic(innerClass.getModifiers())) {
                 BlockAPIPlugin.getLogUtils().info("  跳过非 static 修饰的内部类: %s", innerClass.getSimpleName());
             }
             if (!Modifier.isPublic(innerClass.getModifiers())) {
                 BlockAPIPlugin.getLogUtils().info("  跳过非 public 修饰的内部类: %s", innerClass.getSimpleName());
             }
+
+            String[] subName = Arrays.copyOf(addSubName, addSubName.length + 1);
+            subName[addSubName.length] = annotation.name();
+
+            ArrayList<String> permission = new ArrayList<>();
+            permission.addAll(Arrays.asList(addPermission));
+            permission.addAll(Arrays.asList(annotation.permission()));
+
             try {
-                generatorClassInvokers(innerClass.newInstance(), copyOf);
+                generatorClassInvokers(
+                        innerClass.newInstance(),
+                        subName,
+                        permission.toArray(new String[0])
+                );
             } catch (InstantiationException | IllegalAccessException e) {
                 BlockAPIPlugin.getLogUtils().error(e, "  构造内部类 %s 的实例时出现了一个错误: ");
             }
@@ -200,7 +210,7 @@ public class CommandHandler extends org.bukkit.command.Command {
         }
 
         // 去除不以输入参数开头的补全
-        list = StringUtils.startsWith(list, args[args.length - 1]);
+        list = StringUtils.startsWithIgnoreCase(list, args[args.length - 1]);
         // 去除重复的补全参数
         list = list.stream().distinct().collect(Collectors.toList());
         BlockAPIPlugin.getLogUtils().debug(
@@ -220,11 +230,6 @@ public class CommandHandler extends org.bukkit.command.Command {
      * @param args   命令附加参数
      */
     private void runCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        for (String permission : permissions) {
-            if (!sender.hasPermission(permission)) {
-                return;
-            }
-        }
         for (CommandMethodInvoker invoker : invokers) {
             if (invoker.execCommand(sender, this, label, args)) {
                 return;
