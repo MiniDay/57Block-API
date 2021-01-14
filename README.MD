@@ -2,6 +2,10 @@
 
 五彩方块服务器的 API
 
+# todo list
+
+- 完善 CommandAPI，让添加 static 方法的 CommandExecutor 可以无需构造对象（可能可以改善性能）
+
 # 方便易用的日志记录器
 
 [LogUtils](src/main/java/net/_57block/bukkit/api/util/LogUtils.java)
