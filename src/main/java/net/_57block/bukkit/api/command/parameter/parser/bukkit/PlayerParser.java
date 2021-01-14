@@ -1,6 +1,7 @@
 package net._57block.bukkit.api.command.parameter.parser.bukkit;
 
 import net._57block.bukkit.api.command.parameter.ParameterParser;
+import net._57block.bukkit.api.util.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -35,7 +36,7 @@ public class PlayerParser extends ParameterParser {
         List<String> list = Bukkit.getOnlinePlayers()
                 .stream()
                 .map(Player::getName)
-                .filter(s -> s.startsWith(args[index]))
+                .filter(s -> StringUtils.startsWithIgnoreCase(s, args[index]))
                 .collect(Collectors.toList());
         if (list.size() > 10) {
             list = list.subList(0, 10);

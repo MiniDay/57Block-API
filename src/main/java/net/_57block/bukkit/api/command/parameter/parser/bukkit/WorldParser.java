@@ -13,32 +13,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("CommentedOutCode")
 public class WorldParser extends ParameterParser {
-
-//    @Override
-//    public boolean parser(@NotNull Stack<Object> parameters, @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args, int index) {
-//        if (index + 1 <= args.length) {
-//            World world = Bukkit.getWorld(args[index]);
-//            if (world != null && getNext().parser(parameters, sender, command, label, args, index + 1)) {
-//                parameters.push(world);
-//                return true;
-//            }
-//        }
-//        World world;
-//        if (sender instanceof Entity) {
-//            world = ((Entity) sender).getWorld();
-//        } else if (sender instanceof BlockCommandSender) {
-//            world = ((BlockCommandSender) sender).getBlock().getWorld();
-//        } else {
-//            return false;
-//        }
-//        if (getNext().parser(parameters, sender, command, label, args, index)) {
-//            parameters.push(world);
-//            return true;
-//        }
-//        return false;
-//    }
 
     @Override
     public boolean parser(@NotNull Stack<Object> parameters, @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args, int index) {
