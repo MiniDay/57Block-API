@@ -66,7 +66,8 @@ public class CommandHandler extends org.bukkit.command.Command {
      * @throws IllegalAccessException 如果传入的类的没有公共权限修饰符的构造方法则会抛出该错误
      * @throws InstantiationException 如果传入的类的没有无参的构造方法则会抛出该错误
      */
-    public static CommandHandler generatorCommandHandler(Class<?> executorClass) throws IllegalAccessException, InstantiationException {
+    @NotNull
+    public static CommandHandler generatorCommandHandler(@NotNull Class<?> executorClass) throws IllegalAccessException, InstantiationException {
         CommandExecutor annotation = executorClass.getAnnotation(CommandExecutor.class);
         if (annotation == null) {
             throw new IllegalArgumentException("只有添加了 CommandExecutor 注解的类才能用于构建 CommandHandler 对象!");
@@ -136,7 +137,7 @@ public class CommandHandler extends org.bukkit.command.Command {
      * @param executor   CommandExecutor 实例
      * @param addSubName 子命令前缀，也许这个传入的类是另一个 CommandExecutor 的内部类？
      */
-    private void generatorClassInvokers(Object executor, String... addSubName) {
+    private void generatorClassInvokers(@NotNull Object executor, @NotNull String... addSubName) {
         Class<?> executorClass = executor.getClass();
         CommandExecutor commandExecutor = executorClass.getAnnotation(CommandExecutor.class);
         if (commandExecutor == null) {
