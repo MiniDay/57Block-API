@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -149,6 +150,12 @@ public class CommandHandler extends org.bukkit.command.Command {
         copyOf[addSubName.length] = commandExecutor.name();
 
         for (Class<?> innerClass : executorClass.getDeclaredClasses()) {
+            if (!Modifier.isStatic(innerClass.getModifiers())) {
+                BlockAPIPlugin.getLogUtils().info("  跳过非 static 修饰的内部类: %s", innerClass.getSimpleName());
+            }
+            if (!Modifier.isPublic(innerClass.getModifiers())) {
+                BlockAPIPlugin.getLogUtils().info("  跳过非 public 修饰的内部类: %s", innerClass.getSimpleName());
+            }
             generatorClassInvokers(innerClass, copyOf);
         }
     }
