@@ -156,7 +156,11 @@ public class CommandHandler extends org.bukkit.command.Command {
             if (!Modifier.isPublic(innerClass.getModifiers())) {
                 BlockAPIPlugin.getLogUtils().info("  跳过非 public 修饰的内部类: %s", innerClass.getSimpleName());
             }
-            generatorClassInvokers(innerClass, copyOf);
+            try {
+                generatorClassInvokers(innerClass.newInstance(), copyOf);
+            } catch (InstantiationException | IllegalAccessException e) {
+                BlockAPIPlugin.getLogUtils().error(e, "  构造内部类 %s 的实例时出现了一个错误: ");
+            }
         }
     }
 
