@@ -161,6 +161,7 @@ public final class BlockAPIPlugin extends JavaPlugin {
         ParameterParserManager.registerParser(Location.class, LocationParser.class);
         ParameterParserManager.registerParser(OfflinePlayer.class, OfflinePlayerParser.class);
         ParameterParserManager.registerParser(Player.class, PlayerParser.class);
+        ParameterParserManager.registerParser(Sound.class, SoundParser.class);
         ParameterParserManager.registerParser(CommandSender.class, CommandSenderParser.class);
         ParameterParserManager.registerParser(World.class, WorldParser.class);
         logUtils.info("默认命令参数解析器注册完成.");
