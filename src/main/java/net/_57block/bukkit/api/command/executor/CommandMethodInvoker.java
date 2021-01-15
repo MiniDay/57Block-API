@@ -97,7 +97,7 @@ public class CommandMethodInvoker {
             return false;
         }
 
-        // 判断 subName 长度是否匹配
+        // 判断 subName 是否匹配
         for (int i = 0; i < subName.length; i++) {
             if (!subName[i].equalsIgnoreCase(args[i])) {
                 return false;
@@ -139,11 +139,14 @@ public class CommandMethodInvoker {
         // 如果已输入的参数的长度小于或等于 subName
         // 则先返回 subName 的补全
         if (args.length <= subName.length) {
+
+            // 如果 已输入的参数不能完全匹配 subName 则无法匹配该命令
             for (int i = 0; i < args.length - 1; i++) {
                 if (!subName[i].equalsIgnoreCase(args[i])) {
                     return null;
                 }
             }
+
             return Collections.singletonList(subName[args.length - 1]);
         }
 
