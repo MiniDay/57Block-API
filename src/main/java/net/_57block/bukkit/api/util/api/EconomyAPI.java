@@ -1,4 +1,4 @@
-package net._57block.bukkit.api.util;
+package net._57block.bukkit.api.util.api;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

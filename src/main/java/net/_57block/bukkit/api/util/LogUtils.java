@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings({"unused"})
 public class LogUtils {
+    public static final ArrayList<LogUtils> ALL_INSTANCES = new ArrayList<>();
     public static YamlConfiguration DEFAULT_CONFIG;
 
     private final Plugin plugin;
@@ -130,11 +132,7 @@ public class LogUtils {
                 }
             }
         }
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (fileWriter != null) {
-                fileWriter.close();
-            }
-        }));
+        ALL_INSTANCES.add(this);
     }
 
     /**

@@ -8,8 +8,8 @@ import net._57block.bukkit.api.command.parameter.parser.*;
 import net._57block.bukkit.api.command.parameter.parser.bukkit.*;
 import net._57block.bukkit.api.listener.MainListener;
 import net._57block.bukkit.api.util.LogUtils;
-import net._57block.bukkit.api.util.PointAPI;
-import net._57block.bukkit.api.util.VaultAPI;
+import net._57block.bukkit.api.util.api.PointAPI;
+import net._57block.bukkit.api.util.api.VaultAPI;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
@@ -23,6 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,15 +35,15 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public final class PluginMain extends JavaPlugin {
-    private static LogUtils logUtils;
     private static PluginMain instance;
-
-    public static LogUtils getLogUtils() {
-        return logUtils;
-    }
+    private static LogUtils logUtils;
 
     public static PluginMain getInstance() {
         return instance;
+    }
+
+    public static LogUtils getLogUtils() {
+        return logUtils;
     }
 
     @Override
@@ -77,7 +78,12 @@ public final class PluginMain extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        logUtils.flush();
+        for (LogUtils utils : LogUtils.ALL_INSTANCES) {
+            PrintWriter writer = utils.getFileWriter();
+            if (writer != null) {
+                writer.close();
+            }
+        }
     }
 
     @Override

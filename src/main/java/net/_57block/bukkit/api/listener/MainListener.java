@@ -1,7 +1,7 @@
 package net._57block.bukkit.api.listener;
 
-import net._57block.bukkit.api.util.PointAPI;
-import net._57block.bukkit.api.util.VaultAPI;
+import net._57block.bukkit.api.util.api.PointAPI;
+import net._57block.bukkit.api.util.api.VaultAPI;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;

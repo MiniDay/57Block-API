@@ -1,4 +1,4 @@
-package net._57block.bukkit.api.util;
+package net._57block.bukkit.api.util.api;
 
 import net._57block.bukkit.api.PluginMain;
 import net.milkbowl.vault.chat.Chat;
