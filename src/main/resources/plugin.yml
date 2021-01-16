@@ -1,6 +1,6 @@
 name: 57Block-API
 version: ${project.version}
-main: net._57block.bukkit.api.BlockAPIPlugin
+main: net._57block.bukkit.api.PluginMain
 api-version: 1.16
 load: STARTUP
 

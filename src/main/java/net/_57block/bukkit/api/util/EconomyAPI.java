@@ -1,10 +1,7 @@
 package net._57block.bukkit.api.util;
 
-import net._57block.bukkit.api.BlockAPIPlugin;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -14,32 +11,7 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 public class EconomyAPI {
-    private static boolean vaultEnabled;
-    private static Economy economy;
-
-    /**
-     * 重载 Vault 经济系统挂接
-     */
-    public static void reloadEconomyHook() {
-        vaultEnabled = Bukkit.getPluginManager().isPluginEnabled("Vault");
-        if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
-            RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
-            if (economyProvider != null) {
-                economy = economyProvider.getProvider();
-                BlockAPIPlugin.getLogUtils().info("Vault 经济系统挂接成功!");
-                return;
-            }
-        }
-        BlockAPIPlugin.getLogUtils().warning("未检测到 Vault 经济系统...");
-    }
-
-    /**
-     * 返回服务器是否安装了 Vault 插件
-     *
-     * @return true 代表服务器已安装
-     */
-    public static boolean isSetupVault() {
-        return vaultEnabled;
+    private EconomyAPI() {
     }
 
     /**
@@ -48,16 +20,7 @@ public class EconomyAPI {
      * @return true代表安装了，false代表未安装
      */
     public static boolean isSetupEconomy() {
-        return vaultEnabled && economy != null;
-    }
-
-    /**
-     * 获取 economy 实例
-     *
-     * @return Vault Economy 实例
-     */
-    public static Economy getEconomy() {
-        return economy;
+        return VaultAPI.isSetupVault() && VaultAPI.getEconomy() != null;
     }
 
     /**
@@ -69,7 +32,7 @@ public class EconomyAPI {
      */
     public static boolean giveMoney(@NotNull final OfflinePlayer player, final double money) {
         if (isSetupEconomy()) {
-            return economy.depositPlayer(player, money).transactionSuccess();
+            return VaultAPI.getEconomy().depositPlayer(player, money).transactionSuccess();
         }
         return false;
     }
@@ -94,7 +57,7 @@ public class EconomyAPI {
      */
     public static boolean takeMoney(@NotNull final OfflinePlayer player, final double money) {
         if (isSetupEconomy()) {
-            return economy.withdrawPlayer(player, money).transactionSuccess();
+            return VaultAPI.getEconomy().withdrawPlayer(player, money).transactionSuccess();
         }
         return false;
     }
@@ -153,7 +116,7 @@ public class EconomyAPI {
         if (!isSetupEconomy()) {
             return Double.NaN;
         }
-        return economy.getBalance(player);
+        return VaultAPI.getEconomy().getBalance(player);
     }
 
     /**
@@ -179,7 +142,7 @@ public class EconomyAPI {
         if (!isSetupEconomy()) {
             return false;
         }
-        return economy.has(player, money);
+        return VaultAPI.getEconomy().has(player, money);
     }
 
     /**

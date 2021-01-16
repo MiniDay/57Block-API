@@ -7,9 +7,9 @@ import net._57block.bukkit.api.command.parameter.ParameterParserManager;
 import net._57block.bukkit.api.command.parameter.parser.*;
 import net._57block.bukkit.api.command.parameter.parser.bukkit.*;
 import net._57block.bukkit.api.listener.MainListener;
-import net._57block.bukkit.api.util.EconomyAPI;
 import net._57block.bukkit.api.util.LogUtils;
 import net._57block.bukkit.api.util.PointAPI;
+import net._57block.bukkit.api.util.VaultAPI;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
@@ -33,15 +33,15 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public final class BlockAPIPlugin extends JavaPlugin {
+public final class PluginMain extends JavaPlugin {
     private static LogUtils logUtils;
-    private static BlockAPIPlugin instance;
+    private static PluginMain instance;
 
     public static LogUtils getLogUtils() {
         return logUtils;
     }
 
-    public static BlockAPIPlugin getInstance() {
+    public static PluginMain getInstance() {
         return instance;
     }
 
@@ -63,7 +63,7 @@ public final class BlockAPIPlugin extends JavaPlugin {
         long startTime = System.currentTimeMillis();
 
         logUtils.info("==================================================");
-        EconomyAPI.reloadEconomyHook();
+        VaultAPI.reloadVaultHook();
         PointAPI.reloadPlayerPointAPIHook();
         logUtils.info("==================================================");
         initParameterParser();

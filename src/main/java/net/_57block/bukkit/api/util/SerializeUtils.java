@@ -5,7 +5,9 @@ import org.bukkit.block.BlockFace;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public abstract class SerializeUtils {
+public class SerializeUtils {
+    private SerializeUtils() {
+    }
 
     /**
      * 从字符串中反序列化一个 BlockFace 对象

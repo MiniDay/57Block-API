@@ -1,0 +1,103 @@
+title: "&a公会页面"
+
+graphic:
+  - "##1  234#"
+
+buttonIndex:
+  # （无公会时）寻找按钮的位置
+  search: '1'
+  # （会员时）公会主页按钮的位置
+  guild: '1'
+  # （无公会时）创建按钮的位置
+  create: '2'
+  # （会员时）退出公会按钮的位置
+  quit: '2'
+  # （会长时）解散公会的位置
+  dissolution: '2'
+  # 公会排行按钮位置
+  list: '3'
+  manage: '4'
+
+buttonType:
+  search: 's'
+  guild: 'g'
+  create: 'c'
+  quit: 'q'
+  dissolution: 'd'
+  list: 'l'
+  manage: 'm'
+
+items:
+  # gui展示物ID
+  '#':
+    ==: org.bukkit.inventory.ItemStack
+    type: STAINED_GLASS_PANE
+    damage: 4
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: "§c屏障"
+  's':
+    ==: org.bukkit.inventory.ItemStack
+    type: COMPASS
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: '寻找公会'
+      lore:
+        - '§a点击寻找公会'
+  'g':
+    ==: org.bukkit.inventory.ItemStack
+    type: WATCH
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: '公会主页'
+      lore:
+        - '§a点击进入公会主页'
+  'c':
+    ==: org.bukkit.inventory.ItemStack
+    type: LAVA_BUCKET
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: '创建公会'
+      lore:
+        - '§a点击创建公会'
+  'q':
+    ==: org.bukkit.inventory.ItemStack
+    type: COAL
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: '退出公会'
+      lore:
+        - '§a点击退出公会'
+  'd':
+    ==: org.bukkit.inventory.ItemStack
+    type: LEATHER
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: '解散公会'
+      lore:
+        - '§a点击解散公会'
+  'l':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOW
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: '公会列表'
+      lore:
+        - '§a点击查看公会排行'
+  'm':
+    ==: org.bukkit.inventory.ItemStack
+    type: COAL
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: '管理公会'
+      lore:
+        - '§a点击管理公会'
+

@@ -1,6 +1,6 @@
 package net._57block.bukkit.api.util;
 
-import net._57block.bukkit.api.BlockAPIPlugin;
+import net._57block.bukkit.api.PluginMain;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
@@ -13,17 +13,20 @@ import java.util.UUID;
 public class PointAPI {
     private static PlayerPointsAPI playerPointsAPI;
 
+    private PointAPI() {
+    }
+
     /**
      * 重载 PlayerPointAPI 点券系统挂接
      */
     public static void reloadPlayerPointAPIHook() {
         Plugin plugin = Bukkit.getPluginManager().getPlugin("PlayerPointAPI");
         if (plugin == null) {
-            BlockAPIPlugin.getLogUtils().warning("未检测到 PlayerPointAPI 插件...");
+            PluginMain.getLogUtils().warning("未检测到 PlayerPointAPI 插件...");
             return;
         }
         playerPointsAPI = ((PlayerPoints) plugin).getAPI();
-        BlockAPIPlugin.getLogUtils().info("PlayerPointAPI 挂接成功!");
+        PluginMain.getLogUtils().info("PlayerPointAPI 挂接成功!");
     }
 
     /**

@@ -1,6 +1,6 @@
 package net._57block.bukkit.api.command.executor;
 
-import net._57block.bukkit.api.BlockAPIPlugin;
+import net._57block.bukkit.api.PluginMain;
 import net._57block.bukkit.api.command.parameter.ParameterParser;
 import net._57block.bukkit.api.command.parameter.ParameterParserManager;
 import net._57block.bukkit.api.command.parameter.parser.EndParser;
@@ -130,7 +130,7 @@ public class CommandMethodInvoker {
             method.invoke(executor, objects);
             return true;
         } catch (IllegalAccessException | InvocationTargetException e) {
-            BlockAPIPlugin.getLogUtils().error(e, "在调用 %s 的命令方法 %s 时遇到了一个错误: ", executor.getClass(), method.getName());
+            PluginMain.getLogUtils().error(e, "在调用 %s 的命令方法 %s 时遇到了一个错误: ", executor.getClass(), method.getName());
         }
         return false;
     }

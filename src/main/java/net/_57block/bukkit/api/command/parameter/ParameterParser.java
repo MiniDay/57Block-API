@@ -69,12 +69,12 @@ public abstract class ParameterParser {
      */
     @Nullable
     public List<String> tabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args, @Nullable Location location, int index) {
-        List<String> list = onTabComplete(sender, command, label, args, location, index);
-        if (args.length - 1 == index) {
+        if (index == args.length - 1) {
+            List<String> list = onTabComplete(sender, command, label, args, location, index);
+            if (list == null || list.isEmpty()) {
+                return null;
+            }
             return list;
-        }
-        if (list == null || list.isEmpty()) {
-            return null;
         }
         if (index + 1 >= args.length) {
             return null;

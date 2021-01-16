@@ -1,6 +1,6 @@
 package net._57block.bukkit.api.command.executor;
 
-import net._57block.bukkit.api.BlockAPIPlugin;
+import net._57block.bukkit.api.PluginMain;
 import net._57block.bukkit.api.command.annotation.Command;
 import net._57block.bukkit.api.command.annotation.CommandExecutor;
 import net._57block.bukkit.api.util.StringUtils;
@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * API 生成的命令执行器
@@ -46,7 +47,7 @@ public class CommandHandler extends org.bukkit.command.Command {
         generatorClassInvokers(executor, new String[0], permissions);
 
         if (invokers.isEmpty()) {
-            BlockAPIPlugin.getLogUtils().warning("  命令执行器 %s 中没有扫描到任何命令执行方法! （忘记添加 @Command 了？）", executor.getClass().getSimpleName());
+            PluginMain.getLogUtils().warning("  命令执行器 %s 中没有扫描到任何命令执行方法! （忘记添加 @Command 了？）", executor.getClass().getSimpleName());
         }
     }
 
@@ -90,7 +91,7 @@ public class CommandHandler extends org.bukkit.command.Command {
      */
     private void generatorClassInvokers(@NotNull Object executor, @NotNull String[] addSubName, @NotNull String[] addPermission) {
         Class<?> executorClass = executor.getClass();
-        BlockAPIPlugin.getLogUtils().info("  扫描到命令执行器 %s", executorClass.getName());
+        PluginMain.getLogUtils().info("  扫描到命令执行器 %s", executorClass.getName());
 
         generatorMethodInvokers(executor, addSubName, addPermission);
 
@@ -100,10 +101,10 @@ public class CommandHandler extends org.bukkit.command.Command {
                 continue;
             }
             if (!Modifier.isStatic(innerClass.getModifiers())) {
-                BlockAPIPlugin.getLogUtils().info("  跳过非 static 修饰的内部类: %s", innerClass.getSimpleName());
+                PluginMain.getLogUtils().info("  跳过非 static 修饰的内部类: %s", innerClass.getSimpleName());
             }
             if (!Modifier.isPublic(innerClass.getModifiers())) {
-                BlockAPIPlugin.getLogUtils().info("  跳过非 public 修饰的内部类: %s", innerClass.getSimpleName());
+                PluginMain.getLogUtils().info("  跳过非 public 修饰的内部类: %s", innerClass.getSimpleName());
             }
 
             // 把 command 的 name 和 aliases 存入 commandNames 中
@@ -126,7 +127,7 @@ public class CommandHandler extends org.bukkit.command.Command {
                             permission.toArray(new String[0])
                     );
                 } catch (InstantiationException | IllegalAccessException e) {
-                    BlockAPIPlugin.getLogUtils().error(e, "构造内部类 %s 的实例时出现了一个错误: ");
+                    PluginMain.getLogUtils().error(e, "构造内部类 %s 的实例时出现了一个错误: ");
                 }
             }
         }
@@ -152,7 +153,7 @@ public class CommandHandler extends org.bukkit.command.Command {
             if (annotation == null) {
                 continue;
             }
-            BlockAPIPlugin.getLogUtils().info(
+            PluginMain.getLogUtils().info(
                     "    已读取方法 %s::%s(%s);",
                     executorClass.getSimpleName(),
                     method.getName(),
@@ -176,7 +177,7 @@ public class CommandHandler extends org.bukkit.command.Command {
                 );
                 invokers.add(invoker);
             } catch (Exception e) {
-                BlockAPIPlugin.getLogUtils().error(e, "  在构建命令执行器 %s 的命令 %s 时出现了一个错误: ", executorClass, method.getName());
+                PluginMain.getLogUtils().error(e, "  在构建命令执行器 %s 的命令 %s 时出现了一个错误: ", executorClass, method.getName());
             }
         }
     }
@@ -185,7 +186,7 @@ public class CommandHandler extends org.bukkit.command.Command {
     public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         long startTime = System.currentTimeMillis();
         runCommand(sender, label, args);
-        BlockAPIPlugin.getLogUtils().debug(
+        PluginMain.getLogUtils().debug(
                 "命令 [/%s %s] 执行完成，共计耗时: %d ms",
                 getName(),
                 StringUtils.join(args, " "),
@@ -223,7 +224,7 @@ public class CommandHandler extends org.bukkit.command.Command {
         if (list.size() > 10) {
             list = list.subList(0, 10);
         }
-        BlockAPIPlugin.getLogUtils().debug(
+        PluginMain.getLogUtils().debug(
                 "命令 [/%s %s] 的 tab 补全生成完成，共计耗时: %d ms",
                 getName(),
                 StringUtils.join(args, " "),
