@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class ButtonGroup {
     private final String name;
     private final PageConfig config;
@@ -77,7 +78,25 @@ public class ButtonGroup {
      * @return 按钮物品
      */
     public ItemStack getButton(String buttonName) {
-        return config.getButtonMap().get(buttonName);
+        ItemStack stack = config.getButtonMap().get(buttonName);
+        if (stack != null) {
+            stack = stack.clone();
+        }
+        return stack;
+    }
+
+    public int getButtonIndex(String buttonName) {
+        Character graphicKey = getGraphicKey(buttonName);
+        List<String> graphic = config.getGraphic();
+        for (int i = 0; i < graphic.size(); i++) {
+            char[] chars = graphic.get(i).toCharArray();
+            for (int j = 0; j < chars.length; j++) {
+                if (chars[j] == graphicKey) {
+                    return i * 9 + j;
+                }
+            }
+        }
+        return -1;
     }
 
     /**
@@ -86,14 +105,14 @@ public class ButtonGroup {
      * @param buttonName 按钮名称
      * @return 索引位置
      */
-    public ArrayList<Integer> getAllIndex(String buttonName) {
+    public ArrayList<Integer> getButtonAllIndex(String buttonName) {
         Character graphicKey = getGraphicKey(buttonName);
         List<String> graphic = config.getGraphic();
         ArrayList<Integer> integers = new ArrayList<>();
         for (int i = 0; i < graphic.size(); i++) {
-            String s = graphic.get(i);
-            for (int j = 0; j < s.length() && j < 9; j++) {
-                if (s.charAt(j) == graphicKey) {
+            char[] chars = graphic.get(i).toCharArray();
+            for (int j = 0; j < chars.length; j++) {
+                if (chars[j] == graphicKey) {
                     integers.add(i * 9 + j);
                 }
             }

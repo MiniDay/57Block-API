@@ -8,11 +8,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@SuppressWarnings("unused")
 public class PageConfig implements InventoryHolder {
     private final ConfigurationSection config;
 
@@ -59,10 +62,11 @@ public class PageConfig implements InventoryHolder {
 
         ButtonGroup group = getButtonGroup("default");
         for (int i = 0; i < graphic.size(); i++) {
-            String s = graphic.get(i);
-            for (int j = 0; j < Math.min(s.length(), 9); j++) {
+            char[] chars = graphic.get(i).toCharArray();
+            for (int j = 0; j < chars.length; j++) {
+                char c = chars[j];
                 int index = i * 9 + j;
-                inventory.setItem(index, group.getButton(getButtonKey(index)));
+                inventory.setItem(index, group.getButton(c));
             }
         }
     }
@@ -77,7 +81,7 @@ public class PageConfig implements InventoryHolder {
     }
 
     /**
-     * 获取 graphicKey
+     * 获取索引位置上的 graphicKey
      *
      * @param index 索引
      * @return 若超出 graphic 范围则返回 null
@@ -87,6 +91,25 @@ public class PageConfig implements InventoryHolder {
         if (index / 9 >= graphic.size()) return null;
         String s = graphic.get(index / 9);
         return s.charAt(index % 9);
+    }
+
+    /**
+     * 获取该显示物品对应的 buttonName
+     *
+     * @param stack 显示物品
+     * @return 按钮名称，若无法找到则返回 "empty"
+     */
+    @NotNull
+    public String getButtonName(@Nullable ItemStack stack) {
+        if (stack == null) {
+            return "empty";
+        }
+        for (Map.Entry<String, ItemStack> entry : buttonMap.entrySet()) {
+            if (entry.getValue().isSimilar(stack)) {
+                return entry.getKey();
+            }
+        }
+        return "empty";
     }
 
     @NotNull

@@ -1,10 +1,16 @@
-package net.airgame.bukkit.api.gui;
+package net.airgame.bukkit.api.gui.holder;
 
+import net.airgame.bukkit.api.gui.ButtonGroup;
+import net.airgame.bukkit.api.gui.PageConfig;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 
 import java.util.List;
 
+/**
+ * 固定页面的 GUI
+ */
+@SuppressWarnings("unused")
 public class FixedPage extends PageHolder {
     public FixedPage(PageConfig config, HumanEntity player) {
         super(config, player);
@@ -20,8 +26,7 @@ public class FixedPage extends PageHolder {
 
         List<String> graphic = config.getGraphic();
         for (int i = 0; i < graphic.size(); i++) {
-            String s = graphic.get(i);
-            char[] chars = s.toCharArray();
+            char[] chars = graphic.get(i).toCharArray();
             for (int j = 0; j < chars.length; j++) {
                 char c = chars[j];
                 int index = i * 9 + j;

@@ -13,7 +13,7 @@ buttonGroups:
   default:
     # 字符: 按钮名称
     '#': "barrier"
-    '1': "guild"
+    '1': "element"
     '<': "preview"
     '>': "next"
 

@@ -1,13 +1,21 @@
-package net.airgame.bukkit.api.gui;
+package net.airgame.bukkit.api.gui.holder;
 
+import net.airgame.bukkit.api.gui.ButtonGroup;
+import net.airgame.bukkit.api.gui.PageConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * GUI
+ */
+@SuppressWarnings("unused")
 public abstract class PageHolder implements InventoryHolder {
     private final PageConfig pageConfig;
     private final HumanEntity player;
@@ -19,27 +27,31 @@ public abstract class PageHolder implements InventoryHolder {
         this.player = player;
         buttonGroup = pageConfig.getButtonGroup(player);
         inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), pageConfig.getTitle());
-        initPage();
     }
 
     public abstract void initPage();
 
-    public void onClick(InventoryClickEvent event) {
-        int rawSlot = event.getRawSlot();
-        if (rawSlot < 0) {
-            return;
-        }
-
+    public void onOpen(InventoryOpenEvent event) {
     }
 
-    public void onClickInside(int index) {
+    public void onClick(InventoryClickEvent event) {
+        event.setCancelled(true);
+    }
 
+    public void onClickInside(InventoryClickEvent event) {
+    }
+
+    public void onClose(InventoryCloseEvent event) {
+    }
+
+    public void onClickButton(int index) {
     }
 
     public void onClickButton(String buttonName) {
     }
 
     public InventoryView show() {
+        initPage();
         return player.openInventory(getInventory());
     }
 
