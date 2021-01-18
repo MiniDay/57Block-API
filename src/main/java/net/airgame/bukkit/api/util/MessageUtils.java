@@ -1,19 +1,20 @@
 package net.airgame.bukkit.api.util;
 
-import org.bukkit.Bukkit;
+import net.md_5.bungee.api.chat.*;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+@SuppressWarnings("unused")
 public class MessageUtils {
-    private static final String nmsVersion;
     private static final boolean useOldMethods;
 
     static {
-        nmsVersion = Bukkit.getServer().getClass().getName().split("\\.")[3];
-        useOldMethods = nmsVersion.equalsIgnoreCase("v1_8_R1") || nmsVersion.startsWith("v1_7_");
+        useOldMethods = AirUtils.nmsVersion.equalsIgnoreCase("v1_8_R1") || AirUtils.nmsVersion.startsWith("v1_7_");
     }
 
     /**
@@ -22,8 +23,8 @@ public class MessageUtils {
      * @param player  玩家
      * @param message 要发送的消息
      */
-    @SuppressWarnings("SpellCheckingInspection")
     public static void sendActionBar(@NotNull Player player, @NotNull String message) {
+        String nmsVersion = AirUtils.nmsVersion;
         if (!player.isOnline()) {
             return;
         }
@@ -67,5 +68,57 @@ public class MessageUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    public static TextComponent getItemDisplayInfo(String startText, ItemStack stack, String endText) {
+        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ITEM, getItemInfo(stack));
+
+        TextComponent startComponent = new TextComponent(startText);
+        startComponent.setHoverEvent(hoverEvent);
+        TextComponent endComponent = new TextComponent(endText);
+        endComponent.setHoverEvent(hoverEvent);
+
+        BaseComponent itemComponent = getItemNameComponent(stack);
+        itemComponent.setHoverEvent(hoverEvent);
+
+        return new TextComponent(
+                new ComponentBuilder()
+                        .append(startComponent)
+                        .append(itemComponent)
+                        .append(endComponent)
+                        .create()
+        );
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public static BaseComponent getItemNameComponent(ItemStack stack) {
+        if (ItemUtils.isEmptyItemStack(stack)) {
+            return new TranslatableComponent("block.minecraft.air");
+        } else if (stack.hasItemMeta() && stack.getItemMeta().hasDisplayName()) {
+            return new TextComponent(ItemUtils.getItemName(stack));
+        }
+        Material type = stack.getType();
+        if (type.isBlock()) {
+            return new TranslatableComponent("block.minecraft." + type.name().toLowerCase());
+        } else {
+            return new TranslatableComponent("item.minecraft." + type.name().toLowerCase());
+        }
+    }
+
+    public static BaseComponent[] getItemInfo(ItemStack stack) {
+        try {
+            Class<?> nBTTagCompound = Class.forName("net.minecraft.server." + AirUtils.nmsVersion + ".NBTTagCompound");
+            Object nBTTag = nBTTagCompound.newInstance();
+            Class<?> craftItemStack = Class.forName("org.bukkit.craftbukkit." + AirUtils.nmsVersion + ".inventory.CraftItemStack");
+            Method asNMSCopy = craftItemStack.getMethod("asNMSCopy", ItemStack.class);
+            Object nmsItem = asNMSCopy.invoke(null, stack);
+            Method saveMethod = nmsItem.getClass().getMethod("save", nBTTagCompound);
+            saveMethod.invoke(nmsItem, nBTTag);
+            return new ComponentBuilder(nBTTag.toString()).create();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ComponentBuilder("物品解析失败").create();
     }
 }
