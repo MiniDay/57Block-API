@@ -121,6 +121,10 @@ public abstract class PageableHolder<E extends PageElement> extends PageHolder {
     public void onClickButton(int index) {
     }
 
+    public int getPage() {
+        return page;
+    }
+
     @NotNull
     public HashMap<Integer, E> getElementSlot() {
         return elementSlot;
