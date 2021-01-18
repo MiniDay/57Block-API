@@ -1,9 +1,15 @@
 package net.airgame.bukkit.api.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.UUID;
+
+@SuppressWarnings("unused")
 public class ItemUtils {
     /**
      * 判断物品是否为空
@@ -39,5 +45,63 @@ public class ItemUtils {
             }
         }
         return stack.getType().name();
+    }
+
+    /**
+     * 获取玩家的头颅
+     * 在1.11以上的服务端中获取头颅材质是在服务器上运行的
+     * 因此建议使用异步线程调用该方法
+     *
+     * @param uuid 要获取的玩家
+     * @return 玩家的头颅物品
+     */
+    public static ItemStack getPlayerHead(UUID uuid) {
+        return getPlayerHead(Bukkit.getOfflinePlayer(uuid));
+    }
+
+    /**
+     * 获取玩家的头颅
+     * 在1.11以上的服务端中获取头颅材质是在服务器上运行的
+     * 因此建议使用异步线程调用该方法
+     *
+     * @param offlinePlayer 要获取的玩家
+     * @return 玩家的头颅物品
+     */
+    @SuppressWarnings("deprecation")
+    public static ItemStack getPlayerHead(OfflinePlayer offlinePlayer) {
+        ItemStack stack;
+        try {
+            stack = new ItemStack(Material.valueOf("PLAYER_HEAD"));
+        } catch (IllegalArgumentException e) {
+            stack = new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
+        }
+        SkullMeta meta = (SkullMeta) stack.getItemMeta();
+        if (meta != null) {
+            meta.setOwningPlayer(offlinePlayer);
+        }
+        stack.setItemMeta(meta);
+        return stack;
+    }
+
+    /**
+     * 获取玩家的头颅
+     * 在1.11以上的服务端中获取头颅材质是在服务器上运行的
+     * 因此建议使用异步线程调用该方法
+     *
+     * @param name 要获取的玩家
+     * @return 玩家的头颅物品
+     */
+    @SuppressWarnings({"ConstantConditions", "deprecation"})
+    public static ItemStack getPlayerHead(String name) {
+        ItemStack stack;
+        try {
+            stack = new ItemStack(Material.valueOf("PLAYER_HEAD"));
+        } catch (IllegalArgumentException e) {
+            stack = new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
+        }
+        SkullMeta meta = (SkullMeta) stack.getItemMeta();
+        meta.setOwner(name);
+        stack.setItemMeta(meta);
+        return stack;
     }
 }
