@@ -32,18 +32,22 @@ public abstract class PageableHolder<E extends PageElement> extends PageHolder {
 
     public abstract void showPreviewPage();
 
+    @NotNull
     public abstract ArrayList<E> getPageElements();
 
     public abstract void onClickElement(@NotNull InventoryClickEvent event, @NotNull E element);
 
+    @NotNull
     public String getElementButtonName() {
         return "element";
     }
 
+    @NotNull
     public String getPreviewButtonName() {
         return "preview";
     }
 
+    @NotNull
     public String getNextButtonName() {
         return "next";
     }
@@ -117,6 +121,7 @@ public abstract class PageableHolder<E extends PageElement> extends PageHolder {
     public void onClickButton(int index) {
     }
 
+    @NotNull
     public HashMap<Integer, E> getElementSlot() {
         return elementSlot;
     }
