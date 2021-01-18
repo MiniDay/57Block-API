@@ -143,7 +143,9 @@ public class DisplayMessage implements ConfigurationSerializable {
                     s1 = s1.replace(key, replace.get(key));
                 }
             }
-            s1 = PlaceholderAPI.setPlaceholders(player, s1);
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                s1 = PlaceholderAPI.setPlaceholders(player, s1);
+            }
             player.sendMessage(s1);
         }
 
@@ -154,7 +156,9 @@ public class DisplayMessage implements ConfigurationSerializable {
                         sendMessage = sendMessage.replace(key, replace.get(key));
                     }
                 }
-                sendMessage = PlaceholderAPI.setPlaceholders(player, sendMessage);
+                if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                    sendMessage = PlaceholderAPI.setPlaceholders(player, sendMessage);
+                }
                 player.sendMessage(sendMessage);
             }
         }
@@ -166,7 +170,9 @@ public class DisplayMessage implements ConfigurationSerializable {
                     s1 = s1.replace(key, replace.get(key));
                 }
             }
-            s1 = PlaceholderAPI.setPlaceholders(player, s1);
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                s1 = PlaceholderAPI.setPlaceholders(player, s1);
+            }
             MessageUtils.sendActionBar(player, s1);
         }
 
@@ -179,8 +185,10 @@ public class DisplayMessage implements ConfigurationSerializable {
                     s2 = s2.replace(key, replace.get(key));
                 }
             }
-            s1 = PlaceholderAPI.setPlaceholders(player, s1);
-            s2 = PlaceholderAPI.setPlaceholders(player, s2);
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                s1 = PlaceholderAPI.setPlaceholders(player, s1);
+                s2 = PlaceholderAPI.setPlaceholders(player, s2);
+            }
             player.sendTitle(s1, s2, fadeIn, stay, fadeOut);
         }
 
@@ -195,8 +203,10 @@ public class DisplayMessage implements ConfigurationSerializable {
                     s1 = s1.replace(key, replace.get(key));
                 }
             }
-
-            BossBar bossBar = Bukkit.createBossBar(PlaceholderAPI.setPlaceholders(player, s1), barColor, barStyle);
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                s1 = PlaceholderAPI.setPlaceholders(player, s1);
+            }
+            BossBar bossBar = Bukkit.createBossBar(s1, barColor, barStyle);
             bossBar.addPlayer(player);
 
             if (bossBarTime > 0) {
@@ -209,7 +219,11 @@ public class DisplayMessage implements ConfigurationSerializable {
                                 s = s.replace(key, replace.get(key));
                             }
                         }
-                        bossBar.setTitle(PlaceholderAPI.setPlaceholders(player, s));
+
+                        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                            s = PlaceholderAPI.setPlaceholders(player, s);
+                        }
+                        bossBar.setTitle(s);
 
                         double v = (double) tick / bossBarTime;
                         bossBar.setProgress(v);

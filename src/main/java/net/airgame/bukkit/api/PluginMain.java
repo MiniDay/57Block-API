@@ -6,7 +6,7 @@ import net.airgame.bukkit.api.command.executor.CommandHandler;
 import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.*;
-import net.airgame.bukkit.api.listener.MainListener;
+import net.airgame.bukkit.api.listener.PluginHookListener;
 import net.airgame.bukkit.api.util.LogUtils;
 import net.airgame.bukkit.api.util.api.PointAPI;
 import net.airgame.bukkit.api.util.api.VaultAPI;
@@ -72,7 +72,7 @@ public final class PluginMain extends JavaPlugin {
         logUtils.info("==================================================");
         initCommand();
         logUtils.info("==================================================");
-        Bukkit.getPluginManager().registerEvents(new MainListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PluginHookListener(), this);
 
         logUtils.info("插件启动完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
     }

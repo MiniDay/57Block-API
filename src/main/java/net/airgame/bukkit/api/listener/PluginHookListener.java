@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 
-public class MainListener implements Listener {
+public class PluginHookListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPluginEnable(PluginEnableEvent event) {
         VaultAPI.reloadVaultHook();

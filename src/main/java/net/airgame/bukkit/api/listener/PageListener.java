@@ -42,10 +42,6 @@ public class PageListener implements Listener {
             return;
         }
         handler.onClickButton(index);
-        if (event.isCancelled()) {
-            return;
-        }
-        handler.onClickButton(handler.getButtonGroup().getButtonName(index));
     }
 
     @EventHandler

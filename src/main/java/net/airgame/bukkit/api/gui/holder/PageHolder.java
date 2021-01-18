@@ -22,7 +22,7 @@ public abstract class PageHolder implements InventoryHolder {
     private final ButtonGroup buttonGroup;
     private final Inventory inventory;
 
-    public PageHolder(PageConfig pageConfig, HumanEntity player) {
+    public PageHolder(@NotNull PageConfig pageConfig, @NotNull HumanEntity player) {
         this.pageConfig = pageConfig;
         this.player = player;
         buttonGroup = pageConfig.getButtonGroup(player);
@@ -31,23 +31,20 @@ public abstract class PageHolder implements InventoryHolder {
 
     public abstract void initPage();
 
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
     }
 
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         event.setCancelled(true);
     }
 
-    public void onClickInside(InventoryClickEvent event) {
+    public void onClickInside(@NotNull InventoryClickEvent event) {
     }
 
-    public void onClose(InventoryCloseEvent event) {
+    public void onClose(@NotNull InventoryCloseEvent event) {
     }
 
     public void onClickButton(int index) {
-    }
-
-    public void onClickButton(String buttonName) {
     }
 
     public InventoryView show() {
@@ -55,14 +52,17 @@ public abstract class PageHolder implements InventoryHolder {
         return player.openInventory(getInventory());
     }
 
+    @NotNull
     public PageConfig getPageConfig() {
         return pageConfig;
     }
 
+    @NotNull
     public HumanEntity getPlayer() {
         return player;
     }
 
+    @NotNull
     public ButtonGroup getButtonGroup() {
         return buttonGroup;
     }

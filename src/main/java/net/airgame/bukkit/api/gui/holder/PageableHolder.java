@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,18 +23,18 @@ public abstract class PageableHolder<E extends PageElement> extends PageHolder {
     private final int page;
     private HashMap<Integer, E> elementSlot;
 
-    public PageableHolder(PageConfig pageConfig, HumanEntity player) {
-        this(pageConfig, player, 0);
-    }
-
-    public PageableHolder(PageConfig pageConfig, HumanEntity player, int page) {
+    public PageableHolder(@NotNull PageConfig pageConfig, @NotNull HumanEntity player, int page) {
         super(pageConfig, player);
         this.page = page;
     }
 
+    public abstract void showNextPage();
+
+    public abstract void showPreviewPage();
+
     public abstract ArrayList<E> getPageElements();
 
-    public abstract void onClickElement(InventoryClickEvent event, E element);
+    public abstract void onClickElement(@NotNull InventoryClickEvent event, @NotNull E element);
 
     public String getElementButtonName() {
         return "element";
@@ -95,13 +96,25 @@ public abstract class PageableHolder<E extends PageElement> extends PageHolder {
     }
 
     @Override
-    public void onClickInside(InventoryClickEvent event) {
+    public void onClickInside(@NotNull InventoryClickEvent event) {
         int slot = event.getSlot();
         E e = elementSlot.get(slot);
-        if (e == null) {
+        if (e != null) {
+            onClickElement(event, e);
             return;
         }
-        onClickElement(event, e);
+        String name = getPageConfig().getButtonName(event.getCurrentItem());
+        if (name.equalsIgnoreCase(getNextButtonName())) {
+            showNextPage();
+            return;
+        }
+        if (name.equalsIgnoreCase(getPreviewButtonName())) {
+            showPreviewPage();
+        }
+    }
+
+    @Override
+    public void onClickButton(int index) {
     }
 
     public HashMap<Integer, E> getElementSlot() {
