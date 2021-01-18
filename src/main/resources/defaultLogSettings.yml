@@ -1,6 +1,6 @@
 # 是否启用插件自带的日志器
 # 启用将会把日志打印到控制台上
-usePluginLogger: false
+usePluginLogger: true
 
 # 是否启用调试信息输出
 debug: false
