@@ -28,9 +28,9 @@ public abstract class PageableHolder<E extends PageElement> extends PageHolder {
         this.page = page;
     }
 
-    public abstract void showNextPage();
-
     public abstract void showPreviewPage();
+
+    public abstract void showNextPage();
 
     @NotNull
     public abstract ArrayList<E> getPageElements();
