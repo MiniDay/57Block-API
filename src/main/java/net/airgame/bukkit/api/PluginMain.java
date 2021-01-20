@@ -4,8 +4,10 @@ import net.airgame.bukkit.api.command.annotation.CommandScan;
 import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.*;
+import net.airgame.bukkit.api.data.DisplayMessage;
 import net.airgame.bukkit.api.listener.PluginHookListener;
 import net.airgame.bukkit.api.manager.CommandManager;
+import net.airgame.bukkit.api.manager.PersistenceManager;
 import net.airgame.bukkit.api.util.LogUtils;
 import net.airgame.bukkit.api.util.api.PointAPI;
 import net.airgame.bukkit.api.util.api.VaultAPI;
@@ -14,10 +16,12 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import sun.applet.AppletClassLoader;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -48,6 +52,8 @@ public final class PluginMain extends JavaPlugin {
         long startTime = System.currentTimeMillis();
         instance = this;
 
+        ConfigurationSerialization.registerClass(DisplayMessage.class);
+
         initLogUtil();
         logUtils.info("==================================================");
         loadLibraries();
@@ -56,6 +62,10 @@ public final class PluginMain extends JavaPlugin {
         logUtils.info("==================================================");
         initParameterParser();
         logUtils.info("==================================================");
+        saveDefaultConfig();
+        reloadConfig();
+        saveDefaultFile("sql.properties");
+        PersistenceManager.init();
 
         logUtils.info("插件载入完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
     }
@@ -109,25 +119,27 @@ public final class PluginMain extends JavaPlugin {
      */
     private void loadLibraries() {
         logUtils.info("开始加载第三方库.");
+        File libFolder = new File(getDataFolder(), "libs");
+        if (libFolder.mkdirs()) {
+            logUtils.info("创建第三方库存放文件夹...");
+        }
+        File[] files = libFolder.listFiles();
+        if (files == null) {
+            return;
+        }
+
+        ClassLoader loader = getClassLoader();
         try {
-            ClassLoader loader = getClassLoader();
             Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
             method.setAccessible(true);
-            File libFolder = new File(getDataFolder(), "libs");
-            if (libFolder.mkdirs()) {
-                logUtils.info("创建第三方库存放文件夹...");
-            }
-            File[] files = libFolder.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    String fileName = file.getName();
-                    if (!fileName.endsWith(".jar")) {
-                        logUtils.warning("跳过加载非 jar 拓展名的第三方库: %s", fileName);
-                        continue;
-                    }
-                    method.invoke(loader, file.toURI().toURL());
-                    logUtils.info("已加载第三方库: %s", fileName);
+            for (File file : files) {
+                String fileName = file.getName();
+                if (!fileName.endsWith(".jar")) {
+                    logUtils.warning("跳过加载非 jar 拓展名的第三方库: %s", fileName);
+                    continue;
                 }
+                method.invoke(loader, file.toURI().toURL());
+                logUtils.info("已加载第三方库: %s", fileName);
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | MalformedURLException e) {
             logUtils.error(e, "加载第三方库时遇到了一个错误: ");
@@ -247,6 +259,18 @@ public final class PluginMain extends JavaPlugin {
             }
         }
         logUtils.info("命令注册完成.");
+    }
+
+    private void saveDefaultFile(String name) {
+        if (getDataFolder().mkdirs()) {
+            logUtils.info("创建插件存档文件夹...");
+        }
+        File file = new File(getDataFolder(), name);
+        if (file.exists()) {
+            return;
+        }
+        saveResource(name, true);
+        logUtils.info("复制默认文件 %s 至插件存档文件夹...", name);
     }
 
 }
