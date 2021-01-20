@@ -102,10 +102,22 @@ public class DisplayMessage implements ConfigurationSerializable {
     /**
      * 展示这条消息
      *
+     * @param sender 展示对象
+     */
+    public BossBar show(@NotNull CommandSender sender) {
+        return show(sender, null);
+    }
+
+    /**
+     * 展示这条消息
+     *
      * @param sender  展示对象
      * @param replace 替换文本信息
      */
-    public void show(@NotNull CommandSender sender, @Nullable Map<String, String> replace) {
+    public BossBar show(@NotNull CommandSender sender, @Nullable Map<String, String> replace) {
+        if (sender instanceof Player) {
+            return show((Player) sender, replace);
+        }
         if (message != null) {
             String sendMessage = message;
             if (replace != null) {
@@ -125,6 +137,7 @@ public class DisplayMessage implements ConfigurationSerializable {
                 sender.sendMessage(sendMessage);
             }
         }
+        return null;
     }
 
     /**
@@ -134,7 +147,7 @@ public class DisplayMessage implements ConfigurationSerializable {
      * @param replace 替换文本信息
      * @return 这个 show 所创建的 BossBar，如果没有设置 BossBar 消息则返回 null
      */
-    public BossBar show(@NotNull Player player, @Nullable Map<String, String> replace) {
+    private BossBar show(@NotNull Player player, @Nullable Map<String, String> replace) {
         String s1, s2;
         if (message != null) {
             s1 = message;
@@ -238,21 +251,6 @@ public class DisplayMessage implements ConfigurationSerializable {
             return bossBar;
         }
         return null;
-    }
-
-    /**
-     * 展示这条消息给一些玩家
-     *
-     * @param players 玩家集合
-     * @param replace 替换文本信息
-     * @return 这个 show 所创建的 BossBar，如果没有设置 BossBar 消息则返回 null
-     */
-    public ArrayList<BossBar> show(@NotNull List<Player> players, @Nullable Map<String, String> replace) {
-        ArrayList<BossBar> bars = new ArrayList<>();
-        for (Player player : players) {
-            bars.add(show(player, replace));
-        }
-        return bars;
     }
 
     /**
@@ -426,16 +424,6 @@ public class DisplayMessage implements ConfigurationSerializable {
          */
         public BossBar show(@NotNull Player player) {
             return DisplayMessage.this.show(player, replace);
-        }
-
-        /**
-         * 展示这条消息给一些玩家
-         *
-         * @param players 玩家集合
-         * @return 这个 show 所创建的 BossBar，如果没有设置 BossBar 消息则返回 null
-         */
-        public ArrayList<BossBar> show(@NotNull List<Player> players) {
-            return DisplayMessage.this.show(players, replace);
         }
 
         /**

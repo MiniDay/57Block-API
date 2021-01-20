@@ -1,12 +1,11 @@
 package net.airgame.bukkit.api;
 
-import net.airgame.bukkit.api.command.annotation.CommandExecutor;
 import net.airgame.bukkit.api.command.annotation.CommandScan;
-import net.airgame.bukkit.api.command.executor.CommandHandler;
 import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.*;
 import net.airgame.bukkit.api.listener.PluginHookListener;
+import net.airgame.bukkit.api.manager.CommandManager;
 import net.airgame.bukkit.api.util.LogUtils;
 import net.airgame.bukkit.api.util.api.PointAPI;
 import net.airgame.bukkit.api.util.api.VaultAPI;
@@ -14,17 +13,14 @@ import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -56,6 +52,10 @@ public final class PluginMain extends JavaPlugin {
         logUtils.info("==================================================");
         loadLibraries();
         logUtils.info("==================================================");
+        CommandManager.init(getClassLoader());
+        logUtils.info("==================================================");
+        initParameterParser();
+        logUtils.info("==================================================");
 
         logUtils.info("插件载入完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
     }
@@ -68,11 +68,9 @@ public final class PluginMain extends JavaPlugin {
         VaultAPI.reloadVaultHook();
         PointAPI.reloadPlayerPointAPIHook();
         logUtils.info("==================================================");
-        initParameterParser();
-        logUtils.info("==================================================");
         initCommand();
         logUtils.info("==================================================");
-        Bukkit.getPluginManager().registerEvents(new PluginHookListener(), this);
+        Bukkit.getScheduler().runTask(this, () -> Bukkit.getPluginManager().registerEvents(new PluginHookListener(), PluginMain.this));
 
         logUtils.info("插件启动完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
     }
@@ -178,23 +176,8 @@ public final class PluginMain extends JavaPlugin {
      * 初始化命令
      */
     private void initCommand() {
-        logUtils.info("开始初始化命令管理器.");
+        logUtils.info("开始注册命令.");
 
-        ClassLoader classLoader = getClassLoader();
-        SimpleCommandMap commandMap;
-        Method findClassMethod;
-
-        try {
-            SimplePluginManager manager = (SimplePluginManager) Bukkit.getPluginManager();
-            Field commandMapField = SimplePluginManager.class.getDeclaredField("commandMap");
-            commandMapField.setAccessible(true);
-            commandMap = (SimpleCommandMap) commandMapField.get(manager);
-            findClassMethod = classLoader.getClass().getDeclaredMethod("findClass", String.class);
-            findClassMethod.setAccessible(true);
-        } catch (Exception e) {
-            logUtils.error(e, "初始化命令管理器时遇到了一个错误: ");
-            return;
-        }
 
         ArrayList<String> scanPackages = new ArrayList<>();
         for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
@@ -255,21 +238,15 @@ public final class PluginMain extends JavaPlugin {
             logUtils.info("开始扫描插件 %s", plugin.getName());
             for (String className : classNames) {
                 try {
-                    Class<?> clazz = (Class<?>) findClassMethod.invoke(classLoader, className);
-                    CommandExecutor annotation = clazz.getAnnotation(CommandExecutor.class);
-                    if (annotation == null) {
-                        continue;
-                    }
-                    CommandHandler handler = CommandHandler.generatorCommandHandler(clazz);
-                    commandMap.register(plugin.getName(), handler);
-//                    handler.register(commandMap);
+                    CommandManager.registerCommand(plugin, className);
+                } catch (IllegalAccessException e) {
+                    PluginMain.getLogUtils().debug("扫描到类 %s 没有添加 CommandExecutor 注解, 取消注册该类命令!", className);
                 } catch (Exception | Error e) {
-                    logUtils.error(e, "初始化插件 %s 的命令管理器 %s 时遇到了一个错误: ", plugin.getName(), className);
+                    logUtils.error(e, "在为插件 %s 注册命令 %s 时遇到了一个错误: ", plugin.getName(), className);
                 }
-
             }
         }
-        logUtils.info("命令管理器初始化完成.");
+        logUtils.info("命令注册完成.");
     }
 
 }
