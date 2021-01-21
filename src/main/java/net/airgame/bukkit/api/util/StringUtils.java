@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 字符串工具
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class StringUtils {
 
     private StringUtils() {
@@ -113,6 +113,7 @@ public class StringUtils {
         return string.toLowerCase().endsWith(end.toLowerCase());
     }
 
+    @NotNull
     public static ArrayList<String> startsWith(@NotNull Iterable<String> strings, @NotNull String start) {
         ArrayList<String> list = new ArrayList<>();
         for (String string : strings) {
@@ -123,6 +124,7 @@ public class StringUtils {
         return list;
     }
 
+    @NotNull
     public static ArrayList<String> endsWith(@NotNull Iterable<String> strings, @NotNull String end) {
         ArrayList<String> list = new ArrayList<>();
         for (String string : strings) {
@@ -133,6 +135,7 @@ public class StringUtils {
         return list;
     }
 
+    @NotNull
     public static ArrayList<String> startsWithIgnoreCase(@NotNull Iterable<String> strings, @NotNull String start) {
         ArrayList<String> list = new ArrayList<>();
         for (String string : strings) {
@@ -143,6 +146,7 @@ public class StringUtils {
         return list;
     }
 
+    @NotNull
     public static ArrayList<String> endsWithIgnoreCase(@NotNull Iterable<String> strings, @NotNull String end) {
         ArrayList<String> list = new ArrayList<>();
         for (String string : strings) {
@@ -153,10 +157,12 @@ public class StringUtils {
         return list;
     }
 
+    @NotNull
     public static String join(@NotNull Object[] array, @NotNull String separator) {
         return join(array, separator, 0, array.length);
     }
 
+    @NotNull
     public static String join(@NotNull Object[] array, @NotNull String separator, int startIndex, int endIndex) {
         if (endIndex - startIndex <= 0) {
             return "";
@@ -173,10 +179,12 @@ public class StringUtils {
         return builder.toString();
     }
 
+    @NotNull
     public static String join(@NotNull Iterable<?> iterable, @NotNull String separator) {
         return join(iterable.iterator(), separator);
     }
 
+    @NotNull
     public static String join(@NotNull Iterator<?> iterator, @NotNull String separator) {
         if (!iterator.hasNext()) {
             return "";
