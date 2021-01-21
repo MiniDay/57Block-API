@@ -37,11 +37,8 @@ public class PageListener implements Listener {
         if (index != event.getSlot()) {
             return;
         }
-        handler.onClickInside(event);
-        if (event.isCancelled()) {
-            return;
-        }
         handler.onClickButton(index);
+        handler.onClickInside(event);
     }
 
     @EventHandler

@@ -34,17 +34,17 @@ public abstract class PageHolder implements InventoryHolder {
     public void onOpen(@NotNull InventoryOpenEvent event) {
     }
 
+    public void onClickButton(int index) {
+    }
+
     public void onClick(@NotNull InventoryClickEvent event) {
-        event.setCancelled(true);
     }
 
     public void onClickInside(@NotNull InventoryClickEvent event) {
+        event.setCancelled(true);
     }
 
     public void onClose(@NotNull InventoryCloseEvent event) {
-    }
-
-    public void onClickButton(int index) {
     }
 
     public InventoryView show() {

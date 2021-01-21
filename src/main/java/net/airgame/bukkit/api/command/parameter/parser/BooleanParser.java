@@ -18,8 +18,8 @@ public class BooleanParser extends ParameterParser {
         if (index + 1 > args.length) {
             return false;
         }
-        Boolean b = SerializeUtils.deserializeBoolean(args[index], false);
-        if (getNext().parser(parameters, sender, command, label, args, index + 1)) {
+        Boolean b = SerializeUtils.deserializeBoolean(args[index]);
+        if (b != null && getNext().parser(parameters, sender, command, label, args, index + 1)) {
             parameters.push(b);
             return true;
         }
