@@ -15,7 +15,9 @@ public interface PageElement {
 
     List<String> replaceLore(HumanEntity player, List<String> lore);
 
-    void replaceItem(ItemStack stack);
+    default void replaceMeta(ItemMeta meta) {
+    }
 
-    void replaceMeta(ItemMeta meta);
+    default void replaceItem(ItemStack stack) {
+    }
 }

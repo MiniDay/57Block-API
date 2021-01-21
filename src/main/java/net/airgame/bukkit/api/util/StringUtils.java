@@ -6,13 +6,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * 字符串工具
  */
 @SuppressWarnings("unused")
 public class StringUtils {
-    public static final String EMPTY = "";
 
     private StringUtils() {
     }
@@ -80,6 +80,31 @@ public class StringUtils {
         return list;
     }
 
+    @NotNull
+    public static String[] replaceStringList(@NotNull String[] strings, @NotNull String key, @NotNull String value) {
+        for (int i = 0; i < strings.length; i++) {
+            strings[i] = strings[i].replace(key, value);
+        }
+        return strings;
+    }
+
+    @NotNull
+    public static List<String> replaceStringList(@NotNull Iterable<String> strings, @NotNull String key, @NotNull String value) {
+        ArrayList<String> list = new ArrayList<>();
+        for (String s : strings) {
+            list.add(s.replace(key, value));
+        }
+        return list;
+    }
+
+    @NotNull
+    public static List<String> replaceStringList(@NotNull List<String> strings, @NotNull String key, @NotNull String value) {
+        for (int i = 0; i < strings.size(); i++) {
+            strings.set(i, strings.get(i).replace(key, value));
+        }
+        return strings;
+    }
+
     public static boolean startsWithIgnoreCase(@NotNull String string, @NotNull String start) {
         return string.toLowerCase().startsWith(start.toLowerCase());
     }
@@ -134,7 +159,7 @@ public class StringUtils {
 
     public static String join(@NotNull Object[] array, @NotNull String separator, int startIndex, int endIndex) {
         if (endIndex - startIndex <= 0) {
-            return EMPTY;
+            return "";
         }
 
         StringBuilder builder = new StringBuilder();
@@ -154,7 +179,7 @@ public class StringUtils {
 
     public static String join(@NotNull Iterator<?> iterator, @NotNull String separator) {
         if (!iterator.hasNext()) {
-            return EMPTY;
+            return "";
         }
         Object first = iterator.next();
         if (!iterator.hasNext()) {
