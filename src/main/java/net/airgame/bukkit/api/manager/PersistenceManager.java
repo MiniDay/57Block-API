@@ -2,7 +2,6 @@ package net.airgame.bukkit.api.manager;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.util.UtilityElf;
 import net.airgame.bukkit.api.PluginMain;
 
 import javax.sql.DataSource;

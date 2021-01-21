@@ -16,7 +16,6 @@ import java.io.IOException;
         name = "yaml",
         permission = "airGame.admin"
 )
-@SuppressWarnings("unused")
 public class YamlCommand {
 
     @Command
