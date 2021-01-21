@@ -29,7 +29,8 @@ public class YamlCommand {
         config.set("location", player.getLocation());
 
         try {
-            config.save(new File(instance.getDataFolder(), "test"));
+            config.save(new File(instance.getDataFolder(), "test.yml"));
+            player.sendMessage("§a物品已保存至 test.yml 中.");
         } catch (IOException e) {
             PluginMain.getLogUtils().error(e, "保存测试 yaml 数据至文件中时发生了一个错误: ");
         }
@@ -46,7 +47,8 @@ public class YamlCommand {
         config.set("location", player.getLocation());
 
         try {
-            config.save(new File(instance.getDataFolder(), "test"));
+            config.save(new File(instance.getDataFolder(), "test.yml"));
+            player.sendMessage("§a物品已保存至 test.yml 中.");
         } catch (IOException e) {
             PluginMain.getLogUtils().error(e, "保存测试 yaml 数据至文件中时发生了一个错误: ");
         }
