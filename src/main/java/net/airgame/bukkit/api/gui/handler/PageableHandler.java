@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 支持翻页的 GUI
@@ -32,7 +33,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
     }
 
     @NotNull
-    public abstract ArrayList<E> getPageElements();
+    public abstract List<E> getPageElements();
 
     public abstract void onClickElement(@NotNull ClickType type, @NotNull InventoryAction action, @NotNull E element);
 
@@ -58,7 +59,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
 
     public void initPage() {
         super.initPage();
-        ArrayList<E> elements = getPageElements();
+        List<E> elements = getPageElements();
         ButtonGroup group = getButtonGroup();
         Inventory inventory = getInventory();
         HumanEntity player = getPlayer();
