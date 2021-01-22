@@ -17,9 +17,9 @@ import java.util.Properties;
  * 持久化管理器
  */
 public class PersistenceManager {
-    private static DataSource dataSource;
+    private static HikariDataSource dataSource;
 
-    public static void init() {
+    public PersistenceManager() {
         try {
             PluginMain.getLogUtils().info("开始初始化持久化管理器.");
             File file = new File(PluginMain.getInstance().getDataFolder(), "sql.properties");
@@ -35,5 +35,9 @@ public class PersistenceManager {
 
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
+    }
+
+    public void close() {
+        dataSource.close();
     }
 }

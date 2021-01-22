@@ -19,7 +19,7 @@ import java.util.HashMap;
  * @param <E> 页面元素
  */
 @SuppressWarnings("unused")
-public abstract class PageableHandler<E extends PageElement> extends PageHandler {
+public abstract class PageableHandler<E extends PageElement> extends FixedPageHandler {
     private final int page;
     private HashMap<Integer, E> elementSlot;
 
@@ -54,6 +54,7 @@ public abstract class PageableHandler<E extends PageElement> extends PageHandler
     }
 
     public void initPage() {
+        super.initPage();
         ArrayList<E> elements = getPageElements();
         ButtonGroup group = getButtonGroup();
         Inventory inventory = getInventory();
@@ -87,7 +88,7 @@ public abstract class PageableHandler<E extends PageElement> extends PageHandler
             }
             element.replaceItem(elementItem);
             inventory.setItem(buttonIndex, elementItem);
-            this.elementSlot.put(buttonIndex, element);
+            elementSlot.put(buttonIndex, element);
         }
 
         if (page == 0) {

@@ -1,8 +1,15 @@
 package net.airgame.bukkit.api.util;
 
+import net.airgame.bukkit.api.PluginMain;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @SuppressWarnings("unused")
 public class SerializeUtils {
@@ -145,4 +152,58 @@ public class SerializeUtils {
         }
     }
 
+    /**
+     * 从字符串中解码一条坐标
+     * <p>
+     * 字符串格式: "世界名;x;y;z;yaw;pitch"
+     * <p>
+     * yaw和pitch可以省略
+     * <p>
+     * 即: "世界名;x;y;z" 也是可以接受的
+     *
+     * @param string 要解码的字符串. 例如:
+     * @return 解码后的坐标
+     */
+    @NotNull
+    public static Location deserializeLocation(@NotNull String string) {
+        String[] args = string.split(";");
+        try {
+            if (args.length > 4) {
+                return new Location(
+                        Bukkit.getWorld(args[0]),
+                        Double.parseDouble(args[1]),
+                        Double.parseDouble(args[2]),
+                        Double.parseDouble(args[3]),
+                        Float.parseFloat(args[4]),
+                        Float.parseFloat(args[5])
+                );
+            } else {
+                return new Location(
+                        Bukkit.getWorld(args[0]),
+                        Double.parseDouble(args[1]),
+                        Double.parseDouble(args[2]),
+                        Double.parseDouble(args[3])
+                );
+            }
+        } catch (Exception e) {
+            PluginMain.getLogUtils().error(e, "解析坐标字符串 %s 时出现了一个错误: ", string);
+        }
+        return new Location(Bukkit.getWorlds().get(0), 0, 64, 0);
+    }
+
+    /**
+     * 从一个字符串集合中解码坐标
+     *
+     * @param strings 字符串集合
+     * @return 坐标集合
+     * @see SerializeUtils#deserializeLocation(String)
+     */
+    @NotNull
+    public static ArrayList<Location> deserializeLocation(@NotNull Collection<String> strings) {
+        ArrayList<Location> locations = new ArrayList<>();
+        for (String string : strings) {
+            locations.add(deserializeLocation(string));
+        }
+        return locations;
+    }
 }

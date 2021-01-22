@@ -1,8 +1,16 @@
 package net.airgame.bukkit.api.util;
 
+import net.airgame.bukkit.api.PluginMain;
 import net.airgame.bukkit.api.math.Calculator;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Method;
 
 /**
  * 未分类的工具方法
@@ -55,5 +63,30 @@ public class AirUtils {
 
     public static Class<?> getNMSClass(String className) throws ClassNotFoundException {
         return Class.forName("net.minecraft.server." + nmsVersion + "." + className);
+    }
+
+
+    /**
+     * 取消注册监听器中的所有事件处理器
+     *
+     * @param listener 监听器对象
+     */
+    @SuppressWarnings("unchecked")
+    public static void unregisterEvents(@NotNull Listener listener) {
+        try {
+            for (Method method : listener.getClass().getMethods()) {
+                if (method.getParameterCount() != 1) {
+                    continue;
+                }
+                if (!method.isAnnotationPresent(EventHandler.class)) {
+                    continue;
+                }
+                Class<? extends Event> eventClass = (Class<? extends Event>) method.getParameterTypes()[0];
+                HandlerList handlerList = (HandlerList) eventClass.getMethod("getHandlerList").invoke(null);
+                handlerList.unregister(listener);
+            }
+        } catch (Exception e) {
+            PluginMain.getLogUtils().error(e, "取消注册监听器 %s 时出错!", listener);
+        }
     }
 }

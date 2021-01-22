@@ -38,6 +38,7 @@ import java.util.jar.JarFile;
 public final class PluginMain extends JavaPlugin {
     private static PluginMain instance;
     private static LogUtils logUtils;
+    private PersistenceManager persistenceManager;
 
     public static PluginMain getInstance() {
         return instance;
@@ -65,7 +66,7 @@ public final class PluginMain extends JavaPlugin {
         saveDefaultConfig();
         reloadConfig();
         saveDefaultFile("sql.properties");
-        PersistenceManager.init();
+        persistenceManager = new PersistenceManager();
 
         logUtils.info("插件载入完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
     }
@@ -95,6 +96,9 @@ public final class PluginMain extends JavaPlugin {
             if (writer != null) {
                 writer.close();
             }
+        }
+        if (persistenceManager != null) {
+            persistenceManager.close();
         }
     }
 
