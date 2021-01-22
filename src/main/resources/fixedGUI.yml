@@ -1,43 +1,20 @@
-title: "&a公会页面"
+title: "&a举报审核"
 
 graphic:
   - "#########"
-  - "#1234567#"
-  - "#########"
+  - "#       #"
+  - "# 1 2 3 #"
+  - "#       #"
+  - "<########"
 
-# 按钮组，把字符映射到按钮名上
 buttonGroups:
-  # 组名称，default 为默认组
   default:
-    # 字符: 按钮名称
     '#': "barrier"
-    '1': "empty"
-    '2': "create"
-    '3': "empty"
-    '4': "search"
-    '5': "empty"
-    '6': "list"
-    '7': "empty"
-  hasGuild:
-    '#': "barrier"
-    '1': "empty"
-    '2': "guild"
-    '3': "empty"
-    '4': "list"
-    '5': "empty"
-    '6': "quit"
-    '7': "empty"
-  guildOwner:
-    '#': "barrier"
-    '1': "empty"
-    '2': "guild"
-    '3': "manage"
-    '4': "list"
-    '5': "empty"
-    '6': "dissolution"
-    '7': "empty"
+    '1': "innocent"
+    '2': "info"
+    '3': "guilty"
+    '<': "back"
 
-# 按钮
 buttons:
   # 按钮名称
   barrier:
@@ -48,4 +25,33 @@ buttons:
       ==: ItemMeta
       meta-type: UNSPECIFIC
       display-name: "§c屏障"
-
+  innocent:
+    ==: org.bukkit.inventory.ItemStack
+    type: PAPER
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: 核实无罪
+  info:
+    ==: org.bukkit.inventory.ItemStack
+    type: PAPER
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: 信息
+      lore:
+        - ""
+  guilty:
+    ==: org.bukkit.inventory.ItemStack
+    type: PAPER
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: 核实有罪
+  back:
+    ==: org.bukkit.inventory.ItemStack
+    type: REDSTONE
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: 返回上级

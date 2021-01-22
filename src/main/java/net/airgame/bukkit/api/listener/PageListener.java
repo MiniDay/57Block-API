@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.listener;
 
-import net.airgame.bukkit.api.gui.holder.PageHolder;
+import net.airgame.bukkit.api.gui.handler.PageHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -12,20 +12,20 @@ public class PageListener implements Listener {
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (!(inventory.getHolder() instanceof PageHolder)) {
+        if (!(inventory.getHolder() instanceof PageHandler)) {
             return;
         }
-        PageHolder handler = (PageHolder) inventory.getHolder();
+        PageHandler handler = (PageHandler) inventory.getHolder();
         handler.onOpen(event);
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (!(inventory.getHolder() instanceof PageHolder)) {
+        if (!(inventory.getHolder() instanceof PageHandler)) {
             return;
         }
-        PageHolder handler = (PageHolder) inventory.getHolder();
+        PageHandler handler = (PageHandler) inventory.getHolder();
         handler.onClick(event);
         if (event.isCancelled()) {
             return;
@@ -44,10 +44,10 @@ public class PageListener implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (!(inventory.getHolder() instanceof PageHolder)) {
+        if (!(inventory.getHolder() instanceof PageHandler)) {
             return;
         }
-        PageHolder handler = (PageHolder) inventory.getHolder();
+        PageHandler handler = (PageHandler) inventory.getHolder();
         handler.onClose(event);
     }
 }

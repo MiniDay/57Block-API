@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.gui.holder;
+package net.airgame.bukkit.api.gui.handler;
 
 import net.airgame.bukkit.api.gui.ButtonGroup;
 import net.airgame.bukkit.api.gui.PageConfig;
@@ -16,13 +16,13 @@ import org.jetbrains.annotations.NotNull;
  * GUI
  */
 @SuppressWarnings("unused")
-public abstract class PageHolder implements InventoryHolder {
+public abstract class PageHandler implements InventoryHolder {
     private final PageConfig pageConfig;
     private final HumanEntity player;
     private final ButtonGroup buttonGroup;
     private final Inventory inventory;
 
-    public PageHolder(@NotNull PageConfig pageConfig, @NotNull HumanEntity player) {
+    public PageHandler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player) {
         this.pageConfig = pageConfig;
         this.player = player;
         buttonGroup = pageConfig.getButtonGroup(player);
@@ -48,7 +48,6 @@ public abstract class PageHolder implements InventoryHolder {
     }
 
     public InventoryView show() {
-        initPage();
         return player.openInventory(getInventory());
     }
 

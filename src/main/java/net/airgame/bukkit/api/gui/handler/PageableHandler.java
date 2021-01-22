@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.gui.holder;
+package net.airgame.bukkit.api.gui.handler;
 
 import net.airgame.bukkit.api.gui.ButtonGroup;
 import net.airgame.bukkit.api.gui.PageConfig;
@@ -19,13 +19,14 @@ import java.util.HashMap;
  * @param <E> 页面元素
  */
 @SuppressWarnings("unused")
-public abstract class PageableHolder<E extends PageElement> extends PageHolder {
+public abstract class PageableHandler<E extends PageElement> extends PageHandler {
     private final int page;
     private HashMap<Integer, E> elementSlot;
 
-    public PageableHolder(@NotNull PageConfig pageConfig, @NotNull HumanEntity player, int page) {
+    public PageableHandler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player, int page) {
         super(pageConfig, player);
         this.page = page;
+        initPage();
     }
 
     public abstract void showPreviewPage();

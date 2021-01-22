@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.gui.holder;
+package net.airgame.bukkit.api.gui.handler;
 
 import net.airgame.bukkit.api.gui.ButtonGroup;
 import net.airgame.bukkit.api.gui.PageConfig;
@@ -11,9 +11,10 @@ import java.util.List;
  * 固定页面的 GUI
  */
 @SuppressWarnings("unused")
-public class FixedPage extends PageHolder {
-    public FixedPage(PageConfig config, HumanEntity player) {
+public class FixedPageHandler extends PageHandler {
+    public FixedPageHandler(PageConfig config, HumanEntity player) {
         super(config, player);
+        initPage();
     }
 
     @Override

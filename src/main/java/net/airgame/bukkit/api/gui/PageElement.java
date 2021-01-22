@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.gui;
 
-import net.airgame.bukkit.api.gui.holder.PageableHolder;
+import net.airgame.bukkit.api.gui.handler.PageableHandler;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -8,7 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 /**
- * @see PageableHolder#initPage()
+ * @see PageableHandler#initPage()
  */
 public interface PageElement {
     String replaceDisplayName(HumanEntity player, String displayName);

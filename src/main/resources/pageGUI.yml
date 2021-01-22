@@ -28,4 +28,26 @@ buttons:
       ==: ItemMeta
       meta-type: UNSPECIFIC
       display-name: "§c屏障"
-
+  preview:
+    ==: org.bukkit.inventory.ItemStack
+    type: REDSTONE
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §c上一页
+  next:
+    ==: org.bukkit.inventory.ItemStack
+    type: ARROW
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §a下一页
+  element:
+    ==: org.bukkit.inventory.ItemStack
+    type: EMPTY_MAP
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §a%target_name%
+      lore:
+        - §a%reporter_name%
