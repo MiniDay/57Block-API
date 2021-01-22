@@ -14,6 +14,7 @@ import java.io.IOException;
 
 @CommandExecutor(
         name = "yaml",
+        aliases = "yml",
         permission = "airGame.admin"
 )
 public class YamlCommand {

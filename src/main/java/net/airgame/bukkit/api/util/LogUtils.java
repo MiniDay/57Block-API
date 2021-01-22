@@ -23,11 +23,12 @@ public class LogUtils {
 
     private final Plugin plugin;
 
-    private Logger logger;
+    private final Logger logger;
     private PrintWriter fileWriter;
     private SimpleDateFormat dateFormat;
 
     private boolean debug;
+    private boolean usePluginLogger;
 
     /**
      * 以默认配置实例化一个日志记录器
@@ -37,6 +38,7 @@ public class LogUtils {
      */
     public LogUtils(@NotNull Plugin plugin) {
         this.plugin = plugin;
+        this.logger = plugin.getLogger();
         File logSettingsFile = new File(plugin.getDataFolder(), "logSettings.yml");
         if (logSettingsFile.exists()) {
             init(YamlConfiguration.loadConfiguration(logSettingsFile));
@@ -53,6 +55,7 @@ public class LogUtils {
      */
     public LogUtils(@NotNull Plugin plugin, @NotNull ConfigurationSection config) {
         this.plugin = plugin;
+        this.logger = plugin.getLogger();
         init(config);
     }
 
@@ -63,8 +66,8 @@ public class LogUtils {
      */
     @SuppressWarnings("ConstantConditions")
     private void init(@NotNull ConfigurationSection config) {
+        usePluginLogger = config.getBoolean("usePluginLogger", false);
         if (config.getBoolean("usePluginLogger", false)) {
-            logger = plugin.getLogger();
             info("使用Bukkit自带日志器, 日志将会打印至控制台.");
         }
         debug = config.getBoolean("debug", false);
@@ -141,7 +144,7 @@ public class LogUtils {
      * @param info 信息
      */
     public void info(@NotNull String info) {
-        if (logger != null) {
+        if (usePluginLogger) {
             logger.info(info);
         }
         if (fileWriter != null) {
@@ -170,7 +173,7 @@ public class LogUtils {
      * @param warning 警告
      */
     public void warning(@NotNull String warning) {
-        if (logger != null) {
+        if (usePluginLogger) {
             logger.warning(warning);
         }
         if (fileWriter != null) {
@@ -202,7 +205,7 @@ public class LogUtils {
         if (!this.debug) {
             return;
         }
-        if (logger != null) {
+        if (usePluginLogger) {
             logger.info(debug);
         }
         if (fileWriter != null) {
@@ -231,9 +234,7 @@ public class LogUtils {
      * @param e 异常对象
      */
     public void error(@NotNull Throwable e) {
-        if (logger != null) {
-            e.printStackTrace();
-        }
+        e.printStackTrace();
         if (fileWriter != null) {
             e.printStackTrace(fileWriter);
         }

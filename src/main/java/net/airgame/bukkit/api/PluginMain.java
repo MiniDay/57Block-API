@@ -5,6 +5,7 @@ import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.*;
 import net.airgame.bukkit.api.data.DisplayMessage;
+import net.airgame.bukkit.api.listener.PageListener;
 import net.airgame.bukkit.api.listener.PluginHookListener;
 import net.airgame.bukkit.api.manager.CommandManager;
 import net.airgame.bukkit.api.manager.PersistenceManager;
@@ -21,7 +22,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import sun.applet.AppletClassLoader;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -80,7 +80,10 @@ public final class PluginMain extends JavaPlugin {
         logUtils.info("==================================================");
         initCommand();
         logUtils.info("==================================================");
+
         Bukkit.getScheduler().runTask(this, () -> Bukkit.getPluginManager().registerEvents(new PluginHookListener(), PluginMain.this));
+        Bukkit.getPluginManager().registerEvents(new PageListener(), this);
+        logUtils.info("已注册 GUI 相关监听器.");
 
         logUtils.info("插件启动完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
     }

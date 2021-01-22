@@ -47,7 +47,7 @@ public class PageConfig implements InventoryHolder {
         buttonMap = new HashMap<>();
         ConfigurationSection buttonsConfig = config.getConfigurationSection("buttons");
         for (String key : buttonsConfig.getKeys(false)) {
-            buttonMap.put(key, buttonsConfig.getItemStack("buttons"));
+            buttonMap.put(key, buttonsConfig.getItemStack(key));
         }
 
         buttonGroups = new ArrayList<>();
@@ -153,4 +153,13 @@ public class PageConfig implements InventoryHolder {
         return inventory;
     }
 
+    @Override
+    public String toString() {
+        return "PageConfig{" +
+                ", title='" + title + '\'' +
+                ", graphic=" + graphic +
+                ", buttonMap=" + buttonMap +
+                ", buttonGroups=" + buttonGroups +
+                '}';
+    }
 }

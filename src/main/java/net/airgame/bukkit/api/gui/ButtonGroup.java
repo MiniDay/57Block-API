@@ -2,6 +2,7 @@ package net.airgame.bukkit.api.gui;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -28,22 +29,28 @@ public class ButtonGroup {
 
     /**
      * 以图形字符来获取按钮名称
+     * <p>
+     * 若未找到则返回 "empty"
      *
      * @param graphicKey 图形字符
      * @return 按钮名称
      */
-    public String getButtonName(Character graphicKey) {
-        return buttonNameMap.get(graphicKey);
+    @NotNull
+    public String getButtonName(char graphicKey) {
+        return buttonNameMap.getOrDefault(graphicKey, "empty");
     }
 
     /**
      * 以索引位置来获取按钮名称
+     * <p>
+     * 若未找到则返回 "empty"
      *
      * @param index 索引位置
      * @return 按钮名称
      */
+    @NotNull
     public String getButtonName(int index) {
-        return buttonNameMap.get(config.getButtonKey(index));
+        return buttonNameMap.getOrDefault(config.getButtonKey(index), "empty");
     }
 
     /**
@@ -67,7 +74,7 @@ public class ButtonGroup {
      * @param graphicKey 图形字符
      * @return 按钮物品
      */
-    public ItemStack getButton(Character graphicKey) {
+    public ItemStack getButton(char graphicKey) {
         return getButton(getButtonName(graphicKey));
     }
 
@@ -149,5 +156,13 @@ public class ButtonGroup {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return "ButtonGroup{" +
+                "name='" + name + '\'' +
+                ", buttonNameMap=" + buttonNameMap +
+                '}';
     }
 }
