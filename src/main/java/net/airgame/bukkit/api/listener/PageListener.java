@@ -44,7 +44,7 @@ public class PageListener implements Listener {
             return;
         }
         try {
-            handler.onClickButton(index);
+            handler.onClickButton(event.getClick(), event.getAction(), index);
         } catch (Exception e) {
             PluginMain.getLogUtils().error(e, "执行 %s 的 onClickButton(%d) 时遇到了一个异常: ", handler.getClass().getName(), index);
         }

@@ -4,6 +4,8 @@ import net.airgame.bukkit.api.gui.ButtonGroup;
 import net.airgame.bukkit.api.gui.PageConfig;
 import net.airgame.bukkit.api.gui.PageElement;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +38,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
     @NotNull
     public abstract ArrayList<E> getPageElements();
 
-    public abstract void onClickElement(@NotNull InventoryClickEvent event, @NotNull E element);
+    public abstract void onClickElement(@NotNull ClickType type, @NotNull InventoryAction action, @NotNull E element);
 
     @NotNull
     public String getElementButtonName() {
@@ -79,21 +81,32 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
             }
 
             E element = elements.get(elementIndex);
-            ItemStack elementItem = button.clone();
-            ItemMeta meta = elementItem.getItemMeta();
-            if (meta != null) {
-                if (meta.hasDisplayName()) {
-                    meta.setDisplayName(element.replaceDisplayName(player, meta.getDisplayName()));
-                }
-                if (meta.hasLore()) {
-                    meta.setLore(element.replaceLore(player, meta.getLore()));
-                }
-                element.replaceMeta(meta);
-                elementItem.setItemMeta(meta);
-            }
-            element.replaceItem(elementItem);
-            inventory.setItem(buttonIndex, elementItem);
             elementSlot.put(buttonIndex, element);
+
+            ItemStack elementItem = button.clone();
+            if (element.replaceItem(elementItem)) {
+                inventory.setItem(buttonIndex, elementItem);
+                continue;
+            }
+
+            ItemMeta meta = elementItem.getItemMeta();
+            if (meta == null) {
+                inventory.setItem(buttonIndex, elementItem);
+                continue;
+            }
+            if (element.replaceMeta(meta)) {
+                element.replaceMeta(meta);
+                inventory.setItem(buttonIndex, elementItem);
+                continue;
+            }
+            if (meta.hasDisplayName()) {
+                meta.setDisplayName(element.replaceDisplayName(player, meta.getDisplayName()));
+            }
+            if (meta.hasLore()) {
+                meta.setLore(element.replaceLore(player, meta.getLore()));
+            }
+            elementItem.setItemMeta(meta);
+            inventory.setItem(buttonIndex, elementItem);
         }
 
         if (page == 0) {
@@ -112,7 +125,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         int slot = event.getSlot();
         E e = elementSlot.get(slot);
         if (e != null) {
-            onClickElement(event, e);
+            onClickElement(event.getClick(), event.getAction(), e);
             return;
         }
         String name = getPageConfig().getButtonName(event.getCurrentItem());
@@ -123,10 +136,6 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         if (name.equalsIgnoreCase(getPreviewButtonName())) {
             showPreviewPage();
         }
-    }
-
-    @Override
-    public void onClickButton(int index) {
     }
 
     public int getPage() {

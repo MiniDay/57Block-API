@@ -4,10 +4,7 @@ import net.airgame.bukkit.api.gui.ButtonGroup;
 import net.airgame.bukkit.api.gui.PageConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
@@ -35,7 +32,7 @@ public abstract class PageHandler implements InventoryHolder {
     public void onOpen(@NotNull InventoryOpenEvent event) {
     }
 
-    public void onClickButton(int index) {
+    public void onClickButton(@NotNull ClickType clickType, @NotNull InventoryAction action, int index) {
     }
 
     public void onClick(@NotNull InventoryClickEvent event) {

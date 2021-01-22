@@ -10,14 +10,17 @@ import java.util.List;
 /**
  * @see PageableHandler#initPage()
  */
+@SuppressWarnings("unused")
 public interface PageElement {
+    default boolean replaceItem(ItemStack stack) {
+        return false;
+    }
+
+    default boolean replaceMeta(ItemMeta meta) {
+        return false;
+    }
+
     String replaceDisplayName(HumanEntity player, String displayName);
 
     List<String> replaceLore(HumanEntity player, List<String> lore);
-
-    default void replaceMeta(ItemMeta meta) {
-    }
-
-    default void replaceItem(ItemStack stack) {
-    }
 }
