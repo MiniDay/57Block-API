@@ -53,6 +53,11 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         return "next";
     }
 
+    @NotNull
+    public String getBarrierButtonName() {
+        return "barrier";
+    }
+
     public void initPage() {
         super.initPage();
         ArrayList<E> elements = getPageElements();
@@ -93,11 +98,11 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
 
         if (page == 0) {
             // 如果页面已在首页则撤掉上一页按钮
-            inventory.setItem(group.getButtonIndex(getPreviewButtonName()), null);
+            inventory.setItem(group.getButtonIndex(getPreviewButtonName()), group.getButton(getBarrierButtonName()));
         }
         if (elements.size() <= (page + 1) * pageSize) {
             // 如果页面显示超出已有元素数量则撤掉下一页按钮
-            inventory.setItem(group.getButtonIndex(getNextButtonName()), null);
+            inventory.setItem(group.getButtonIndex(getNextButtonName()), group.getButton(getBarrierButtonName()));
         }
     }
 
