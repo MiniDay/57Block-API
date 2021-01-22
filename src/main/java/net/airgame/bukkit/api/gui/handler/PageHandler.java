@@ -46,6 +46,9 @@ public abstract class PageHandler implements InventoryHolder {
     }
 
     public void onDrag(@NotNull InventoryDragEvent event) {
+    }
+
+    public void onDragInside(@NotNull InventoryDragEvent event) {
         event.setCancelled(true);
     }
 

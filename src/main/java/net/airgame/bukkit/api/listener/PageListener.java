@@ -55,7 +55,7 @@ public class PageListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         Inventory inventory = event.getView().getTopInventory();
         if (!(inventory.getHolder() instanceof PageHandler)) {
@@ -66,6 +66,16 @@ public class PageListener implements Listener {
             handler.onDrag(event);
         } catch (Exception e) {
             PluginMain.getLogUtils().error(e, "执行 %s 的 onDrag(event) 时遇到了一个异常: ", handler.getClass().getName());
+        }
+        if (event.isCancelled()) {
+            return;
+        }
+        int size = inventory.getSize();
+        for (Integer slot : event.getRawSlots()) {
+            if (slot < size) {
+                handler.onDragInside(event);
+                break;
+            }
         }
     }
 
