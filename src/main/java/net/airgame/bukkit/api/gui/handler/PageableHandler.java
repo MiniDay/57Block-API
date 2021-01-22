@@ -108,6 +108,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
 
     @Override
     public void onClickInside(@NotNull InventoryClickEvent event) {
+        event.setCancelled(true);
         int slot = event.getSlot();
         E e = elementSlot.get(slot);
         if (e != null) {
