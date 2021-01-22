@@ -22,7 +22,7 @@ import java.util.HashMap;
  */
 @SuppressWarnings("unused")
 public abstract class PageableHandler<E extends PageElement> extends FixedPageHandler {
-    private final int page;
+    private int page;
     private HashMap<Integer, E> elementSlot;
 
     public PageableHandler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player, int page) {
@@ -30,10 +30,6 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         this.page = page;
         initPage();
     }
-
-    public abstract void showPreviewPage();
-
-    public abstract void showNextPage();
 
     @NotNull
     public abstract ArrayList<E> getPageElements();
@@ -136,6 +132,16 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         if (name.equalsIgnoreCase(getPreviewButtonName())) {
             showPreviewPage();
         }
+    }
+
+    public void showPreviewPage() {
+        page--;
+        initPage();
+    }
+
+    public void showNextPage() {
+        page++;
+        initPage();
     }
 
     public int getPage() {
