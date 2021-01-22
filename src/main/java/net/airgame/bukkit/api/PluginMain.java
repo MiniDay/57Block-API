@@ -5,6 +5,7 @@ import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.*;
 import net.airgame.bukkit.api.data.DisplayMessage;
+import net.airgame.bukkit.api.gui.handler.PageHandler;
 import net.airgame.bukkit.api.listener.PageListener;
 import net.airgame.bukkit.api.listener.PluginHookListener;
 import net.airgame.bukkit.api.manager.CommandManager;
@@ -19,6 +20,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -99,6 +102,15 @@ public final class PluginMain extends JavaPlugin {
         }
         if (persistenceManager != null) {
             persistenceManager.close();
+        }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            InventoryView view = player.getOpenInventory();
+            Inventory inventory = view.getTopInventory();
+            if (!(inventory.getHolder() instanceof PageHandler)) {
+                continue;
+            }
+            player.closeInventory();
+            player.sendMessage("§c由于服务器调整数据, 你打开的界面被强行关闭了.");
         }
     }
 
