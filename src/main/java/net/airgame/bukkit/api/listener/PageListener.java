@@ -1,7 +1,7 @@
 package net.airgame.bukkit.api.listener;
 
 import net.airgame.bukkit.api.PluginMain;
-import net.airgame.bukkit.api.gui.handler.PageHandler;
+import net.airgame.bukkit.api.gui.handler.Handler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -14,20 +14,20 @@ public class PageListener implements Listener {
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (!(inventory.getHolder() instanceof PageHandler)) {
+        if (!(inventory.getHolder() instanceof Handler)) {
             return;
         }
-        PageHandler handler = (PageHandler) inventory.getHolder();
+        Handler handler = (Handler) inventory.getHolder();
         handler.onOpen(event);
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (!(inventory.getHolder() instanceof PageHandler)) {
+        if (!(inventory.getHolder() instanceof Handler)) {
             return;
         }
-        PageHandler handler = (PageHandler) inventory.getHolder();
+        Handler handler = (Handler) inventory.getHolder();
         try {
             handler.onClick(event);
         } catch (Exception e) {
@@ -58,10 +58,10 @@ public class PageListener implements Listener {
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (!(inventory.getHolder() instanceof PageHandler)) {
+        if (!(inventory.getHolder() instanceof Handler)) {
             return;
         }
-        PageHandler handler = (PageHandler) inventory.getHolder();
+        Handler handler = (Handler) inventory.getHolder();
         try {
             handler.onDrag(event);
         } catch (Exception e) {
@@ -82,10 +82,10 @@ public class PageListener implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (!(inventory.getHolder() instanceof PageHandler)) {
+        if (!(inventory.getHolder() instanceof Handler)) {
             return;
         }
-        PageHandler handler = (PageHandler) inventory.getHolder();
+        Handler handler = (Handler) inventory.getHolder();
         handler.onClose(event);
     }
 }

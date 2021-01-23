@@ -5,7 +5,7 @@ import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.*;
 import net.airgame.bukkit.api.data.DisplayMessage;
-import net.airgame.bukkit.api.gui.handler.PageHandler;
+import net.airgame.bukkit.api.gui.handler.Handler;
 import net.airgame.bukkit.api.listener.PageListener;
 import net.airgame.bukkit.api.listener.PluginHookListener;
 import net.airgame.bukkit.api.manager.CommandManager;
@@ -106,7 +106,7 @@ public final class PluginMain extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryView view = player.getOpenInventory();
             Inventory inventory = view.getTopInventory();
-            if (!(inventory.getHolder() instanceof PageHandler)) {
+            if (!(inventory.getHolder() instanceof Handler)) {
                 continue;
             }
             player.closeInventory();

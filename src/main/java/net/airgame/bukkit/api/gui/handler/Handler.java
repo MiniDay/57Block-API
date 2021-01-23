@@ -1,5 +1,6 @@
 package net.airgame.bukkit.api.gui.handler;
 
+import net.airgame.bukkit.api.PluginMain;
 import net.airgame.bukkit.api.gui.ButtonGroup;
 import net.airgame.bukkit.api.gui.PageConfig;
 import org.bukkit.Bukkit;
@@ -7,19 +8,18 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * GUI
+ * GUI 处理类
  */
 @SuppressWarnings("unused")
-public abstract class PageHandler implements InventoryHolder {
+public abstract class Handler implements InventoryHolder {
     private final PageConfig pageConfig;
     private final HumanEntity player;
     private final Inventory inventory;
 
-    public PageHandler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player) {
+    public Handler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player) {
         this.pageConfig = pageConfig;
         this.player = player;
         inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), pageConfig.getTitle());
@@ -50,8 +50,12 @@ public abstract class PageHandler implements InventoryHolder {
     public void onClose(@NotNull InventoryCloseEvent event) {
     }
 
-    public InventoryView show() {
-        return player.openInventory(getInventory());
+    public void show() {
+        Bukkit.getScheduler().runTaskLater(
+                PluginMain.getInstance(),
+                () -> player.openInventory(getInventory()),
+                1
+        );
     }
 
     @NotNull
