@@ -1,7 +1,7 @@
 package net.airgame.bukkit.api.data;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.airgame.bukkit.api.PluginMain;
+import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.thread.CountdownRunnable;
 import net.airgame.bukkit.api.util.MessageUtils;
 import net.airgame.bukkit.api.util.StringUtils;
@@ -82,7 +82,7 @@ public class DisplayMessage implements ConfigurationSerializable {
         try {
             color = BarColor.valueOf((String) map.getOrDefault("barColor", "BLUE"));
         } catch (IllegalArgumentException e) {
-            PluginMain.getLogUtils().error(e, "加载消息设定的 barColor 时出现了一个错误: ");
+            AirGameAPI.getLogUtils().error(e, "加载消息设定的 barColor 时出现了一个错误: ");
             color = BarColor.BLUE;
         }
         barColor = color;
@@ -91,7 +91,7 @@ public class DisplayMessage implements ConfigurationSerializable {
         try {
             style = BarStyle.valueOf((String) map.getOrDefault("barStyle", "SEGMENTED_20"));
         } catch (IllegalArgumentException e) {
-            PluginMain.getLogUtils().error(e, "加载消息设定的 barStyle 时出现了一个错误: ");
+            AirGameAPI.getLogUtils().error(e, "加载消息设定的 barStyle 时出现了一个错误: ");
             style = BarStyle.SEGMENTED_20;
         }
         barStyle = style;
@@ -246,7 +246,7 @@ public class DisplayMessage implements ConfigurationSerializable {
                     public void onFinish() {
                         bossBar.removeAll();
                     }
-                }.start(PluginMain.getInstance(), 1, true);
+                }.start(AirGameAPI.getInstance(), 1, true);
             }
             return bossBar;
         }

@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.gui.handler;
 
-import net.airgame.bukkit.api.PluginMain;
+import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.gui.ButtonGroup;
 import net.airgame.bukkit.api.gui.PageConfig;
 import org.bukkit.Bukkit;
@@ -52,7 +52,7 @@ public abstract class Handler implements InventoryHolder {
 
     public void show() {
         Bukkit.getScheduler().runTaskLater(
-                PluginMain.getInstance(),
+                AirGameAPI.getInstance(),
                 () -> player.openInventory(getInventory()),
                 1
         );

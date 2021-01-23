@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.util;
 
-import net.airgame.bukkit.api.PluginMain;
+import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.math.Calculator;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -86,7 +86,7 @@ public class AirUtils {
                 handlerList.unregister(listener);
             }
         } catch (Exception e) {
-            PluginMain.getLogUtils().error(e, "取消注册监听器 %s 时出错!", listener);
+            AirGameAPI.getLogUtils().error(e, "取消注册监听器 %s 时出错!", listener);
         }
     }
 }

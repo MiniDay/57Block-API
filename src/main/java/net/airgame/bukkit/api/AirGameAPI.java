@@ -24,6 +24,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -38,17 +39,45 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 @CommandScan("net.airgame.bukkit.api.debug")
-public final class PluginMain extends JavaPlugin {
-    private static PluginMain instance;
+public final class AirGameAPI extends JavaPlugin {
+    private static AirGameAPI instance;
     private static LogUtils logUtils;
     private PersistenceManager persistenceManager;
 
-    public static PluginMain getInstance() {
+    public static AirGameAPI getInstance() {
         return instance;
     }
 
     public static LogUtils getLogUtils() {
         return logUtils;
+    }
+
+    /**
+     * 在主线程上执行一些代码
+     * <p>
+     * 没事别调用这个方法，要用你自己在你的插件主类里再写一个
+     * <p>
+     * 否则服务器的 timings 可能会把你的代码运行时间也算进这个插件中
+     *
+     * @param runnable 执行代码
+     * @return BukkitTask对象
+     */
+    public static BukkitTask sync(@NotNull Runnable runnable) {
+        return Bukkit.getScheduler().runTask(instance, runnable);
+    }
+
+    /**
+     * 异步执行一些代码
+     * <p>
+     * 没事别调用这个方法，要用你自己在你的插件主类里再写一个
+     * <p>
+     * 否则服务器的 timings 可能会把你的代码运行时间也算进这个插件中
+     *
+     * @param runnable 执行代码
+     * @return BukkitTask对象
+     */
+    public static BukkitTask async(@NotNull Runnable runnable) {
+        return Bukkit.getScheduler().runTaskAsynchronously(instance, runnable);
     }
 
     @Override
@@ -85,7 +114,7 @@ public final class PluginMain extends JavaPlugin {
         initCommand();
         logUtils.info("==================================================");
 
-        Bukkit.getScheduler().runTask(this, () -> Bukkit.getPluginManager().registerEvents(new PluginHookListener(), PluginMain.this));
+        Bukkit.getScheduler().runTask(this, () -> Bukkit.getPluginManager().registerEvents(new PluginHookListener(), AirGameAPI.this));
         Bukkit.getPluginManager().registerEvents(new PageListener(), this);
         logUtils.info("已注册 GUI 相关监听器.");
 
@@ -123,10 +152,7 @@ public final class PluginMain extends JavaPlugin {
      * 初始化日志器的设定
      */
     private void initLogUtil() {
-        File defaultLogSettingsFile = new File(getDataFolder(), "defaultLogSettings.yml");
-        if (!defaultLogSettingsFile.exists()) {
-            saveResource("defaultLogSettings.yml", true);
-        }
+        File defaultLogSettingsFile = saveDefaultFile("defaultLogSettings.yml");
         LogUtils.DEFAULT_CONFIG = YamlConfiguration.loadConfiguration(defaultLogSettingsFile);
 
         logUtils = new LogUtils(this);
@@ -271,7 +297,7 @@ public final class PluginMain extends JavaPlugin {
                 try {
                     CommandManager.registerCommand(plugin, className);
                 } catch (IllegalAccessException e) {
-                    PluginMain.getLogUtils().debug("扫描到类 %s 没有添加 CommandExecutor 注解, 取消注册该类命令!", className);
+                    AirGameAPI.getLogUtils().debug("扫描到类 %s 没有添加 CommandExecutor 注解, 取消注册该类命令!", className);
                 } catch (Exception | Error e) {
                     logUtils.error(e, "在为插件 %s 注册命令 %s 时遇到了一个错误: ", plugin.getName(), className);
                 }
@@ -280,16 +306,24 @@ public final class PluginMain extends JavaPlugin {
         logUtils.info("命令注册完成.");
     }
 
-    private void saveDefaultFile(String name) {
+    /**
+     * 将插件 jar 文件内的文件保存到插件存档目录中
+     * <p>
+     * 若插件存档目录中已存在该文件则不会保存
+     *
+     * @param name 文件名称
+     */
+    private File saveDefaultFile(String name) {
         if (getDataFolder().mkdirs()) {
             logUtils.info("创建插件存档文件夹...");
         }
         File file = new File(getDataFolder(), name);
         if (file.exists()) {
-            return;
+            return file;
         }
         saveResource(name, true);
-        logUtils.info("复制默认文件 %s 至插件存档文件夹...", name);
+        logUtils.info("复制 %s 至插件存档文件夹...", name);
+        return file;
     }
 
 }

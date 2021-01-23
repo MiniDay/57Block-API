@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.util;
 
-import net.airgame.bukkit.api.PluginMain;
+import net.airgame.bukkit.api.AirGameAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -186,7 +186,7 @@ public class SerializeUtils {
                 );
             }
         } catch (Exception e) {
-            PluginMain.getLogUtils().error(e, "解析坐标字符串 %s 时出现了一个错误: ", string);
+            AirGameAPI.getLogUtils().error(e, "解析坐标字符串 %s 时出现了一个错误: ", string);
         }
         return new Location(Bukkit.getWorlds().get(0), 0, 64, 0);
     }

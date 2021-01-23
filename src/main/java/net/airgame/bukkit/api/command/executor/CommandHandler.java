@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.command.executor;
 
-import net.airgame.bukkit.api.PluginMain;
+import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.manager.CommandManager;
 import net.airgame.bukkit.api.util.StringUtils;
 import org.bukkit.Location;
@@ -41,7 +41,7 @@ public class CommandHandler extends Command {
         invokers = CommandManager.generatorClassInvokers(executor, new String[0], permissions);
 
         if (invokers.isEmpty()) {
-            PluginMain.getLogUtils().warning("  命令执行器 %s 中没有扫描到任何命令执行方法! （忘记添加 @Command 了？）", executor.getClass().getSimpleName());
+            AirGameAPI.getLogUtils().warning("  命令执行器 %s 中没有扫描到任何命令执行方法! （忘记添加 @Command 了？）", executor.getClass().getSimpleName());
         }
     }
 
@@ -49,7 +49,7 @@ public class CommandHandler extends Command {
     public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         long startTime = System.currentTimeMillis();
         runCommand(sender, label, args);
-        PluginMain.getLogUtils().debug(
+        AirGameAPI.getLogUtils().debug(
                 "命令 [/%s %s] 执行完成，共计耗时: %d ms",
                 getName(),
                 StringUtils.join(args, " "),
@@ -87,7 +87,7 @@ public class CommandHandler extends Command {
         if (list.size() > 10) {
             list = list.subList(0, 10);
         }
-        PluginMain.getLogUtils().debug(
+        AirGameAPI.getLogUtils().debug(
                 "命令 [/%s %s] 的 tab 补全生成完成，共计耗时: %d ms",
                 getName(),
                 StringUtils.join(args, " "),
