@@ -23,7 +23,7 @@ public class FixedPageHandler extends PageHandler {
 
         Inventory inventory = getInventory();
         PageConfig config = getPageConfig();
-        ButtonGroup group = config.getButtonGroup(player);
+        ButtonGroup group = getButtonGroup();
 
         List<String> graphic = config.getGraphic();
         for (int i = 0; i < graphic.size(); i++) {

@@ -3,7 +3,6 @@ package net.airgame.bukkit.api.gui;
 import net.airgame.bukkit.api.util.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -110,11 +109,6 @@ public class PageConfig implements InventoryHolder {
             }
         }
         return "empty";
-    }
-
-    @NotNull
-    public ButtonGroup getButtonGroup(@NotNull HumanEntity player) {
-        return getButtonGroup("default");
     }
 
     @NotNull

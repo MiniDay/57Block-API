@@ -17,13 +17,11 @@ import org.jetbrains.annotations.NotNull;
 public abstract class PageHandler implements InventoryHolder {
     private final PageConfig pageConfig;
     private final HumanEntity player;
-    private final ButtonGroup buttonGroup;
     private final Inventory inventory;
 
     public PageHandler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player) {
         this.pageConfig = pageConfig;
         this.player = player;
-        buttonGroup = pageConfig.getButtonGroup(player);
         inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), pageConfig.getTitle());
     }
 
@@ -32,14 +30,14 @@ public abstract class PageHandler implements InventoryHolder {
     public void onOpen(@NotNull InventoryOpenEvent event) {
     }
 
-    public void onClickButton(@NotNull ClickType clickType, @NotNull InventoryAction action, int index) {
-    }
-
     public void onClick(@NotNull InventoryClickEvent event) {
     }
 
     public void onClickInside(@NotNull InventoryClickEvent event) {
         event.setCancelled(true);
+    }
+
+    public void onClickButton(@NotNull ClickType clickType, @NotNull InventoryAction action, int index) {
     }
 
     public void onDrag(@NotNull InventoryDragEvent event) {
@@ -68,7 +66,7 @@ public abstract class PageHandler implements InventoryHolder {
 
     @NotNull
     public ButtonGroup getButtonGroup() {
-        return buttonGroup;
+        return getPageConfig().getButtonGroup("default");
     }
 
     @NotNull
