@@ -39,6 +39,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 @CommandScan("net.airgame.bukkit.api.debug")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public final class AirGameAPI extends JavaPlugin {
     private static AirGameAPI instance;
     private static LogUtils logUtils;
@@ -114,7 +115,7 @@ public final class AirGameAPI extends JavaPlugin {
         initCommand();
         logUtils.info("==================================================");
 
-        Bukkit.getScheduler().runTask(this, () -> Bukkit.getPluginManager().registerEvents(new PluginHookListener(), AirGameAPI.this));
+        sync(() -> Bukkit.getPluginManager().registerEvents(new PluginHookListener(), AirGameAPI.this));
         Bukkit.getPluginManager().registerEvents(new PageListener(), this);
         logUtils.info("已注册 GUI 相关监听器.");
 

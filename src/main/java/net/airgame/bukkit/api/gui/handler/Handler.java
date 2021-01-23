@@ -51,11 +51,7 @@ public abstract class Handler implements InventoryHolder {
     }
 
     public void show() {
-        Bukkit.getScheduler().runTaskLater(
-                AirGameAPI.getInstance(),
-                () -> player.openInventory(getInventory()),
-                1
-        );
+        AirGameAPI.sync(() -> player.openInventory(getInventory()));
     }
 
     @NotNull
