@@ -92,10 +92,17 @@
 
     <repositories>
         <repository>
-            <id>lss233-repo</id>
-            <url>https://crystal.app.lss233.com/repositories/minecraft</url>
+            <id>hamster3</id>
+            <url>http://maven.hamster3.cn/repository/maven-public/</url>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>airgame-repo</id>
+            <url>http://maven.hamster3.cn/repository/airgame-repo/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
 
