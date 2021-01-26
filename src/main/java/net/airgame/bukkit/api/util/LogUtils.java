@@ -122,6 +122,7 @@ public class LogUtils {
         info("日志器初始化完成...");
         info("当前时间戳: " + now);
         info("当前日志输出信息: %s-%s", plugin.getName(), plugin.getDescription().getVersion());
+        info("工作路径: " + new File("./").getAbsolutePath());
 
         int saveDays = config.getInt("saveDays", 7);
         if (saveDays < 1) {

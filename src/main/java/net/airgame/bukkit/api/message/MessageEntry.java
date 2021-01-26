@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.data;
+package net.airgame.bukkit.api.message;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.airgame.bukkit.api.AirGameAPI;
@@ -12,7 +12,6 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,13 +22,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 方便实用的消息类
+ * 代表一条消息
  */
-@SerializableAs("DisplayMessage")
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public class DisplayMessage implements ConfigurationSerializable {
-    private final String message;
-    private final List<String> messageList;
+public class MessageEntry implements ConfigurationSerializable {
+    private final List<String> chatMessage;
 
     private final String actionBar;
 
@@ -54,16 +51,15 @@ public class DisplayMessage implements ConfigurationSerializable {
      * @param map Configuration 的 map 对象
      */
     @SuppressWarnings("unchecked")
-    public DisplayMessage(@NotNull Map<String, Object> map) {
-        message = StringUtils.replaceColorCode((String) map.getOrDefault("message", null));
-        messageList = StringUtils.replaceColorCode((List<String>) map.getOrDefault("messageList", null));
+    public MessageEntry(@NotNull Map<String, Object> map) {
+        chatMessage = StringUtils.replaceColorCode((List<String>) map.getOrDefault("chatMessage", null));
         actionBar = StringUtils.replaceColorCode((String) map.getOrDefault("actionBar", null));
 
         title = StringUtils.replaceColorCode((String) map.getOrDefault("title", null));
         subTitle = StringUtils.replaceColorCode((String) map.getOrDefault("subTitle", null));
-        fadeIn = (int) map.getOrDefault("fadeIn", 20);
-        stay = (int) map.getOrDefault("stay", 60);
-        fadeOut = (int) map.getOrDefault("fadeOut", 20);
+        fadeIn = (int) map.getOrDefault("fadeIn", 10);
+        stay = (int) map.getOrDefault("stay", 40);
+        fadeOut = (int) map.getOrDefault("fadeOut", 10);
 
         String s = (String) map.getOrDefault("sound", null);
         if (s != null) {
@@ -118,17 +114,8 @@ public class DisplayMessage implements ConfigurationSerializable {
         if (sender instanceof Player) {
             return show((Player) sender, replace);
         }
-        if (message != null) {
-            String sendMessage = message;
-            if (replace != null) {
-                for (String key : replace.keySet()) {
-                    sendMessage = sendMessage.replace(key, replace.get(key));
-                }
-            }
-            sender.sendMessage(sendMessage);
-        }
-        if (messageList != null) {
-            for (String sendMessage : messageList) {
+        if (chatMessage != null) {
+            for (String sendMessage : chatMessage) {
                 if (replace != null) {
                     for (String key : replace.keySet()) {
                         sendMessage = sendMessage.replace(key, replace.get(key));
@@ -149,21 +136,9 @@ public class DisplayMessage implements ConfigurationSerializable {
      */
     private BossBar show(@NotNull Player player, @Nullable Map<String, String> replace) {
         String s1, s2;
-        if (message != null) {
-            s1 = message;
-            if (replace != null) {
-                for (String key : replace.keySet()) {
-                    s1 = s1.replace(key, replace.get(key));
-                }
-            }
-            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                s1 = PlaceholderAPI.setPlaceholders(player, s1);
-            }
-            player.sendMessage(s1);
-        }
 
-        if (messageList != null) {
-            for (String sendMessage : messageList) {
+        if (chatMessage != null) {
+            for (String sendMessage : chatMessage) {
                 if (replace != null) {
                     for (String key : replace.keySet()) {
                         sendMessage = sendMessage.replace(key, replace.get(key));
@@ -286,12 +261,8 @@ public class DisplayMessage implements ConfigurationSerializable {
         return new ReplaceMessage();
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public List<String> getMessageList() {
-        return messageList;
+    public List<String> getChatMessage() {
+        return chatMessage;
     }
 
     public String getActionBar() {
@@ -350,9 +321,7 @@ public class DisplayMessage implements ConfigurationSerializable {
     @NotNull
     public Map<String, Object> serialize() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("message", message);
-        map.put("messageList", messageList);
-
+        map.put("chatMessage", chatMessage);
         map.put("actionBar", actionBar);
 
         if (title != null) {
@@ -413,7 +382,7 @@ public class DisplayMessage implements ConfigurationSerializable {
          * @param sender 展示对象
          */
         public void show(@NotNull CommandSender sender) {
-            DisplayMessage.this.show(sender, replace);
+            MessageEntry.this.show(sender, replace);
         }
 
         /**
@@ -423,7 +392,7 @@ public class DisplayMessage implements ConfigurationSerializable {
          * @return 这个 show 所创建的 BossBar，如果没有设置 BossBar 消息则返回 null
          */
         public BossBar show(@NotNull Player player) {
-            return DisplayMessage.this.show(player, replace);
+            return MessageEntry.this.show(player, replace);
         }
 
         /**
@@ -432,7 +401,7 @@ public class DisplayMessage implements ConfigurationSerializable {
          * @return 这个 broadcast 所创建的 BossBar，如果没有设置 BossBar 消息则返回 null
          */
         public ArrayList<BossBar> broadcast() {
-            return DisplayMessage.this.broadcast(replace);
+            return MessageEntry.this.broadcast(replace);
         }
 
     }

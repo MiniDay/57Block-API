@@ -4,12 +4,12 @@ import net.airgame.bukkit.api.command.annotation.CommandScan;
 import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.*;
-import net.airgame.bukkit.api.data.DisplayMessage;
 import net.airgame.bukkit.api.gui.handler.Handler;
 import net.airgame.bukkit.api.listener.PageListener;
 import net.airgame.bukkit.api.listener.PluginHookListener;
 import net.airgame.bukkit.api.manager.CommandManager;
 import net.airgame.bukkit.api.manager.PersistenceManager;
+import net.airgame.bukkit.api.message.MessageEntry;
 import net.airgame.bukkit.api.util.LogUtils;
 import net.airgame.bukkit.api.util.api.PointAPI;
 import net.airgame.bukkit.api.util.api.VaultAPI;
@@ -43,6 +43,7 @@ import java.util.jar.JarFile;
 public final class AirGameAPI extends JavaPlugin {
     private static AirGameAPI instance;
     private static LogUtils logUtils;
+    private static String defaultLocale;
     private PersistenceManager persistenceManager;
 
     public static AirGameAPI getInstance() {
@@ -86,7 +87,7 @@ public final class AirGameAPI extends JavaPlugin {
         long startTime = System.currentTimeMillis();
         instance = this;
 
-        ConfigurationSerialization.registerClass(DisplayMessage.class);
+        ConfigurationSerialization.registerClass(MessageEntry.class);
 
         initLogUtil();
         logUtils.info("==================================================");
@@ -174,7 +175,7 @@ public final class AirGameAPI extends JavaPlugin {
             return;
         }
 
-        ClassLoader loader = getClassLoader();
+        ClassLoader loader = getClassLoader().getParent();
         try {
             Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
             method.setAccessible(true);
@@ -323,7 +324,8 @@ public final class AirGameAPI extends JavaPlugin {
             return file;
         }
         saveResource(name, true);
-        logUtils.info("复制 %s 至插件存档文件夹...", name);
+        // 这里不能用日志器
+        getLogger().info("复制 " + name + " 至插件存档文件夹...");
         return file;
     }
 
