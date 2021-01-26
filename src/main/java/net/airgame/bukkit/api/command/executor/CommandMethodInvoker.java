@@ -136,6 +136,11 @@ public class CommandMethodInvoker {
     }
 
     public List<String> tabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args, @Nullable Location location) {
+        for (String s : permissions) {
+            if (!sender.hasPermission(s)) {
+                return null;
+            }
+        }
         // 如果已输入的参数的长度小于或等于 subName
         // 则先返回 subName 的补全
         if (args.length <= subName.length) {

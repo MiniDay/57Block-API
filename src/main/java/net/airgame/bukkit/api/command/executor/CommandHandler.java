@@ -41,7 +41,7 @@ public class CommandHandler extends Command {
         invokers = CommandManager.generatorClassInvokers(executor, new String[0], permissions);
 
         if (invokers.isEmpty()) {
-            AirGameAPI.getLogUtils().warning("  命令执行器 %s 中没有扫描到任何命令执行方法! （忘记添加 @Command 了？）", executor.getClass().getSimpleName());
+            AirGameAPI.getLogUtils().warning("  命令执行器 %s 中没有扫描到任何命令执行方法!", executor.getClass().getSimpleName());
         }
     }
 
@@ -78,21 +78,22 @@ public class CommandHandler extends Command {
             }
         }
 
-        // 去除不以输入参数开头的补全
-        list = StringUtils.startsWithIgnoreCase(list, args[args.length - 1]);
-        // 去除重复的补全参数
-        list = list.stream().distinct().collect(Collectors.toList());
+        String tabArg = args[args.length - 1];
 
-        // 补全最多显示 10 个
-        if (list.size() > 10) {
-            list = list.subList(0, 10);
-        }
+        // 去除重复的补全参数
+        list = list.stream()
+                .filter(s -> StringUtils.startsWithIgnoreCase(s, tabArg)) // 去除不以输入参数开头的补全
+                .distinct() // 去重
+                .limit(10) // 补全最多显示 10 个
+                .collect(Collectors.toList());
+
         AirGameAPI.getLogUtils().debug(
                 "命令 [/%s %s] 的 tab 补全生成完成，共计耗时: %d ms",
                 getName(),
                 StringUtils.join(args, " "),
                 System.currentTimeMillis() - startTime
         );
+
         return list;
     }
 
