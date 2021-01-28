@@ -271,10 +271,7 @@ public final class AirGameAPI extends JavaPlugin {
                 continue;
             }
             scanPackages.addAll(Arrays.asList(commandScan.value()));
-            logUtils.info("已添加插件 %s 需要扫描的包: ", plugin.getName());
-            for (String s : commandScan.value()) {
-                logUtils.info(s);
-            }
+            logUtils.info("  已添加插件 %s 需要扫描的包: %s", plugin.getName(), Arrays.asList(commandScan.value()));
         }
         logUtils.info("==================================================");
 
@@ -348,10 +345,7 @@ public final class AirGameAPI extends JavaPlugin {
                 continue;
             }
             scanPackages.addAll(Arrays.asList(pageScan.value()));
-            logUtils.info("已添加插件 %s 需要扫描的包: ", plugin.getName());
-            for (String s : pageScan.value()) {
-                logUtils.info(s);
-            }
+            logUtils.info("  已添加插件 %s 需要扫描的包: %s", plugin.getName(), Arrays.asList(pageScan.value()));
         }
         logUtils.info("==================================================");
 
