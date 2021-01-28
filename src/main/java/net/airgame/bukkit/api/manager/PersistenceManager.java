@@ -23,8 +23,7 @@ import java.util.Properties;
 public class PersistenceManager {
     private static DataSource dataSource;
 
-    public PersistenceManager() {
-        AirGameAPI.getLogUtils().info("开始初始化持久化管理器.");
+    public PersistenceManager(boolean hikariCP) {
         File file = new File(AirGameAPI.getInstance().getDataFolder(), "sql.properties");
         Properties properties = new Properties();
         try {
@@ -33,24 +32,33 @@ public class PersistenceManager {
             AirGameAPI.getLogUtils().error(e, "初始化数据库连接池时遇到了一个错误: ");
             return;
         }
-        try {
-            Class.forName("com.zaxxer.hikari.HikariDataSource");
-            HikariConfig config = new HikariConfig(properties);
-            dataSource = new HikariDataSource(config);
-            return;
-        } catch (ClassNotFoundException e) {
-            AirGameAPI.getLogUtils().warning("未找到 HikariCP 前置依赖, 使用默认连接池!");
+
+        if (hikariCP && initHikariCP(properties)) {
+            AirGameAPI.getLogUtils().info("已使用 HikariCP 作为数据库连接池!");
+        } else {
+            try {
+                dataSource = new SimpleDataSource(properties);
+                AirGameAPI.getLogUtils().info("已使用 SimpleDataSource 作为数据库连接池!");
+            } catch (ClassNotFoundException e) {
+                AirGameAPI.getLogUtils().error(e, "初始化数据库连接池时遇到了一个错误: ");
+            }
         }
-        try {
-            dataSource = new SimpleDataSource(properties);
-        } catch (ClassNotFoundException e) {
-            AirGameAPI.getLogUtils().error(e, "初始化数据库连接池时遇到了一个错误: ");
-        }
-        AirGameAPI.getLogUtils().info("持久化管理器初始化完成.");
     }
 
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
+    }
+
+    public boolean initHikariCP(Properties properties) {
+        try {
+            Class.forName("com.zaxxer.hikari.HikariDataSource");
+            HikariConfig config = new HikariConfig(properties);
+            dataSource = new HikariDataSource(config);
+            return true;
+        } catch (ClassNotFoundException e) {
+            AirGameAPI.getLogUtils().warning("未找到 HikariCP 前置依赖, 使用默认连接池!");
+        }
+        return false;
     }
 
     public void close() {

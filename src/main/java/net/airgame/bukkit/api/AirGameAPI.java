@@ -17,6 +17,7 @@ import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
@@ -89,6 +90,10 @@ public final class AirGameAPI extends JavaPlugin {
 
         ConfigurationSerialization.registerClass(MessageEntry.class);
 
+        saveDefaultConfig();
+        reloadConfig();
+        saveDefaultFile("sql.properties");
+
         initLogUtil();
         logUtils.info("==================================================");
         loadLibraries();
@@ -97,10 +102,8 @@ public final class AirGameAPI extends JavaPlugin {
         logUtils.info("==================================================");
         initParameterParser();
         logUtils.info("==================================================");
-        saveDefaultConfig();
-        reloadConfig();
-        saveDefaultFile("sql.properties");
-        persistenceManager = new PersistenceManager();
+        initPersistenceManager();
+        logUtils.info("==================================================");
 
         logUtils.info("插件载入完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
     }
@@ -165,6 +168,10 @@ public final class AirGameAPI extends JavaPlugin {
      * 仅 .jar 文件会被加载
      */
     private void loadLibraries() {
+        if (!getConfig().getBoolean("loadLibraries", true)) {
+            logUtils.warning("跳过加载第三方库.");
+            return;
+        }
         logUtils.info("开始加载第三方库.");
         File libFolder = new File(getDataFolder(), "libs");
         if (libFolder.mkdirs()) {
@@ -175,7 +182,7 @@ public final class AirGameAPI extends JavaPlugin {
             return;
         }
 
-        ClassLoader loader = getClassLoader().getParent();
+        ClassLoader loader = getClassLoader();
         try {
             Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
             method.setAccessible(true);
@@ -229,6 +236,17 @@ public final class AirGameAPI extends JavaPlugin {
         ParameterParserManager.registerParser(CommandSender.class, CommandSenderParser.class);
         ParameterParserManager.registerParser(World.class, WorldParser.class);
         logUtils.info("默认命令参数解析器注册完成.");
+    }
+
+    private void initPersistenceManager() {
+        FileConfiguration config = getConfig();
+        if (!config.getBoolean("datasource.enable")) {
+            AirGameAPI.getLogUtils().warning("跳过初始化持久化管理器.");
+            return;
+        }
+        AirGameAPI.getLogUtils().info("开始初始化持久化管理器.");
+        persistenceManager = new PersistenceManager(config.getBoolean("datasource.hikariCP"));
+        AirGameAPI.getLogUtils().info("持久化管理器初始化完成.");
     }
 
     /**
