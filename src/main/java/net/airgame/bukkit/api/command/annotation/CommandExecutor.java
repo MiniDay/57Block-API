@@ -1,7 +1,5 @@
 package net.airgame.bukkit.api.command.annotation;
 
-import org.bukkit.command.Command;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,10 +36,9 @@ public @interface CommandExecutor {
     /**
      * 命令使用帮助
      * <p>
-     * 一般情况下用不到，除非使用 command.getUsage()
+     * 一般情况下用不到
      *
      * @return 使用帮助
-     * @see Command#getUsage()
      */
     String[] usage() default {};
 

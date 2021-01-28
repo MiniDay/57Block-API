@@ -99,7 +99,9 @@ public class MessageEntry implements ConfigurationSerializable {
      * 展示这条消息
      *
      * @param sender 展示对象
+     * @return 产生的 BossBar
      */
+    @Nullable
     public BossBar show(@NotNull CommandSender sender) {
         return show(sender, null);
     }
@@ -109,7 +111,9 @@ public class MessageEntry implements ConfigurationSerializable {
      *
      * @param sender  展示对象
      * @param replace 替换文本信息
+     * @return 可能产生的 BossBar
      */
+    @Nullable
     public BossBar show(@NotNull CommandSender sender, @Nullable Map<String, String> replace) {
         if (sender instanceof Player) {
             return show((Player) sender, replace);
@@ -230,7 +234,10 @@ public class MessageEntry implements ConfigurationSerializable {
 
     /**
      * 广播这条消息
+     *
+     * @return 可能产生的 BossBar 集合
      */
+    @NotNull
     public ArrayList<BossBar> broadcast() {
         return broadcast(null);
     }
@@ -239,8 +246,9 @@ public class MessageEntry implements ConfigurationSerializable {
      * 广播这条消息
      *
      * @param replace 替换文本信息
-     * @return 这个 broadcast 所创建的 BossBar，如果没有设置 BossBar 消息则返回 null
+     * @return 可能产生的 BossBar 集合
      */
+    @NotNull
     public ArrayList<BossBar> broadcast(@Nullable Map<String, String> replace) {
         ArrayList<BossBar> bars = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {

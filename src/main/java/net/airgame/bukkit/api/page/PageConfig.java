@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.gui;
+package net.airgame.bukkit.api.page;
 
 import net.airgame.bukkit.api.util.StringUtils;
 import org.bukkit.Bukkit;

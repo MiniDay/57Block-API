@@ -1,6 +1,6 @@
-package net.airgame.bukkit.api.gui;
+package net.airgame.bukkit.api.page;
 
-import net.airgame.bukkit.api.gui.handler.PageableHandler;
+import net.airgame.bukkit.api.page.handler.PageableHandler;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

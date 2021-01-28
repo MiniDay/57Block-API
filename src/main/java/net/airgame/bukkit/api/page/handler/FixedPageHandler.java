@@ -1,9 +1,10 @@
-package net.airgame.bukkit.api.gui.handler;
+package net.airgame.bukkit.api.page.handler;
 
-import net.airgame.bukkit.api.gui.ButtonGroup;
-import net.airgame.bukkit.api.gui.PageConfig;
+import net.airgame.bukkit.api.page.ButtonGroup;
+import net.airgame.bukkit.api.page.PageConfig;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -12,9 +13,13 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class FixedPageHandler extends Handler {
+
+    public FixedPageHandler(@NotNull HumanEntity player) {
+        super(player);
+    }
+
     public FixedPageHandler(PageConfig config, HumanEntity player) {
         super(config, player);
-        initPage();
     }
 
     @Override

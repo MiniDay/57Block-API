@@ -1,8 +1,8 @@
-package net.airgame.bukkit.api.gui.handler;
+package net.airgame.bukkit.api.page.handler;
 
-import net.airgame.bukkit.api.gui.ButtonGroup;
-import net.airgame.bukkit.api.gui.PageConfig;
-import net.airgame.bukkit.api.gui.PageElement;
+import net.airgame.bukkit.api.page.ButtonGroup;
+import net.airgame.bukkit.api.page.PageConfig;
+import net.airgame.bukkit.api.page.PageElement;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
@@ -26,10 +26,21 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
     private int page;
     private HashMap<Integer, E> elementSlot;
 
+    public PageableHandler(@NotNull HumanEntity player, int page) {
+        super(player);
+        this.page = page;
+        initPage();
+    }
+
     public PageableHandler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player, int page) {
         super(pageConfig, player);
         this.page = page;
         initPage();
+    }
+
+    @Override
+    public boolean autoInit() {
+        return false;
     }
 
     @NotNull

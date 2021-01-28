@@ -108,13 +108,14 @@ public class CommandManager {
     /**
      * 传入一个 CommandExecutor 的实例
      * <p>
-     * 把这它的命令方法的执行器添加到 invokers 中
+     * 构建它的全部 CommandMethodInvoker 对象
      * <p>
      * 并递归搜索它的内部类
      *
      * @param executor      CommandExecutor 实例
      * @param addSubName    子命令前缀，也许这个传入的类是另一个 CommandExecutor 的内部类？
      * @param addPermission 命令权限追加，也许这个传入的类是另一个 CommandExecutor 的内部类？
+     * @return 构建的 CommandMethodInvoker 对象集合
      */
     public static ArrayList<CommandMethodInvoker> generatorClassInvokers(@NotNull Object executor, @NotNull String[] addSubName, @NotNull String[] addPermission) {
         Class<?> executorClass = executor.getClass();
@@ -166,11 +167,12 @@ public class CommandManager {
     /**
      * 传入一个 CommandExecutor 实例
      * <p>
-     * 把它的命令方法的执行器添加到 invokers 中
+     * 构建出这个类下面全部的 CommandMethodInvoker 对象
      *
      * @param executor      CommandExecutor 实例
      * @param addSubName    子命令前缀，这些参数会添加在 Command 注解中 subName 的前面
      * @param addPermission 命令权限追加，这些参数会添加在 Command 注解中 permission 的前面
+     * @return 构建的 CommandMethodInvoker 对象集合
      */
     public static ArrayList<CommandMethodInvoker> generatorMethodInvokers(@NotNull Object executor, @NotNull String[] addSubName, @NotNull String[] addPermission) {
         Class<?> executorClass = executor.getClass();

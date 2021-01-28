@@ -1,7 +1,7 @@
 package net.airgame.bukkit.api.listener;
 
 import net.airgame.bukkit.api.AirGameAPI;
-import net.airgame.bukkit.api.gui.handler.Handler;
+import net.airgame.bukkit.api.page.handler.Handler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;

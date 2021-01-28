@@ -1,8 +1,9 @@
-package net.airgame.bukkit.api.gui.handler;
+package net.airgame.bukkit.api.page.handler;
 
 import net.airgame.bukkit.api.AirGameAPI;
-import net.airgame.bukkit.api.gui.ButtonGroup;
-import net.airgame.bukkit.api.gui.PageConfig;
+import net.airgame.bukkit.api.manager.PageConfigManager;
+import net.airgame.bukkit.api.page.ButtonGroup;
+import net.airgame.bukkit.api.page.PageConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.*;
@@ -19,10 +20,34 @@ public abstract class Handler implements InventoryHolder {
     private final HumanEntity player;
     private final Inventory inventory;
 
+    public Handler(@NotNull HumanEntity player) {
+        pageConfig = PageConfigManager.getPageConfig(getClass());
+        if (pageConfig == null) {
+            throw new IllegalArgumentException("未注册的界面设定!");
+        }
+        this.player = player;
+        inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), pageConfig.getTitle());
+        if (autoInit()) {
+            initPage();
+        }
+    }
+
     public Handler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player) {
         this.pageConfig = pageConfig;
         this.player = player;
         inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), pageConfig.getTitle());
+        if (autoInit()) {
+            initPage();
+        }
+    }
+
+    /**
+     * 是否在实例化时就自动构建页面
+     *
+     * @return true 代表在实例化时就自动构建页面
+     */
+    public boolean autoInit() {
+        return true;
     }
 
     public abstract void initPage();

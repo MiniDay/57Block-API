@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.gui;
+package net.airgame.bukkit.api.page;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
