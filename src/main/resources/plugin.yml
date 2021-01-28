@@ -6,7 +6,8 @@ load: STARTUP
 
 softdepend:
   - Vault
-  - PlayerPointsAPI
+  - PlayerPoints
+  - PlaceholderAPI
 
 authors: [ Hamster3 ]
 description: 五彩方块服务器的API系统

@@ -20,7 +20,7 @@ public class PointAPI {
      * 重载 PlayerPointAPI 点券系统挂接
      */
     public static void reloadPlayerPointAPIHook() {
-        Plugin plugin = Bukkit.getPluginManager().getPlugin("PlayerPointAPI");
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("PlayerPoints");
         if (plugin == null) {
             AirGameAPI.getLogUtils().warning("未检测到 PlayerPointAPI 插件...");
             return;

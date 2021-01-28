@@ -6,17 +6,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.event.server.ServiceRegisterEvent;
+import org.bukkit.event.server.ServiceUnregisterEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 
 public class PluginHookListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPluginEnable(PluginEnableEvent event) {
         Plugin plugin = event.getPlugin();
-        if (isPluginDepend(plugin, "Vault")) {
+        if (plugin.getName().equals("Vault")) {
             VaultAPI.reloadVaultHook();
         }
-        if (isPluginDepend(plugin, "PlayerPointAPI")) {
+        if (plugin.getName().equals("PlayerPoints")) {
             PointAPI.reloadPlayerPointAPIHook();
         }
     }
@@ -24,25 +25,21 @@ public class PluginHookListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPluginDisable(PluginDisableEvent event) {
         Plugin plugin = event.getPlugin();
-        if (isPluginDepend(plugin, "Vault")) {
+        if (plugin.getName().equals("Vault")) {
             VaultAPI.reloadVaultHook();
         }
-        if (isPluginDepend(plugin, "PlayerPointAPI")) {
+        if (plugin.getName().equals("PlayerPoints")) {
             PointAPI.reloadPlayerPointAPIHook();
         }
     }
 
-    private boolean isPluginDepend(Plugin plugin, String pluginName) {
-        if (plugin.getName().equals(pluginName)) {
-            return true;
-        }
-        PluginDescriptionFile description = plugin.getDescription();
-        if (description.getDepend().contains(pluginName)) {
-            return true;
-        }
-        if (description.getSoftDepend().contains(pluginName)) {
-            return true;
-        }
-        return description.getLoadBefore().contains(pluginName);
+    @EventHandler(ignoreCancelled = true)
+    public void onServiceRegister(ServiceRegisterEvent event) {
+        VaultAPI.reloadVaultHook();
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onServiceUnregister(ServiceUnregisterEvent event) {
+        VaultAPI.reloadVaultHook();
     }
 }
