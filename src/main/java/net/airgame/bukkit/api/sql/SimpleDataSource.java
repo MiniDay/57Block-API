@@ -24,6 +24,7 @@ public class SimpleDataSource implements DataSource {
         jdbcUrl = properties.getProperty("jdbcUrl");
         username = properties.getProperty("username");
         password = properties.getProperty("password");
+        AirGameAPI.getLogUtils().info("连接池最大连接数: %s", properties.getProperty("maximumPoolSize"));
     }
 
     @Override
