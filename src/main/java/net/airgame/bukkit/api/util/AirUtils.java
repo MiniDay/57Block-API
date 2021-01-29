@@ -53,7 +53,7 @@ public class AirUtils {
     }
 
     public static String getNMSVersion() {
-        return Bukkit.getServer().getClass().getName().split("\\.")[3];
+        return nmsVersion;
     }
 
     public static Package getNMSPackage() {
