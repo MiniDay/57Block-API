@@ -75,7 +75,7 @@ public class CommandManager {
     public static void registerCommand(Plugin plugin, Class<?> clazz) throws InstantiationException, IllegalAccessException {
         CommandHandler handler = generatorCommandHandler(clazz);
         commandMap.register(plugin.getName(), handler);
-        AirGameAPI.getLogUtils().info("  已成功注册命令: %s", clazz.getSimpleName());
+        AirGameAPI.getLogUtils().info("  已成功注册命令类: %s", clazz.getSimpleName());
     }
 
     /**
@@ -119,7 +119,7 @@ public class CommandManager {
      */
     public static ArrayList<CommandMethodInvoker> generatorClassInvokers(@NotNull Object executor, @NotNull String[] addSubName, @NotNull String[] addPermission) {
         Class<?> executorClass = executor.getClass();
-        AirGameAPI.getLogUtils().info("  开始扫描命令类 %s", executorClass.getName());
+        AirGameAPI.getLogUtils().debug("  开始扫描命令类 %s", executorClass.getName());
 
         ArrayList<CommandMethodInvoker> invokers = generatorMethodInvokers(executor, addSubName, addPermission);
 
@@ -186,7 +186,7 @@ public class CommandManager {
             if (annotation == null) {
                 continue;
             }
-            AirGameAPI.getLogUtils().info(
+            AirGameAPI.getLogUtils().debug(
                     "    已读取方法 %s::%s(%s);",
                     executorClass.getSimpleName(),
                     method.getName(),

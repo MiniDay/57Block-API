@@ -260,7 +260,6 @@ public final class AirGameAPI extends JavaPlugin {
     private void initCommand() {
         logUtils.info("开始注册命令.");
 
-
         ArrayList<String> scanPackages = new ArrayList<>();
         for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
             if (!(plugin instanceof JavaPlugin)) {
