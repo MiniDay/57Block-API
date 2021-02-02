@@ -39,7 +39,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
     }
 
     @Override
-    public boolean autoInit() {
+    public final boolean autoInit() {
         return false;
     }
 

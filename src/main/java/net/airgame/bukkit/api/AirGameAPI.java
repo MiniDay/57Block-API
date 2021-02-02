@@ -315,6 +315,9 @@ public final class AirGameAPI extends JavaPlugin {
             ArrayList<String> classNames = entry.getValue();
             logUtils.info("开始扫描插件 %s", plugin.getName());
             for (String className : classNames) {
+                if (className.contains("$")) {
+                    continue;
+                }
                 try {
                     CommandManager.registerCommand(plugin, className);
                 } catch (IllegalAccessException e) {

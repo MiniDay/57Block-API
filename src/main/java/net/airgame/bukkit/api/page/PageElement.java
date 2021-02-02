@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @see PageableHandler#initPage()
@@ -22,5 +23,10 @@ public interface PageElement {
 
     String replaceDisplayName(HumanEntity player, String displayName);
 
-    List<String> replaceLore(HumanEntity player, List<String> lore);
+    default List<String> replaceLore(HumanEntity player, List<String> lore) {
+        if (lore == null) {
+            return null;
+        }
+        return lore.stream().map(s -> replaceDisplayName(player, s)).collect(Collectors.toList());
+    }
 }
