@@ -104,4 +104,84 @@ public class ItemUtils {
         stack.setItemMeta(meta);
         return stack;
     }
+
+    /**
+     * 获取该物品是否拥有耐久条
+     *
+     * @param material 物品材料
+     * @return 该物品是否拥有耐久条
+     */
+    public static boolean isDamageable(Material material) {
+        switch (material) {
+            case FLINT_AND_STEEL:
+            case FISHING_ROD:
+            case SHEARS:
+            case BOW:
+
+            case WOODEN_SHOVEL:
+            case STONE_SHOVEL:
+            case IRON_SHOVEL:
+            case GOLDEN_SHOVEL:
+            case DIAMOND_SHOVEL:
+            case NETHERITE_SHOVEL:
+
+            case WOODEN_PICKAXE:
+            case STONE_PICKAXE:
+            case IRON_PICKAXE:
+            case GOLDEN_PICKAXE:
+            case DIAMOND_PICKAXE:
+            case NETHERITE_PICKAXE:
+
+            case WOODEN_AXE:
+            case STONE_AXE:
+            case IRON_AXE:
+            case GOLDEN_AXE:
+            case DIAMOND_AXE:
+            case NETHERITE_AXE:
+
+            case WOODEN_HOE:
+            case STONE_HOE:
+            case IRON_HOE:
+            case GOLDEN_HOE:
+            case DIAMOND_HOE:
+            case NETHERITE_HOE:
+
+            case WOODEN_SWORD:
+            case STONE_SWORD:
+            case IRON_SWORD:
+            case GOLDEN_SWORD:
+            case DIAMOND_SWORD:
+            case NETHERITE_SWORD:
+
+            case LEATHER_BOOTS:
+            case CHAINMAIL_BOOTS:
+            case IRON_BOOTS:
+            case GOLDEN_BOOTS:
+            case DIAMOND_BOOTS:
+            case NETHERITE_BOOTS:
+
+            case LEATHER_LEGGINGS:
+            case CHAINMAIL_LEGGINGS:
+            case IRON_LEGGINGS:
+            case GOLDEN_LEGGINGS:
+            case DIAMOND_LEGGINGS:
+            case NETHERITE_LEGGINGS:
+
+            case LEATHER_CHESTPLATE:
+            case CHAINMAIL_CHESTPLATE:
+            case IRON_CHESTPLATE:
+            case GOLDEN_CHESTPLATE:
+            case DIAMOND_CHESTPLATE:
+            case NETHERITE_CHESTPLATE:
+
+            case LEATHER_HELMET:
+            case CHAINMAIL_HELMET:
+            case IRON_HELMET:
+            case GOLDEN_HELMET:
+            case DIAMOND_HELMET:
+            case NETHERITE_HELMET:
+                return true;
+        }
+        return false;
+    }
 }
