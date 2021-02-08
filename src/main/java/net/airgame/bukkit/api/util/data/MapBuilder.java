@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.data;
+package net.airgame.bukkit.api.util.data;
 
 import java.util.HashMap;
 
@@ -7,7 +7,11 @@ public class MapBuilder<K, V> {
     private final HashMap<K, V> map;
 
     public MapBuilder() {
-        map = new HashMap<>();
+        this(new HashMap<>());
+    }
+
+    public MapBuilder(HashMap<K, V> map) {
+        this.map = map;
     }
 
     public static <K, V> MapBuilder<K, V> with(K key, V value) {

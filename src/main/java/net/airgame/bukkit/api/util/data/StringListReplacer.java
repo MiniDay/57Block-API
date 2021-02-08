@@ -1,8 +1,11 @@
-package net.airgame.bukkit.api.data;
+package net.airgame.bukkit.api.util.data;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 public class StringListReplacer {
