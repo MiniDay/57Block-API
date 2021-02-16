@@ -1,6 +1,6 @@
 # 是否启用插件自带的日志器
 # 启用将会把日志打印到控制台上
-usePluginLogger: true
+usePluginLogger: false
 
 # 是否启用调试信息输出
 debug: false
@@ -11,7 +11,7 @@ logSaveToFile: true
 # 缓存输出（一般在需要调试时才会改为false）
 # 启用则日志可能会延迟输出到文件中，优化性能
 # 关闭则日志输出时立即保存至文件，但性能较差
-bufferWriter: false
+bufferWriter: true
 
 # 日志文件最多保存多少天
 # 设置为小于 1 的值将会让日志永远不会被自动删除
