@@ -1,7 +1,7 @@
 package net.airgame.bukkit.api.command.parameter;
 
 import net.airgame.bukkit.api.AirGameAPI;
-import net.airgame.bukkit.api.command.annotation.Sender;
+import net.airgame.bukkit.api.annotation.Sender;
 import net.airgame.bukkit.api.command.parameter.parser.EndParser;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.CommandSenderParser;
 import org.bukkit.command.CommandSender;

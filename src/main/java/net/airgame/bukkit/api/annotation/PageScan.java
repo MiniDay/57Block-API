@@ -1,11 +1,12 @@
-package net.airgame.bukkit.api.command.annotation;
+package net.airgame.bukkit.api.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.PARAMETER)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Sender {
+public @interface PageScan {
+    String[] value();
 }

@@ -32,7 +32,7 @@ public class AirUtils {
      * @return 计算结果
      */
     public static double calculate(String s) {
-        return calculator.calculate(s);
+        return calculator.calculate(s.replace(" ", ""));
     }
 
     /**

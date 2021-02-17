@@ -2,12 +2,7 @@
 
 五彩方块服务器的 API
 
-本项目以 [LGPL许可协议](LICENSE.md) 开源
-
-<details>
-<summary>若使用该项目代码则请严格遵守许可协议，否则......</summary>
-<p style="background-color: black; color: black;">否则你会被仓鼠强烈谴责.jpg</p>
-</details>
+**本项目仍在开发阶段，许多类和方法都不稳定，请谨慎考虑使用该API**
 
 # 使用方法
 

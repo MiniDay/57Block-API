@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.command.annotation;
+package net.airgame.bukkit.api.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

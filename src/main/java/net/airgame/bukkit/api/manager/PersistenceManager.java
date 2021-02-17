@@ -1,5 +1,8 @@
 package net.airgame.bukkit.api.manager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.airgame.bukkit.api.AirGameAPI;
@@ -21,6 +24,8 @@ import java.util.Properties;
  */
 @SuppressWarnings({"unused", "SpellCheckingInspection"})
 public class PersistenceManager {
+    private static final Gson gson = new GsonBuilder().create();
+    private static final JsonParser parser = new JsonParser();
     private static DataSource dataSource;
 
     public PersistenceManager(boolean hikariCP) {
@@ -43,6 +48,18 @@ public class PersistenceManager {
                 AirGameAPI.getLogUtils().error(e, "初始化数据库连接池时遇到了一个错误: ");
             }
         }
+    }
+
+    public static Gson getGson() {
+        return gson;
+    }
+
+    public static JsonParser getParser() {
+        return parser;
+    }
+
+    public static DataSource getDataSource() {
+        return dataSource;
     }
 
     public static Connection getConnection() throws SQLException {

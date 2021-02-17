@@ -35,14 +35,14 @@
                     </links>
                     <detectJavaApiLink>true</detectJavaApiLink>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <!--                <executions>-->
+                <!--                    <execution>-->
+                <!--                        <phase>install</phase>-->
+                <!--                        <goals>-->
+                <!--                            <goal>jar</goal>-->
+                <!--                        </goals>-->
+                <!--                    </execution>-->
+                <!--                </executions>-->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -101,7 +101,7 @@
     <distributionManagement>
         <repository>
             <id>airgame-repo</id>
-            <url>http://maven.hamster3.cn/repository/airgame-repo/</url>
+            <url>http://maven.hamster3.cn/repository/miniday-repo/</url>
         </repository>
     </distributionManagement>
 

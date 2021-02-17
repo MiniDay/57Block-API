@@ -9,6 +9,9 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
+/**
+ * PlayerPointsAPI
+ */
 @SuppressWarnings("unused")
 public class PointAPI {
     private static PlayerPointsAPI playerPointsAPI;

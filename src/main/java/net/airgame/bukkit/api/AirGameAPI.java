@@ -1,6 +1,7 @@
 package net.airgame.bukkit.api;
 
-import net.airgame.bukkit.api.command.annotation.CommandScan;
+import net.airgame.bukkit.api.annotation.CommandScan;
+import net.airgame.bukkit.api.annotation.PageScan;
 import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.*;
@@ -10,8 +11,6 @@ import net.airgame.bukkit.api.manager.CommandManager;
 import net.airgame.bukkit.api.manager.PageConfigManager;
 import net.airgame.bukkit.api.manager.PersistenceManager;
 import net.airgame.bukkit.api.message.MessageEntry;
-import net.airgame.bukkit.api.page.PageConfig;
-import net.airgame.bukkit.api.page.PageScan;
 import net.airgame.bukkit.api.page.handler.Handler;
 import net.airgame.bukkit.api.util.LogUtils;
 import net.airgame.bukkit.api.util.api.PointAPI;
@@ -42,7 +41,7 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-@CommandScan("net.airgame.bukkit.api.debug")
+@CommandScan("net.airgame.bukkit.api.command.debug")
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public final class AirGameAPI extends JavaPlugin {
     private static AirGameAPI instance;
@@ -336,8 +335,6 @@ public final class AirGameAPI extends JavaPlugin {
     private void initPageConfig() {
         logUtils.info("开始注册界面设定.");
 
-
-        ArrayList<String> scanPackages = new ArrayList<>();
         for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
             if (!(plugin instanceof JavaPlugin)) {
                 continue;
@@ -346,65 +343,11 @@ public final class AirGameAPI extends JavaPlugin {
             if (pageScan == null) {
                 continue;
             }
-            scanPackages.addAll(Arrays.asList(pageScan.value()));
-            logUtils.info("  已添加插件 %s 需要扫描的包: %s", plugin.getName(), Arrays.asList(pageScan.value()));
-        }
-        logUtils.info("==================================================");
-
-        HashMap<Plugin, ArrayList<String>> scanPlugin = new HashMap<>();
-        try {
-            Method getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
-            getFileMethod.setAccessible(true);
-            for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
-                if (!(plugin instanceof JavaPlugin)) {
-                    continue;
-                }
-                Enumeration<JarEntry> entries = new JarFile((File) getFileMethod.invoke(plugin)).entries();
-
-                ArrayList<String> classNames = new ArrayList<>();
-
-                while (entries.hasMoreElements()) {
-                    JarEntry entry = entries.nextElement();
-                    String entryName = entry.getName();
-                    if (!entryName.endsWith(".class")) {
-                        continue;
-                    }
-                    String s = entryName.replace("/", ".");
-                    s = s.substring(0, s.length() - 6);
-                    for (String packageName : scanPackages) {
-                        if (s.startsWith(packageName)) {
-                            classNames.add(s);
-                        }
-                    }
-                }
-
-                if (classNames.isEmpty()) {
-                    continue;
-                }
-                scanPlugin.put(plugin, classNames);
-            }
-        } catch (Exception e) {
-            logUtils.error(e, "从插件的Java包中扫描界面设定时遇到了一个异常: ");
-        }
-
-        for (Map.Entry<Plugin, ArrayList<String>> entry : scanPlugin.entrySet()) {
-            Plugin plugin = entry.getKey();
-            ArrayList<String> classNames = entry.getValue();
-            logUtils.info("开始扫描插件 %s", plugin.getName());
-            for (String pageClassName : classNames) {
-                String yamlName = pageClassName.substring(pageClassName.lastIndexOf('.') + 1) + ".yml";
-                File file = new File(plugin.getDataFolder(), yamlName);
-
-                try {
-                    if (!file.exists() && plugin.getResource(yamlName) != null) {
-                        plugin.saveResource(yamlName, false);
-                    }
-                    PageConfigManager.registerPageConfig(pageClassName, new PageConfig(YamlConfiguration.loadConfiguration(file)));
-                } catch (Exception e) {
-                    AirGameAPI.getLogUtils().error(e, "注册插件 %s 的界面设定 %s 时遇到了一个异常: ", plugin.getName(), yamlName);
-                }
+            for (String packageName : pageScan.value()) {
+                PageConfigManager.registerPageConfig((JavaPlugin) plugin, packageName);
             }
         }
+
         logUtils.info("界面设定注册完成.");
     }
 

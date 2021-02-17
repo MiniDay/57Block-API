@@ -1,8 +1,8 @@
 package net.airgame.bukkit.api.manager;
 
 import net.airgame.bukkit.api.AirGameAPI;
-import net.airgame.bukkit.api.command.annotation.Command;
-import net.airgame.bukkit.api.command.annotation.CommandExecutor;
+import net.airgame.bukkit.api.annotation.Command;
+import net.airgame.bukkit.api.annotation.CommandExecutor;
 import net.airgame.bukkit.api.command.executor.CommandHandler;
 import net.airgame.bukkit.api.command.executor.CommandMethodInvoker;
 import net.airgame.bukkit.api.util.StringUtils;

@@ -7,6 +7,9 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+/**
+ * Vault API
+ */
 @SuppressWarnings("unused")
 public class VaultAPI {
     private static boolean vaultEnabled;

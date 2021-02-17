@@ -1,9 +1,9 @@
-package net.airgame.bukkit.api.debug;
+package net.airgame.bukkit.api.command.debug;
 
 import net.airgame.bukkit.api.AirGameAPI;
-import net.airgame.bukkit.api.command.annotation.Command;
-import net.airgame.bukkit.api.command.annotation.CommandExecutor;
-import net.airgame.bukkit.api.command.annotation.Sender;
+import net.airgame.bukkit.api.annotation.Command;
+import net.airgame.bukkit.api.annotation.CommandExecutor;
+import net.airgame.bukkit.api.annotation.Sender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
