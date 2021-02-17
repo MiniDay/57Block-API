@@ -11,7 +11,7 @@ import net.airgame.bukkit.api.manager.CommandManager;
 import net.airgame.bukkit.api.manager.PageConfigManager;
 import net.airgame.bukkit.api.manager.PersistenceManager;
 import net.airgame.bukkit.api.message.MessageEntry;
-import net.airgame.bukkit.api.page.handler.Handler;
+import net.airgame.bukkit.api.page.handler.PageHandler;
 import net.airgame.bukkit.api.util.LogUtils;
 import net.airgame.bukkit.api.util.api.PointAPI;
 import net.airgame.bukkit.api.util.api.VaultAPI;
@@ -144,7 +144,7 @@ public final class AirGameAPI extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryView view = player.getOpenInventory();
             Inventory inventory = view.getTopInventory();
-            if (!(inventory.getHolder() instanceof Handler)) {
+            if (!(inventory.getHolder() instanceof PageHandler)) {
                 continue;
             }
             player.closeInventory();

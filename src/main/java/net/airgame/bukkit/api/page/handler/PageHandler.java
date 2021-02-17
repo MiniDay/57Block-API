@@ -15,12 +15,12 @@ import org.jetbrains.annotations.NotNull;
  * GUI 处理类
  */
 @SuppressWarnings("unused")
-public abstract class Handler implements InventoryHolder {
+public abstract class PageHandler implements InventoryHolder {
     private final PageConfig pageConfig;
     private final HumanEntity player;
     private final Inventory inventory;
 
-    public Handler(@NotNull HumanEntity player) {
+    public PageHandler(@NotNull HumanEntity player) {
         pageConfig = PageConfigManager.getPageConfig(getClass());
         if (pageConfig == null) {
             throw new IllegalArgumentException("未注册的界面设定!");
@@ -32,7 +32,7 @@ public abstract class Handler implements InventoryHolder {
         }
     }
 
-    public Handler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player) {
+    public PageHandler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player) {
         this.pageConfig = pageConfig;
         this.player = player;
         inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), pageConfig.getTitle());
@@ -62,7 +62,7 @@ public abstract class Handler implements InventoryHolder {
         event.setCancelled(true);
     }
 
-    public void onClickButton(@NotNull ClickType clickType, @NotNull InventoryAction action, int index) {
+    public void onClickInside(@NotNull ClickType clickType, @NotNull InventoryAction action, int index) {
     }
 
     public void onDrag(@NotNull InventoryDragEvent event) {

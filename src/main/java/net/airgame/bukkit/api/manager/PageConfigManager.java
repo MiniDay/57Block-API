@@ -2,7 +2,7 @@ package net.airgame.bukkit.api.manager;
 
 import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.page.PageConfig;
-import net.airgame.bukkit.api.page.handler.Handler;
+import net.airgame.bukkit.api.page.handler.PageHandler;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -67,12 +67,12 @@ public class PageConfigManager {
     }
 
     @SuppressWarnings("unused")
-    public static void registerPageConfig(@NotNull Class<? extends Handler> clazz, @NotNull PageConfig config) {
+    public static void registerPageConfig(@NotNull Class<? extends PageHandler> clazz, @NotNull PageConfig config) {
         registerPageConfig(clazz.getName(), config);
         AirGameAPI.getLogUtils().info("已注册 %s 的界面设置.", clazz.getName());
     }
 
-    public static PageConfig getPageConfig(@NotNull Class<? extends Handler> clazz) {
+    public static PageConfig getPageConfig(@NotNull Class<? extends PageHandler> clazz) {
         return pageConfigs.get(clazz.getName());
     }
 }

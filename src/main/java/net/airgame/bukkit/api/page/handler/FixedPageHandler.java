@@ -12,7 +12,7 @@ import java.util.List;
  * 固定页面的 GUI
  */
 @SuppressWarnings("unused")
-public class FixedPageHandler extends Handler {
+public class FixedPageHandler extends PageHandler {
 
     public FixedPageHandler(@NotNull HumanEntity player) {
         super(player);

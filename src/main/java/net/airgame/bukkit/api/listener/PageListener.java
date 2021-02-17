@@ -1,7 +1,7 @@
 package net.airgame.bukkit.api.listener;
 
 import net.airgame.bukkit.api.AirGameAPI;
-import net.airgame.bukkit.api.page.handler.Handler;
+import net.airgame.bukkit.api.page.handler.PageHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -14,24 +14,24 @@ public class PageListener implements Listener {
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (!(inventory.getHolder() instanceof Handler)) {
+        if (!(inventory.getHolder() instanceof PageHandler)) {
             return;
         }
-        Handler handler = (Handler) inventory.getHolder();
-        handler.onOpen(event);
+        PageHandler pageHandler = (PageHandler) inventory.getHolder();
+        pageHandler.onOpen(event);
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (!(inventory.getHolder() instanceof Handler)) {
+        if (!(inventory.getHolder() instanceof PageHandler)) {
             return;
         }
-        Handler handler = (Handler) inventory.getHolder();
+        PageHandler pageHandler = (PageHandler) inventory.getHolder();
         try {
-            handler.onClick(event);
+            pageHandler.onClick(event);
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "执行 %s 的 onClick(event) 时遇到了一个异常: ", handler.getClass().getName());
+            AirGameAPI.getLogUtils().error(e, "执行 %s 的 onClick(event) 时遇到了一个异常: ", pageHandler.getClass().getName());
         }
         if (event.isCancelled()) {
             return;
@@ -44,28 +44,34 @@ public class PageListener implements Listener {
             return;
         }
         try {
-            handler.onClickButton(event.getClick(), event.getAction(), index);
+            pageHandler.onClickInside(event);
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "执行 %s 的 onClickButton(%d) 时遇到了一个异常: ", handler.getClass().getName(), index);
+            AirGameAPI.getLogUtils().error(e, "执行 %s 的 onClickInside(event) 时遇到了一个异常: ", pageHandler.getClass().getName());
         }
         try {
-            handler.onClickInside(event);
+            pageHandler.onClickInside(event.getClick(), event.getAction(), index);
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "执行 %s 的 onClickInside(event) 时遇到了一个异常: ", handler.getClass().getName());
+            AirGameAPI.getLogUtils().error(e,
+                    "执行 %s 的 onClickInside(%s %s%d) 时遇到了一个异常: ",
+                    pageHandler.getClass().getName(),
+                    event.getClick().name(),
+                    event.getAction().name(),
+                    index
+            );
         }
     }
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (!(inventory.getHolder() instanceof Handler)) {
+        if (!(inventory.getHolder() instanceof PageHandler)) {
             return;
         }
-        Handler handler = (Handler) inventory.getHolder();
+        PageHandler pageHandler = (PageHandler) inventory.getHolder();
         try {
-            handler.onDrag(event);
+            pageHandler.onDrag(event);
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "执行 %s 的 onDrag(event) 时遇到了一个异常: ", handler.getClass().getName());
+            AirGameAPI.getLogUtils().error(e, "执行 %s 的 onDrag(event) 时遇到了一个异常: ", pageHandler.getClass().getName());
         }
         if (event.isCancelled()) {
             return;
@@ -73,7 +79,7 @@ public class PageListener implements Listener {
         int size = inventory.getSize();
         for (Integer slot : event.getRawSlots()) {
             if (slot < size) {
-                handler.onDragInside(event);
+                pageHandler.onDragInside(event);
                 break;
             }
         }
@@ -82,10 +88,10 @@ public class PageListener implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         Inventory inventory = event.getView().getTopInventory();
-        if (!(inventory.getHolder() instanceof Handler)) {
+        if (!(inventory.getHolder() instanceof PageHandler)) {
             return;
         }
-        Handler handler = (Handler) inventory.getHolder();
-        handler.onClose(event);
+        PageHandler pageHandler = (PageHandler) inventory.getHolder();
+        pageHandler.onClose(event);
     }
 }
