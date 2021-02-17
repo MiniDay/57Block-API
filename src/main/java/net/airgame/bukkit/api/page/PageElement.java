@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @see PageableHandler#initPage()
@@ -21,12 +20,19 @@ public interface PageElement {
         return false;
     }
 
-    String replaceDisplayName(HumanEntity player, String displayName);
+    default String replaceDisplayName(HumanEntity player, String displayName) {
+        return replacePlaceholder(player, displayName);
+    }
 
     default List<String> replaceLore(HumanEntity player, List<String> lore) {
         if (lore == null) {
             return null;
         }
-        return lore.stream().map(s -> replaceDisplayName(player, s)).collect(Collectors.toList());
+        for (int i = 0; i < lore.size(); i++) {
+            lore.set(i, replacePlaceholder(player, lore.get(i)));
+        }
+        return lore;
     }
+
+    String replacePlaceholder(HumanEntity player, String string);
 }
