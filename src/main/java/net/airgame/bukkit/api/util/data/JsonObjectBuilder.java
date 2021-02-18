@@ -4,42 +4,42 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 @SuppressWarnings("unused")
-public class JsonBuilder {
+public class JsonObjectBuilder {
     private final JsonObject object;
 
-    public JsonBuilder() {
+    public JsonObjectBuilder() {
         this(new JsonObject());
     }
 
-    public JsonBuilder(JsonObject object) {
+    public JsonObjectBuilder(JsonObject object) {
         this.object = object;
     }
 
-    public static JsonBuilder create() {
-        return new JsonBuilder();
+    public static JsonObjectBuilder create() {
+        return new JsonObjectBuilder();
     }
 
-    public JsonBuilder append(String key, String value) {
+    public JsonObjectBuilder append(String key, String value) {
         object.addProperty(key, value);
         return this;
     }
 
-    public JsonBuilder append(String key, Number value) {
+    public JsonObjectBuilder append(String key, Number value) {
         object.addProperty(key, value);
         return this;
     }
 
-    public JsonBuilder append(String key, Boolean value) {
+    public JsonObjectBuilder append(String key, Boolean value) {
         object.addProperty(key, value);
         return this;
     }
 
-    public JsonBuilder append(String key, Character value) {
+    public JsonObjectBuilder append(String key, Character value) {
         object.addProperty(key, value);
         return this;
     }
 
-    public JsonBuilder append(String key, JsonElement value) {
+    public JsonObjectBuilder append(String key, JsonElement value) {
         object.add(key, value);
         return this;
     }

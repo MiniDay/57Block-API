@@ -33,16 +33,13 @@ public class ItemUtils {
      * @param stack 物品
      * @return 物品的名称
      */
-    @SuppressWarnings("ConstantConditions")
     public static String getItemName(ItemStack stack) {
         if (stack == null) {
             return "null";
         }
-        if (stack.hasItemMeta()) {
-            ItemMeta meta = stack.getItemMeta();
-            if (meta.hasDisplayName()) {
-                return meta.getDisplayName();
-            }
+        ItemMeta meta = stack.getItemMeta();
+        if (meta != null && meta.hasDisplayName()) {
+            return meta.getDisplayName();
         }
         return stack.getType().name();
     }

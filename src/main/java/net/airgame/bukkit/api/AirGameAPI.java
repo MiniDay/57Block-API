@@ -12,6 +12,7 @@ import net.airgame.bukkit.api.manager.PageConfigManager;
 import net.airgame.bukkit.api.manager.PersistenceManager;
 import net.airgame.bukkit.api.message.MessageEntry;
 import net.airgame.bukkit.api.page.handler.PageHandler;
+import net.airgame.bukkit.api.util.AirUtils;
 import net.airgame.bukkit.api.util.LogUtils;
 import net.airgame.bukkit.api.util.api.PointAPI;
 import net.airgame.bukkit.api.util.api.VaultAPI;
@@ -126,7 +127,8 @@ public final class AirGameAPI extends JavaPlugin {
         sync(() -> Bukkit.getPluginManager().registerEvents(new PluginHookListener(), AirGameAPI.this));
         Bukkit.getPluginManager().registerEvents(new PageListener(), this);
         logUtils.info("已注册 GUI 相关监听器.");
-
+        logUtils.debug("当前服务器 MC 版本: " + AirUtils.getMCVersion());
+        logUtils.debug("当前服务器 nms 包名: " + AirUtils.getNMSPackage().getName());
         logUtils.info("插件启动完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
     }
 

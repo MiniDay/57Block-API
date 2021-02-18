@@ -42,6 +42,9 @@ public class LogUtils {
         File logSettingsFile = new File(plugin.getDataFolder(), "logSettings.yml");
         if (logSettingsFile.exists()) {
             init(YamlConfiguration.loadConfiguration(logSettingsFile));
+        } else if (plugin.getResource("logSettings.yml") != null) {
+            plugin.saveResource("logSettings.yml", true);
+            init(YamlConfiguration.loadConfiguration(logSettingsFile));
         } else {
             init(DEFAULT_CONFIG);
         }
@@ -83,7 +86,7 @@ public class LogUtils {
 
         File logFolder;
         if (config.contains("logFolder")) {
-            File logFolderLocation = new File(config.getString("logFolder"));
+            File logFolderLocation = new File(config.getString("logFolder", "logs/plugins"));
             if (logFolderLocation.exists() || logFolderLocation.mkdirs()) {
                 logFolder = new File(logFolderLocation, plugin.getName());
             } else {

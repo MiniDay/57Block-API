@@ -57,14 +57,12 @@ public class AirUtils {
     }
 
     public static Package getNMSPackage() {
-        String nmsVersion = getNMSVersion();
-        return Package.getPackage("net.minecraft.server." + nmsVersion);
+        return Package.getPackage("net.minecraft.server." + getNMSVersion());
     }
 
     public static Class<?> getNMSClass(String className) throws ClassNotFoundException {
         return Class.forName("net.minecraft.server." + nmsVersion + "." + className);
     }
-
 
     /**
      * 取消注册监听器中的所有事件处理器
