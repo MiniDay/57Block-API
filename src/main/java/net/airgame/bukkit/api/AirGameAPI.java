@@ -95,7 +95,6 @@ public final class AirGameAPI extends JavaPlugin {
 
         saveDefaultConfig();
         reloadConfig();
-        saveDefaultFile("sql.properties");
 
         initLogUtil();
         logUtils.info("==================================================");
@@ -251,6 +250,7 @@ public final class AirGameAPI extends JavaPlugin {
             return;
         }
         AirGameAPI.getLogUtils().info("开始初始化持久化管理器.");
+        saveDefaultFile("sql.properties");
         persistenceManager = new PersistenceManager(config.getBoolean("datasource.hikariCP"));
         AirGameAPI.getLogUtils().info("持久化管理器初始化完成.");
     }
@@ -361,15 +361,16 @@ public final class AirGameAPI extends JavaPlugin {
      * @param name 文件名称
      */
     private File saveDefaultFile(String name) {
+        // 这里不能用日志器
+        // 因为日志器的配置文件也是用这个方法生成的
         if (getDataFolder().mkdirs()) {
-            logUtils.info("创建插件存档文件夹...");
+            getLogger().info("创建插件存档文件夹...");
         }
         File file = new File(getDataFolder(), name);
         if (file.exists()) {
             return file;
         }
         saveResource(name, true);
-        // 这里不能用日志器
         getLogger().info("复制 " + name + " 至插件存档文件夹...");
         return file;
     }

@@ -28,7 +28,7 @@ public class PersistenceManager {
     private static final JsonParser parser = new JsonParser();
     private static DataSource dataSource;
 
-    public PersistenceManager(boolean hikariCP) {
+    public PersistenceManager(boolean enableHikariCP) {
         File file = new File(AirGameAPI.getInstance().getDataFolder(), "sql.properties");
         Properties properties = new Properties();
         try {
@@ -38,7 +38,7 @@ public class PersistenceManager {
             return;
         }
 
-        if (hikariCP && initHikariCP(properties)) {
+        if (enableHikariCP && initHikariCP(properties)) {
             AirGameAPI.getLogUtils().info("已使用 HikariCP 作为数据库连接池!");
         } else {
             try {
