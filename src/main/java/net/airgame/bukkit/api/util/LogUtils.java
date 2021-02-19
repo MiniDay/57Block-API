@@ -203,7 +203,7 @@ public class LogUtils {
     /**
      * 记录一条调试信息
      *
-     * @param debug 试信息
+     * @param debug 调试信息
      */
     public void debug(@NotNull String debug) {
         if (!this.debug) {
@@ -224,12 +224,51 @@ public class LogUtils {
     /**
      * 记录一条调试信息，使用 String.format() 替换参数
      *
-     * @param debug  试信息
+     * @param debug  调试信息
      * @param params 参数
      * @see String#format(String, Object...)
      */
     public void debug(@NotNull String debug, @NotNull Object... params) {
         debug(String.format(debug, params));
+    }
+
+    /**
+     * 记录一条调试异常
+     *
+     * @param e 异常对象
+     */
+    public void debug(@NotNull Throwable e) {
+        if (!this.debug) {
+            return;
+        }
+        error(e);
+    }
+
+    /**
+     * 记录一条调试异常
+     *
+     * @param e     异常对象
+     * @param debug 附加信息
+     */
+    public void debug(@NotNull Throwable e, @NotNull String debug) {
+        if (!this.debug) {
+            return;
+        }
+        error(e, debug);
+    }
+
+    /**
+     * 记录一条调试异常
+     *
+     * @param e      异常对象
+     * @param debug  附加信息
+     * @param params 格式化对象
+     */
+    public void debug(@NotNull Throwable e, @NotNull String debug, @NotNull Object... params) {
+        if (!this.debug) {
+            return;
+        }
+        error(e, debug, params);
     }
 
     /**

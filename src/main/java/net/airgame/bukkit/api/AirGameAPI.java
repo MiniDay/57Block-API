@@ -5,6 +5,7 @@ import net.airgame.bukkit.api.annotation.PageScan;
 import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.*;
+import net.airgame.bukkit.api.listener.ConversationListener;
 import net.airgame.bukkit.api.listener.PageListener;
 import net.airgame.bukkit.api.listener.PluginHookListener;
 import net.airgame.bukkit.api.manager.CommandManager;
@@ -113,6 +114,9 @@ public final class AirGameAPI extends JavaPlugin {
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
+        logUtils.info("插件正在启动...");
+        logUtils.debug("当前服务器 MC 版本: " + AirUtils.getMCVersion());
+        logUtils.debug("当前服务器 nms 包名: " + AirUtils.getNMSPackage().getName());
 
         logUtils.info("==================================================");
         VaultAPI.reloadVaultHook();
@@ -123,11 +127,13 @@ public final class AirGameAPI extends JavaPlugin {
         initPageConfig();
         logUtils.info("==================================================");
 
-        sync(() -> Bukkit.getPluginManager().registerEvents(new PluginHookListener(), AirGameAPI.this));
         Bukkit.getPluginManager().registerEvents(new PageListener(), this);
         logUtils.info("已注册 GUI 相关监听器.");
-        logUtils.debug("当前服务器 MC 版本: " + AirUtils.getMCVersion());
-        logUtils.debug("当前服务器 nms 包名: " + AirUtils.getNMSPackage().getName());
+        Bukkit.getPluginManager().registerEvents(new PluginHookListener(), this);
+        logUtils.info("已注册插件挂接监听器.");
+        Bukkit.getPluginManager().registerEvents(new ConversationListener(), this);
+        logUtils.info("已注册玩家会话监听器.");
+
         logUtils.info("插件启动完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
     }
 
