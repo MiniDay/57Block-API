@@ -28,6 +28,14 @@ public abstract class Conversation {
         return ConversationListener.getPlayerInput(player).get(time, unit);
     }
 
+    public void sendMessage(String message) {
+        player.sendMessage(message);
+    }
+
+    public void sendMessage(String message, Object... args) {
+        sendMessage(String.format(message, args));
+    }
+
     public abstract void conversation() throws InterruptedException, ExecutionException, TimeoutException;
 
     public void start() {
