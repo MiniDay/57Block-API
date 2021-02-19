@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 
 @CommandExecutor(
         name = "reloadPageSetting",
-        aliases = {"reloadPage"},
+        aliases = {"reloadPage", "pageReload"},
         permission = "airgame.admin"
 )
 @SuppressWarnings("unused")
