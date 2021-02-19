@@ -42,6 +42,7 @@ public abstract class Conversation {
     public abstract void conversation() throws InterruptedException, ExecutionException, TimeoutException;
 
     public BukkitTask start(Plugin plugin) {
+        AirGameAPI.sync(player::closeInventory);
         return Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 conversation();
