@@ -29,18 +29,11 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
     public PageableHandler(@NotNull HumanEntity player, int page) {
         super(player);
         this.page = page;
-        initPage();
     }
 
     public PageableHandler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player, int page) {
         super(pageConfig, player);
         this.page = page;
-        initPage();
-    }
-
-    @Override
-    public final boolean autoInit() {
-        return false;
     }
 
     @NotNull
@@ -148,12 +141,12 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
 
     public void showPreviewPage() {
         page--;
-        initPage();
+        show();
     }
 
     public void showNextPage() {
         page++;
-        initPage();
+        show();
     }
 
     public int getPage() {

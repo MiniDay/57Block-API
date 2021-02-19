@@ -27,27 +27,12 @@ public abstract class PageHandler implements InventoryHolder {
         }
         this.player = player;
         inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), pageConfig.getTitle());
-        if (autoInit()) {
-            initPage();
-        }
     }
 
     public PageHandler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player) {
         this.pageConfig = pageConfig;
         this.player = player;
         inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), pageConfig.getTitle());
-        if (autoInit()) {
-            initPage();
-        }
-    }
-
-    /**
-     * 是否在实例化时就自动构建页面
-     *
-     * @return true 代表在实例化时就自动构建页面
-     */
-    public boolean autoInit() {
-        return true;
     }
 
     public abstract void initPage();
@@ -76,6 +61,13 @@ public abstract class PageHandler implements InventoryHolder {
     }
 
     public void show() {
+        show(true);
+    }
+
+    public void show(boolean init) {
+        if (init) {
+            initPage();
+        }
         AirGameAPI.sync(() -> player.openInventory(getInventory()));
     }
 
