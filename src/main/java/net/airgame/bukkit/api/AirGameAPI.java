@@ -1,7 +1,6 @@
 package net.airgame.bukkit.api;
 
 import net.airgame.bukkit.api.annotation.CommandScan;
-import net.airgame.bukkit.api.annotation.PageScan;
 import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.*;
@@ -43,7 +42,7 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-@CommandScan("net.airgame.bukkit.api.command.debug")
+@CommandScan("net.airgame.bukkit.api.command.preset")
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public final class AirGameAPI extends JavaPlugin {
     private static AirGameAPI instance;
@@ -343,18 +342,7 @@ public final class AirGameAPI extends JavaPlugin {
     private void initPageConfig() {
         logUtils.info("开始注册界面设定.");
 
-        for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
-            if (!(plugin instanceof JavaPlugin)) {
-                continue;
-            }
-            PageScan pageScan = plugin.getClass().getAnnotation(PageScan.class);
-            if (pageScan == null) {
-                continue;
-            }
-            for (String packageName : pageScan.value()) {
-                PageConfigManager.registerPageConfig((JavaPlugin) plugin, packageName);
-            }
-        }
+        PageConfigManager.reload();
 
         logUtils.info("界面设定注册完成.");
     }

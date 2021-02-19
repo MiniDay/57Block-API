@@ -1,9 +1,12 @@
 package net.airgame.bukkit.api.manager;
 
 import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.annotation.PageScan;
 import net.airgame.bukkit.api.page.PageConfig;
 import net.airgame.bukkit.api.page.handler.PageHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,6 +20,23 @@ import java.util.jar.JarFile;
 
 public class PageConfigManager {
     private static final HashMap<String, PageConfig> pageConfigs = new HashMap<>();
+
+    public static void reload() {
+        pageConfigs.clear();
+
+        for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+            if (!(plugin instanceof JavaPlugin)) {
+                continue;
+            }
+            PageScan pageScan = plugin.getClass().getAnnotation(PageScan.class);
+            if (pageScan == null) {
+                continue;
+            }
+            for (String packageName : pageScan.value()) {
+                PageConfigManager.registerPageConfig((JavaPlugin) plugin, packageName);
+            }
+        }
+    }
 
     public static void registerPageConfig(JavaPlugin plugin, String packageName) {
         AirGameAPI.getLogUtils().info("开始扫描插件 %s 中的包 %s", plugin.getName(), packageName);

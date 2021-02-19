@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.command.debug;
+package net.airgame.bukkit.api.command.preset;
 
 import net.airgame.bukkit.api.annotation.Command;
 import net.airgame.bukkit.api.annotation.CommandExecutor;
@@ -17,6 +17,7 @@ import java.util.List;
         name = "lore",
         permission = "airGame.admin"
 )
+@SuppressWarnings("unused")
 public class LoreCommand {
 
     @Command(subName = "name")

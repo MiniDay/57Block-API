@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.command.debug;
+package net.airgame.bukkit.api.command.preset;
 
 import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.annotation.Command;
@@ -17,6 +17,7 @@ import java.io.IOException;
         aliases = "yml",
         permission = "airGame.admin"
 )
+@SuppressWarnings("unused")
 public class YamlCommand {
 
     @Command
