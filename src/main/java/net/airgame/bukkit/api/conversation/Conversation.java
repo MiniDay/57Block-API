@@ -71,6 +71,7 @@ public abstract class Conversation {
     }
 
     public BukkitTask startIgnoreException(Plugin plugin) {
+        AirGameAPI.sync(player::closeInventory);
         return Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 conversation();
