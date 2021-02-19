@@ -2,6 +2,7 @@ package net.airgame.bukkit.api.listener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -11,11 +12,13 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class ConversationListener implements Listener {
-    public static HashMap<UUID, CompletableFuture<String>> playerConversation;
+    public static HashMap<UUID, CompletableFuture<String>> playerConversation = new HashMap<>();
 
     public static CompletableFuture<String> getPlayerInput(Player player) {
         internalPlayerInput(player);
-        return playerConversation.put(player.getUniqueId(), new CompletableFuture<>());
+        CompletableFuture<String> future = new CompletableFuture<>();
+        playerConversation.put(player.getUniqueId(), future);
+        return future;
     }
 
     public static void internalPlayerInput(Player player) {
@@ -26,7 +29,7 @@ public class ConversationListener implements Listener {
         future.cancel(true);
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         CompletableFuture<String> future = playerConversation.remove(player.getUniqueId());
@@ -34,6 +37,7 @@ public class ConversationListener implements Listener {
             return;
         }
         future.complete(event.getMessage());
+        event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true)
