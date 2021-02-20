@@ -52,7 +52,7 @@ public class PageListener implements Listener {
             pageHandler.onClickInside(event.getClick(), event.getAction(), index);
         } catch (Exception e) {
             AirGameAPI.getLogUtils().error(e,
-                    "执行 %s 的 onClickInside(%s %s%d) 时遇到了一个异常: ",
+                    "执行 %s 的 onClickInside(%s, %s, %d) 时遇到了一个异常: ",
                     pageHandler.getClass().getName(),
                     event.getClick().name(),
                     event.getAction().name(),

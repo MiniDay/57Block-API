@@ -5,6 +5,24 @@ public class MathUtils {
     private MathUtils() {
     }
 
+    public static int locationToChunk(int a) {
+        if (a >= 0) {
+            a /= 16;
+        } else {
+            a = (a + 1) / 16 - 1;
+        }
+        return a;
+    }
+
+    public static int locationToChunk(double a) {
+        if (a >= 0) {
+            a /= 16;
+        } else {
+            a = (a + 1) / 16 - 1;
+        }
+        return (int) a;
+    }
+
     /**
      * x 是否在 [a,b] 区间内
      *
