@@ -19,6 +19,8 @@ public abstract class Conversation {
         this.player = player;
     }
 
+    public abstract void conversation() throws InterruptedException, ExecutionException, TimeoutException;
+
     public String getPlayerInput() throws ExecutionException, InterruptedException {
         return ConversationUtils.getPlayerInput(player).get();
     }
@@ -39,7 +41,17 @@ public abstract class Conversation {
         sendMessage(String.format(message, args));
     }
 
-    public abstract void conversation() throws InterruptedException, ExecutionException, TimeoutException;
+    public void onInterruptedException(InterruptedException e) {
+    }
+
+    public void onExecutionException(ExecutionException e) {
+    }
+
+    public void onTimeoutException(TimeoutException e) {
+    }
+
+    public void onException(Exception e) {
+    }
 
     public BukkitTask start(Plugin plugin) {
         AirGameAPI.sync(player::closeInventory);
@@ -47,57 +59,22 @@ public abstract class Conversation {
             try {
                 conversation();
             } catch (InterruptedException e) {
-                if (getInterruptMessage() != null) {
-                    player.sendMessage(getInterruptMessage());
-                }
+                onInterruptedException(e);
                 AirGameAPI.getLogUtils().debug(e, "执行会话时遇到了一个中断异常: ");
             } catch (ExecutionException e) {
-                if (getExecutionMessage() != null) {
-                    player.sendMessage(getExecutionMessage());
-                }
+                onExecutionException(e);
                 AirGameAPI.getLogUtils().debug(e, "执行会话时遇到了一个执行异常: ");
             } catch (TimeoutException e) {
-                if (getTimeoutMessage() != null) {
-                    player.sendMessage(getTimeoutMessage());
-                }
+                onTimeoutException(e);
                 AirGameAPI.getLogUtils().debug(e, "执行会话时遇到了一个超时异常: ");
             } catch (Exception e) {
-                if (getExceptionMessage() != null) {
-                    player.sendMessage(getExceptionMessage());
-                }
-                AirGameAPI.getLogUtils().debug(e);
-            }
-        });
-    }
-
-    public BukkitTask startIgnoreException(Plugin plugin) {
-        AirGameAPI.sync(player::closeInventory);
-        return Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            try {
-                conversation();
-            } catch (Exception e) {
-                AirGameAPI.getLogUtils().debug(e, "执行会话时遇到了一个异常: ");
+                onException(e);
+                AirGameAPI.getLogUtils().debug(e, "执行会话时遇到了一个意料之外的异常: ");
             }
         });
     }
 
     public HumanEntity getPlayer() {
         return player;
-    }
-
-    public String getInterruptMessage() {
-        return null;
-    }
-
-    public String getExecutionMessage() {
-        return null;
-    }
-
-    public String getTimeoutMessage() {
-        return null;
-    }
-
-    public String getExceptionMessage() {
-        return null;
     }
 }
