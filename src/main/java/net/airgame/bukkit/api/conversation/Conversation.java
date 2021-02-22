@@ -60,12 +60,15 @@ public abstract class Conversation {
                 conversation();
             } catch (InterruptedException e) {
                 onInterruptedException(e);
+                onException(e);
                 AirGameAPI.getLogUtils().debug(e, "执行会话时遇到了一个中断异常: ");
             } catch (ExecutionException e) {
                 onExecutionException(e);
+                onException(e);
                 AirGameAPI.getLogUtils().debug(e, "执行会话时遇到了一个执行异常: ");
             } catch (TimeoutException e) {
                 onTimeoutException(e);
+                onException(e);
                 AirGameAPI.getLogUtils().debug(e, "执行会话时遇到了一个超时异常: ");
             } catch (Exception e) {
                 onException(e);
