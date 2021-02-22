@@ -256,7 +256,7 @@ public final class AirGameAPI extends JavaPlugin {
         }
         AirGameAPI.getLogUtils().info("开始初始化持久化管理器.");
         saveDefaultFile("sql.properties");
-        persistenceManager = new PersistenceManager(config.getBoolean("datasource.hikariCP"));
+        persistenceManager = new PersistenceManager(this);
         AirGameAPI.getLogUtils().info("持久化管理器初始化完成.");
     }
 

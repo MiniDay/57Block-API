@@ -5,3 +5,5 @@ loadLibraries: true
 datasource:
   enable: false
   hikariCP: false
+  database: "minecraft"
+  tablePrefix: "AirGame_"

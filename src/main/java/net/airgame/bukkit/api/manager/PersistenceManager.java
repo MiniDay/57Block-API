@@ -7,6 +7,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.sql.SimpleDataSource;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -27,9 +28,12 @@ public class PersistenceManager {
     private static final Gson gson = new GsonBuilder().create();
     private static final JsonParser parser = new JsonParser();
     private static DataSource dataSource;
+    private String database;
 
-    public PersistenceManager(boolean enableHikariCP) {
-        File file = new File(AirGameAPI.getInstance().getDataFolder(), "sql.properties");
+    public PersistenceManager(AirGameAPI plugin) {
+        FileConfiguration config = plugin.getConfig();
+
+        File file = new File(plugin.getDataFolder(), "sql.properties");
         Properties properties = new Properties();
         try {
             properties.load(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
@@ -38,7 +42,7 @@ public class PersistenceManager {
             return;
         }
 
-        if (enableHikariCP && initHikariCP(properties)) {
+        if (config.getBoolean("datasource.hikariCP") && initHikariCP(properties)) {
             AirGameAPI.getLogUtils().info("已使用 HikariCP 作为数据库连接池!");
         } else {
             try {
@@ -48,6 +52,7 @@ public class PersistenceManager {
                 AirGameAPI.getLogUtils().error(e, "初始化数据库连接池时遇到了一个错误: ");
             }
         }
+        database = config.getString("datasource.database", "minecraft");
     }
 
     public static Gson getGson() {
@@ -64,6 +69,10 @@ public class PersistenceManager {
 
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
+    }
+
+    public String getDatabase() {
+        return database;
     }
 
     public boolean initHikariCP(Properties properties) {
