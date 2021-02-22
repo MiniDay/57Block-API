@@ -4,6 +4,7 @@ import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.math.Calculator;
 import net.airgame.bukkit.api.page.PageElement;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -92,7 +93,7 @@ public class AirUtils {
         }
     }
 
-    public static void replacePageElementInfo(Player player, ItemStack stack, PageElement element) {
+    public static void replacePageElementInfo(HumanEntity player, ItemStack stack, PageElement element) {
         if (stack == null) {
             return;
         }
