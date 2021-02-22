@@ -1,9 +1,9 @@
 package net.airgame.bukkit.api.conversation;
 
 import net.airgame.bukkit.api.AirGameAPI;
-import net.airgame.bukkit.api.listener.ConversationListener;
+import net.airgame.bukkit.api.util.ConversationUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -13,22 +13,22 @@ import java.util.concurrent.TimeoutException;
 
 @SuppressWarnings("unused")
 public abstract class Conversation {
-    private final Player player;
+    private final HumanEntity player;
 
-    public Conversation(Player player) {
+    public Conversation(HumanEntity player) {
         this.player = player;
     }
 
     public String getPlayerInput() throws ExecutionException, InterruptedException {
-        return ConversationListener.getPlayerInput(player).get();
+        return ConversationUtils.getPlayerInput(player).get();
     }
 
     public String getPlayerInput(long time) throws InterruptedException, ExecutionException, TimeoutException {
-        return ConversationListener.getPlayerInput(player).get(time, TimeUnit.SECONDS);
+        return ConversationUtils.getPlayerInput(player).get(time, TimeUnit.SECONDS);
     }
 
     public String getPlayerInput(long time, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return ConversationListener.getPlayerInput(player).get(time, unit);
+        return ConversationUtils.getPlayerInput(player).get(time, unit);
     }
 
     public void sendMessage(String message) {
@@ -81,7 +81,7 @@ public abstract class Conversation {
         });
     }
 
-    public Player getPlayer() {
+    public HumanEntity getPlayer() {
         return player;
     }
 

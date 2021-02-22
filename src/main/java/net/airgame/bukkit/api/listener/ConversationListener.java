@@ -1,5 +1,6 @@
 package net.airgame.bukkit.api.listener;
 
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,14 +15,14 @@ import java.util.concurrent.CompletableFuture;
 public class ConversationListener implements Listener {
     public static HashMap<UUID, CompletableFuture<String>> playerConversation = new HashMap<>();
 
-    public static CompletableFuture<String> getPlayerInput(Player player) {
+    public static CompletableFuture<String> getPlayerInput(HumanEntity player) {
         internalPlayerInput(player);
         CompletableFuture<String> future = new CompletableFuture<>();
         playerConversation.put(player.getUniqueId(), future);
         return future;
     }
 
-    public static void internalPlayerInput(Player player) {
+    public static void internalPlayerInput(HumanEntity player) {
         CompletableFuture<String> future = playerConversation.remove(player.getUniqueId());
         if (future == null) {
             return;
