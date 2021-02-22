@@ -28,7 +28,8 @@ public class PersistenceManager {
     private static final Gson gson = new GsonBuilder().create();
     private static final JsonParser parser = new JsonParser();
     private static DataSource dataSource;
-    private String database;
+    private static String database;
+    private static String tablePrefix;
 
     public PersistenceManager(AirGameAPI plugin) {
         FileConfiguration config = plugin.getConfig();
@@ -53,6 +54,7 @@ public class PersistenceManager {
             }
         }
         database = config.getString("datasource.database", "minecraft");
+        tablePrefix = config.getString("datasource.tablePrefix", "AirGame_");
     }
 
     public static Gson getGson() {
@@ -71,8 +73,12 @@ public class PersistenceManager {
         return dataSource.getConnection();
     }
 
-    public String getDatabase() {
+    public static String getDatabase() {
         return database;
+    }
+
+    public static String getTablePrefix() {
+        return tablePrefix;
     }
 
     public boolean initHikariCP(Properties properties) {
