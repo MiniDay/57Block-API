@@ -2,15 +2,19 @@ package net.airgame.bukkit.api.util;
 
 import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.math.Calculator;
+import net.airgame.bukkit.api.page.PageElement;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 未分类的工具方法
@@ -88,5 +92,20 @@ public class AirUtils {
         }
     }
 
+    public static void replacePageElementInfo(Player player, ItemStack stack, PageElement element) {
+        if (stack == null) {
+            return;
+        }
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) {
+            return;
+        }
+        meta.setDisplayName(element.replaceDisplayName(player, meta.getDisplayName()));
+        List<String> lore = meta.getLore();
+        if (lore != null) {
+            meta.setLore(element.replaceLore(player, lore));
+        }
+        stack.setItemMeta(meta);
+    }
 
 }
