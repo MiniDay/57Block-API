@@ -47,6 +47,11 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
     }
 
     @NotNull
+    public String getElementButtonName(E element) {
+        return getElementButtonName();
+    }
+
+    @NotNull
     public String getPreviewButtonName() {
         return "preview";
     }
@@ -70,18 +75,23 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
 
         ArrayList<Integer> buttonIndexes = group.getButtonAllIndex(getElementButtonName());
         int pageSize = buttonIndexes.size(); // 一页有多少个按钮
-        ItemStack button = group.getButton(getElementButtonName());
         elementSlot = new HashMap<>();
         for (int i = 0; i < pageSize; i++) {
             int elementIndex = page * pageSize + i; // 元素的索引位置
             int buttonIndex = buttonIndexes.get(i);  // 按钮在 GUI 中的索引位置
 
-            if (elementIndex >= elements.size() || button == null) {
+            if (elementIndex >= elements.size()) {
                 inventory.setItem(buttonIndex, null);
                 continue;
             }
 
             E element = elements.get(elementIndex);
+            ItemStack button = group.getButton(getElementButtonName(element));
+            if (button == null) {
+                inventory.setItem(buttonIndex, null);
+                continue;
+            }
+
             elementSlot.put(buttonIndex, element);
 
             ItemStack elementItem = button.clone();
