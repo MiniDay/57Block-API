@@ -71,6 +71,10 @@ public abstract class PageHandler implements InventoryHolder {
         AirGameAPI.sync(() -> player.openInventory(getInventory()));
     }
 
+    public void close() {
+        AirGameAPI.sync(player::closeInventory);
+    }
+
     @NotNull
     public PageConfig getPageConfig() {
         return pageConfig;
