@@ -1,6 +1,7 @@
 package net.airgame.bukkit.api;
 
 import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketListener;
 import net.airgame.bukkit.api.annotation.CommandScan;
 import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
@@ -10,7 +11,6 @@ import net.airgame.bukkit.api.hook.VaultAPI;
 import net.airgame.bukkit.api.listener.ConversationListener;
 import net.airgame.bukkit.api.listener.PageListener;
 import net.airgame.bukkit.api.listener.PluginHookListener;
-import net.airgame.bukkit.api.listener.SignEditListener;
 import net.airgame.bukkit.api.manager.CommandManager;
 import net.airgame.bukkit.api.manager.PageConfigManager;
 import net.airgame.bukkit.api.manager.PersistenceManager;
@@ -132,7 +132,16 @@ public final class AirGameAPI extends JavaPlugin {
         logUtils.info("已注册玩家会话监听器.");
 
         if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-            ProtocolLibrary.getProtocolManager().addPacketListener(new SignEditListener(this));
+            // 这里只能用反射的方式实例化 SignEditListener
+            // 否则在没有安装 ProtocolLib 的服务器上会由于类加载器异常而导致插件无法启动
+            try {
+                ProtocolLibrary.getProtocolManager().addPacketListener(
+                        (PacketListener) Class.forName("net.airgame.bukkit.api.listener.SignEditListener.SignEditListener").newInstance()
+                );
+                logUtils.info("已启用 ProtocolLib 支持: SignEditAPI.");
+            } catch (Exception e) {
+                logUtils.error(e, "启用 ProtocolLib 支持: SignEditAPI 时遇到了一个异常: ");
+            }
         }
 
         logUtils.info("插件启动完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);

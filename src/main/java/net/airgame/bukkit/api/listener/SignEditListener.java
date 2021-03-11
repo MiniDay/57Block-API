@@ -11,6 +11,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.nbt.NbtBase;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
+import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.object.SignEditFuture;
 import net.airgame.bukkit.api.util.MessageUtils;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -19,7 +20,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -33,12 +33,14 @@ import java.util.HashSet;
 public class SignEditListener extends PacketAdapter {
     public static final HashSet<SignEditFuture> SIGN_EDIT_FUTURES = new HashSet<>();
 
-    public SignEditListener(Plugin plugin) {
-        super(plugin,
+    public SignEditListener() {
+        super(
+                AirGameAPI.getInstance(),
                 PacketType.Play.Client.UPDATE_SIGN,
                 PacketType.Play.Server.OPEN_SIGN_EDITOR,
                 PacketType.Play.Server.TILE_ENTITY_DATA,
-                PacketType.Play.Server.BLOCK_CHANGE);
+                PacketType.Play.Server.BLOCK_CHANGE
+        );
     }
 
     @SuppressWarnings("deprecation")
