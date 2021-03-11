@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.util.replacer;
+package net.airgame.bukkit.api.object.replacer;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

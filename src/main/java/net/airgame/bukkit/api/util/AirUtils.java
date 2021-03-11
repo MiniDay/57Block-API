@@ -1,33 +1,49 @@
 package net.airgame.bukkit.api.util;
 
 import net.airgame.bukkit.api.AirGameAPI;
-import net.airgame.bukkit.api.math.Calculator;
-import net.airgame.bukkit.api.page.PageElement;
+import net.airgame.bukkit.api.listener.ConversationListener;
+import net.airgame.bukkit.api.listener.SignEditListener;
+import net.airgame.bukkit.api.object.Calculator;
+import net.airgame.bukkit.api.object.SignEditFuture;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 未分类的工具方法
  */
 @SuppressWarnings("unused")
 public class AirUtils {
-    public static final String nmsVersion;
-    private static final Calculator calculator;
+    public static final String NMS_VERSION;
+    private static final Calculator CALCULATOR;
 
     static {
-        nmsVersion = Bukkit.getServer().getClass().getName().split("\\.")[3];
-        calculator = new Calculator();
+        NMS_VERSION = Bukkit.getServer().getClass().getName().split("\\.")[3];
+        CALCULATOR = new Calculator();
+    }
+
+    public static String getMCVersion() {
+        return Bukkit.getBukkitVersion().split("-")[0];
+    }
+
+    public static String getNMSVersion() {
+        return NMS_VERSION;
+    }
+
+    public static Package getNMSPackage() {
+        return Package.getPackage("net.minecraft.server." + getNMSVersion());
+    }
+
+    public static Class<?> getNMSClass(@NotNull String className) throws ClassNotFoundException {
+        return Class.forName("net.minecraft.server." + NMS_VERSION + "." + className);
     }
 
     /**
@@ -36,8 +52,8 @@ public class AirUtils {
      * @param s 要计算的数学运算
      * @return 计算结果
      */
-    public static double calculate(String s) {
-        return calculator.calculate(s.replace(" ", ""));
+    public static double calculate(@NotNull String s) {
+        return CALCULATOR.calculate(s.replace(" ", ""));
     }
 
     /**
@@ -46,27 +62,11 @@ public class AirUtils {
      * @param player  玩家
      * @param command 要执行的命令
      */
-    public static void opCommand(Player player, String command) {
+    public static void opCommand(@NotNull Player player, @NotNull String command) {
         boolean isOp = player.isOp();
         player.setOp(true);
         Bukkit.dispatchCommand(player, command);
         player.setOp(isOp);
-    }
-
-    public static String getMCVersion() {
-        return Bukkit.getBukkitVersion().split("-")[0];
-    }
-
-    public static String getNMSVersion() {
-        return nmsVersion;
-    }
-
-    public static Package getNMSPackage() {
-        return Package.getPackage("net.minecraft.server." + getNMSVersion());
-    }
-
-    public static Class<?> getNMSClass(String className) throws ClassNotFoundException {
-        return Class.forName("net.minecraft.server." + nmsVersion + "." + className);
     }
 
     /**
@@ -74,39 +74,77 @@ public class AirUtils {
      *
      * @param listener 监听器对象
      */
-    @SuppressWarnings("unchecked")
     public static void unregisterEvents(@NotNull Listener listener) {
-        try {
-            for (Method method : listener.getClass().getMethods()) {
-                if (method.getParameterCount() != 1) {
-                    continue;
-                }
-                if (!method.isAnnotationPresent(EventHandler.class)) {
-                    continue;
-                }
-                Class<? extends Event> eventClass = (Class<? extends Event>) method.getParameterTypes()[0];
+        for (Method method : listener.getClass().getMethods()) {
+            if (method.getParameterCount() != 1) {
+                continue;
+            }
+            if (!method.isAnnotationPresent(EventHandler.class)) {
+                continue;
+            }
+            Class<?> eventClass = method.getParameterTypes()[0];
+            try {
                 HandlerList handlerList = (HandlerList) eventClass.getMethod("getHandlerList").invoke(null);
                 handlerList.unregister(listener);
+            } catch (Exception e) {
+                AirGameAPI.getLogUtils().error(e, "为监听器 %s 取消注册事件 %s 时出错!", listener, eventClass.getName());
             }
-        } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "取消注册监听器 %s 时出错!", listener);
         }
     }
 
-    public static void replacePageElementInfo(HumanEntity player, ItemStack stack, PageElement element) {
-        if (stack == null) {
-            return;
-        }
-        ItemMeta meta = stack.getItemMeta();
-        if (meta == null) {
-            return;
-        }
-        meta.setDisplayName(element.replaceDisplayName(player, meta.getDisplayName()));
-        List<String> lore = meta.getLore();
-        if (lore != null) {
-            meta.setLore(element.replaceLore(player, lore));
-        }
-        stack.setItemMeta(meta);
+    /**
+     * 给玩家打开一个牌子编辑器
+     *
+     * @param player 玩家
+     * @param lines  牌子内容
+     * @return 玩家编辑内容的 Future 对象
+     */
+    @NotNull
+    public static SignEditFuture getPlayerInputBySignEdit(@NotNull Player player, @NotNull String[] lines) {
+        return SignEditListener.getPlayerInput(player, lines);
     }
 
+    public static void internalPlayerInputBySignEdit(@NotNull Player player) {
+        SignEditListener.internalPlayerInput(player);
+    }
+
+    /**
+     * 获取玩家的输入
+     *
+     * @param player 玩家
+     * @return 玩家输入内容的 Future 对象
+     */
+    @NotNull
+    public static CompletableFuture<String> getPlayerInput(@NotNull HumanEntity player) {
+        return ConversationListener.getPlayerInput(player);
+    }
+
+    /**
+     * 中断玩家的输入
+     *
+     * @param player 玩家
+     */
+    public static void internalPlayerInput(@NotNull HumanEntity player) {
+        ConversationListener.internalPlayerInput(player);
+    }
+
+    /**
+     * 比较两个坐标所指的方块是否相同
+     *
+     * @param location1 坐标1
+     * @param location2 坐标2
+     * @return true代表相同
+     */
+    public static boolean equalBlockLocation(@NotNull Location location1, @NotNull Location location2) {
+        if (location1.getWorld() != location2.getWorld()) {
+            return false;
+        }
+        if (location1.getBlockX() != location2.getBlockX()) {
+            return false;
+        }
+        if (location1.getBlockY() != location2.getBlockY()) {
+            return false;
+        }
+        return location1.getBlockZ() == location2.getBlockZ();
+    }
 }

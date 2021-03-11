@@ -1,5 +1,3 @@
-defaultLocale: zh_CN
-
 loadLibraries: true
 
 datasource:

@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.util.builder;
+package net.airgame.bukkit.api.object.builder;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

@@ -8,6 +8,7 @@ softdepend:
   - Vault
   - PlayerPoints
   - PlaceholderAPI
+  - ProtocolLib
 
 authors: [ Hamster3 ]
 description: 五彩方块服务器的API系统

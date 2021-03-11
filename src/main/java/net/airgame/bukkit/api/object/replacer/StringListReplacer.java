@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.util.replacer;
+package net.airgame.bukkit.api.object.replacer;
 
 import org.jetbrains.annotations.NotNull;
 

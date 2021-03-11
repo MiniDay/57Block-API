@@ -12,18 +12,21 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * 会话监听器
+ */
 public class ConversationListener implements Listener {
-    public static HashMap<UUID, CompletableFuture<String>> playerConversation = new HashMap<>();
+    public static HashMap<UUID, CompletableFuture<String>> PLAYER_CONVERSATIONS = new HashMap<>();
 
     public static CompletableFuture<String> getPlayerInput(HumanEntity player) {
         internalPlayerInput(player);
         CompletableFuture<String> future = new CompletableFuture<>();
-        playerConversation.put(player.getUniqueId(), future);
+        PLAYER_CONVERSATIONS.put(player.getUniqueId(), future);
         return future;
     }
 
     public static void internalPlayerInput(HumanEntity player) {
-        CompletableFuture<String> future = playerConversation.remove(player.getUniqueId());
+        CompletableFuture<String> future = PLAYER_CONVERSATIONS.remove(player.getUniqueId());
         if (future == null) {
             return;
         }
@@ -33,7 +36,7 @@ public class ConversationListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        CompletableFuture<String> future = playerConversation.remove(player.getUniqueId());
+        CompletableFuture<String> future = PLAYER_CONVERSATIONS.remove(player.getUniqueId());
         if (future == null) {
             return;
         }
@@ -44,7 +47,7 @@ public class ConversationListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        CompletableFuture<String> future = playerConversation.remove(player.getUniqueId());
+        CompletableFuture<String> future = PLAYER_CONVERSATIONS.remove(player.getUniqueId());
         if (future == null) {
             return;
         }

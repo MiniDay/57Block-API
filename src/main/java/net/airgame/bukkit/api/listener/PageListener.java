@@ -10,6 +10,9 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
+/**
+ * GUI 监听器
+ */
 public class PageListener implements Listener {
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {

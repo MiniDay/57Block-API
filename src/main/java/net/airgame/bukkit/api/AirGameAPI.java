@@ -1,28 +1,28 @@
 package net.airgame.bukkit.api;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import net.airgame.bukkit.api.annotation.CommandScan;
 import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.*;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.*;
+import net.airgame.bukkit.api.hook.PointAPI;
+import net.airgame.bukkit.api.hook.VaultAPI;
 import net.airgame.bukkit.api.listener.ConversationListener;
 import net.airgame.bukkit.api.listener.PageListener;
 import net.airgame.bukkit.api.listener.PluginHookListener;
+import net.airgame.bukkit.api.listener.SignEditListener;
 import net.airgame.bukkit.api.manager.CommandManager;
 import net.airgame.bukkit.api.manager.PageConfigManager;
 import net.airgame.bukkit.api.manager.PersistenceManager;
-import net.airgame.bukkit.api.message.MessageEntry;
 import net.airgame.bukkit.api.page.handler.PageHandler;
 import net.airgame.bukkit.api.util.AirUtils;
 import net.airgame.bukkit.api.util.LogUtils;
-import net.airgame.bukkit.api.util.api.PointAPI;
-import net.airgame.bukkit.api.util.api.VaultAPI;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -91,8 +91,6 @@ public final class AirGameAPI extends JavaPlugin {
         long startTime = System.currentTimeMillis();
         instance = this;
 
-        ConfigurationSerialization.registerClass(MessageEntry.class);
-
         saveDefaultConfig();
         reloadConfig();
 
@@ -132,6 +130,10 @@ public final class AirGameAPI extends JavaPlugin {
         logUtils.info("已注册插件挂接监听器.");
         Bukkit.getPluginManager().registerEvents(new ConversationListener(), this);
         logUtils.info("已注册玩家会话监听器.");
+
+        if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+            ProtocolLibrary.getProtocolManager().addPacketListener(new SignEditListener(this));
+        }
 
         logUtils.info("插件启动完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
     }

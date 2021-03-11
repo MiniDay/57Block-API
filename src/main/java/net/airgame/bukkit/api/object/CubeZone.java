@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.data;
+package net.airgame.bukkit.api.object;
 
 import net.airgame.bukkit.api.util.MathUtils;
 import org.bukkit.Bukkit;

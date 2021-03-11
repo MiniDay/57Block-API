@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.prompt;
+package net.airgame.bukkit.api.conversation.prompt;
 
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.MessagePrompt;

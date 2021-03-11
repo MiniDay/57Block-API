@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.util.builder;
+package net.airgame.bukkit.api.object.builder;
 
 import java.util.HashMap;
 

@@ -1,7 +1,7 @@
 package net.airgame.bukkit.api.conversation;
 
 import net.airgame.bukkit.api.AirGameAPI;
-import net.airgame.bukkit.api.util.ConversationUtils;
+import net.airgame.bukkit.api.util.AirUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.plugin.Plugin;
@@ -22,15 +22,15 @@ public abstract class Conversation {
     public abstract void conversation() throws InterruptedException, ExecutionException, TimeoutException;
 
     public String getPlayerInput() throws ExecutionException, InterruptedException {
-        return ConversationUtils.getPlayerInput(player).get();
+        return AirUtils.getPlayerInput(player).get();
     }
 
     public String getPlayerInput(long time) throws InterruptedException, ExecutionException, TimeoutException {
-        return ConversationUtils.getPlayerInput(player).get(time, TimeUnit.SECONDS);
+        return AirUtils.getPlayerInput(player).get(time, TimeUnit.SECONDS);
     }
 
     public String getPlayerInput(long time, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return ConversationUtils.getPlayerInput(player).get(time, unit);
+        return AirUtils.getPlayerInput(player).get(time, unit);
     }
 
     public void sendMessage(String message) {

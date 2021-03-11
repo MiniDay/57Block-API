@@ -12,11 +12,28 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public interface PageElement {
-    default boolean replaceItem(ItemStack stack) {
+
+    default void replaceInfo(HumanEntity player, ItemStack stack) {
+        if (stack == null) {
+            return;
+        }
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) {
+            return;
+        }
+        meta.setDisplayName(replaceDisplayName(player, meta.getDisplayName()));
+        List<String> lore = meta.getLore();
+        if (lore != null) {
+            meta.setLore(replaceLore(player, lore));
+        }
+        stack.setItemMeta(meta);
+    }
+
+    default boolean replaceItem(HumanEntity player, ItemStack stack) {
         return false;
     }
 
-    default boolean replaceMeta(ItemMeta meta) {
+    default boolean replaceMeta(HumanEntity player, ItemMeta meta) {
         return false;
     }
 

@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.util.api;
+package net.airgame.bukkit.api.hook;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

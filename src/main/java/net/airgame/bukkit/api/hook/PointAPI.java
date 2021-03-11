@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.util.api;
+package net.airgame.bukkit.api.hook;
 
 import net.airgame.bukkit.api.AirGameAPI;
 import org.black_ixx.playerpoints.PlayerPoints;

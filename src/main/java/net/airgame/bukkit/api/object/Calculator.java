@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.math;
+package net.airgame.bukkit.api.object;
 
 import java.util.Collections;
 import java.util.Stack;

@@ -1,7 +1,7 @@
 package net.airgame.bukkit.api.listener;
 
-import net.airgame.bukkit.api.util.api.PointAPI;
-import net.airgame.bukkit.api.util.api.VaultAPI;
+import net.airgame.bukkit.api.hook.PointAPI;
+import net.airgame.bukkit.api.hook.VaultAPI;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;

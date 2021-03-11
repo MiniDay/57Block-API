@@ -1,4 +1,4 @@
-package net.airgame.bukkit.api.sql;
+package net.airgame.bukkit.api.object;
 
 import net.airgame.bukkit.api.AirGameAPI;
 

@@ -6,7 +6,7 @@ import com.google.gson.JsonParser;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.airgame.bukkit.api.AirGameAPI;
-import net.airgame.bukkit.api.sql.SimpleDataSource;
+import net.airgame.bukkit.api.object.SimpleDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import javax.sql.DataSource;
@@ -27,6 +27,7 @@ import java.util.Properties;
 public class PersistenceManager {
     private static final Gson gson = new GsonBuilder().create();
     private static final JsonParser parser = new JsonParser();
+
     private static DataSource dataSource;
     private static String database;
     private static String tablePrefix;

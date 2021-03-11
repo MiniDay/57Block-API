@@ -95,7 +95,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
             elementSlot.put(buttonIndex, element);
 
             ItemStack elementItem = button.clone();
-            if (element.replaceItem(elementItem)) {
+            if (element.replaceItem(player, elementItem)) {
                 inventory.setItem(buttonIndex, elementItem);
                 continue;
             }
@@ -105,8 +105,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
                 inventory.setItem(buttonIndex, elementItem);
                 continue;
             }
-            if (element.replaceMeta(meta)) {
-                element.replaceMeta(meta);
+            if (element.replaceMeta(player, meta)) {
                 inventory.setItem(buttonIndex, elementItem);
                 continue;
             }
