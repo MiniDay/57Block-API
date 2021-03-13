@@ -1,5 +1,8 @@
 package net.airgame.bukkit.api.util;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.airgame.bukkit.api.AirGameAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -10,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class SerializeUtils {
@@ -206,4 +211,25 @@ public class SerializeUtils {
         }
         return locations;
     }
+
+    public static JsonArray serializeUUIDCollectionToJson(Collection<UUID> collection) {
+        JsonArray array = new JsonArray();
+        for (UUID uuid : collection) {
+            array.add(uuid.toString());
+        }
+        return array;
+    }
+
+    public static HashSet<UUID> deserializeUUID(JsonObject object, String name) {
+        return deserializeUUID(object.getAsJsonArray(name));
+    }
+
+    public static HashSet<UUID> deserializeUUID(JsonArray array) {
+        HashSet<UUID> set = new HashSet<>();
+        for (JsonElement element : array) {
+            set.add(UUID.fromString(element.getAsString()));
+        }
+        return set;
+    }
+
 }
