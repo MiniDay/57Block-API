@@ -177,7 +177,7 @@ public class PageConfigManager {
         }
 
         // 尝试搜索配置文件是否放置在 Page 类的相同 Java 包下
-        String packageYamlFilePath = className.replace("*", "/") + ".yml";
+        String packageYamlFilePath = className.replace(".", "/") + ".yml";
         inputStream = plugin.getResource(packageYamlFilePath);
         if (inputStream != null) {
             if (yamlFileFolder.mkdirs()) {
