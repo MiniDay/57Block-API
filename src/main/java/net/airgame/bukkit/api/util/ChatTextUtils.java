@@ -3,6 +3,7 @@ package net.airgame.bukkit.api.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.manager.PersistenceManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 @SuppressWarnings("unused")
-public class MessageUtils {
+public class ChatTextUtils {
 
     /**
      * 向玩家发送一条 actionBar 消息
@@ -76,7 +77,7 @@ public class MessageUtils {
             saveMethod.invoke(nmsItem, nBTTag);
             return new ComponentBuilder(nBTTag.toString()).create();
         } catch (Exception e) {
-            e.printStackTrace();
+            AirGameAPI.getLogUtils().error(e, "组建物品文本信息时出现了一个异常:");
         }
         return new ComponentBuilder("物品解析失败").create();
     }

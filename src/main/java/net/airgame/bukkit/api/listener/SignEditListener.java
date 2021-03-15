@@ -13,7 +13,7 @@ import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import net.airgame.bukkit.api.AirGameAPI;
 import net.airgame.bukkit.api.object.SignEditFuture;
-import net.airgame.bukkit.api.util.MessageUtils;
+import net.airgame.bukkit.api.util.ChatTextUtils;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -96,7 +96,7 @@ public class SignEditListener extends PacketAdapter {
                 try {
                     protocolManager.sendServerPacket(player, updateSign);
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    AirGameAPI.getLogUtils().error(e, "发送牌子编辑数据包时出现了一个异常:");
                 }
                 break;
             }
@@ -119,7 +119,7 @@ public class SignEditListener extends PacketAdapter {
                 try {
                     protocolManager.sendServerPacket(player, updateSign);
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    AirGameAPI.getLogUtils().error(e, "发送牌子编辑数据包时出现了一个异常:");
                 }
             }
             return result;
@@ -130,7 +130,7 @@ public class SignEditListener extends PacketAdapter {
         try {
             protocolManager.sendServerPacket(player, openSignEditor);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            AirGameAPI.getLogUtils().error(e, "发送牌子编辑数据包时出现了一个异常:");
         }
 
         internalPlayerInput(player);
@@ -184,7 +184,7 @@ public class SignEditListener extends PacketAdapter {
                     lines = new String[4];
                     WrappedChatComponent[] chatComponents = packet.getChatComponentArrays().read(0);
                     for (int i = 0; i < chatComponents.length; i++) {
-                        lines[i] = new TextComponent(MessageUtils.parseComponentFromJson(chatComponents[i].getJson())).toLegacyText();
+                        lines[i] = new TextComponent(ChatTextUtils.parseComponentFromJson(chatComponents[i].getJson())).toLegacyText();
                     }
                     break;
                 }

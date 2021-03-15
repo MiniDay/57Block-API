@@ -171,8 +171,9 @@ public class PageConfigManager {
                         yamlFile.toPath(),
                         StandardCopyOption.REPLACE_EXISTING
                 );
+                return YamlConfiguration.loadConfiguration(yamlFile);
             } catch (Exception e) {
-                e.printStackTrace();
+                AirGameAPI.getLogUtils().error(e, "在为插件 %s 保存文件 %s 至 %s 时出现了一个异常:", plugin.getName(), yamlFileName, yamlFileFolderName);
             }
         }
 
@@ -189,8 +190,9 @@ public class PageConfigManager {
                         yamlFile.toPath(),
                         StandardCopyOption.REPLACE_EXISTING
                 );
+                return YamlConfiguration.loadConfiguration(yamlFile);
             } catch (Exception e) {
-                e.printStackTrace();
+                AirGameAPI.getLogUtils().error(e, "在为插件 %s 保存文件 %s 至 %s 时出现了一个异常:", plugin.getName(), yamlFileName, yamlFileFolderName);
             }
         }
 
