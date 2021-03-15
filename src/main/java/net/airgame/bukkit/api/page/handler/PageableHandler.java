@@ -39,7 +39,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
     @NotNull
     public abstract List<E> getPageElements();
 
-    public abstract void onClickElement(@NotNull ClickType type, @NotNull InventoryAction action, @NotNull E element);
+    public abstract void onClickElement(@NotNull ClickType clickType, @NotNull InventoryAction action, @NotNull E element);
 
     @NotNull
     public String getElementButtonName() {
@@ -47,7 +47,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
     }
 
     @NotNull
-    public String getElementButtonName(E element) {
+    public String getElementButtonName(@NotNull E element) {
         return getElementButtonName();
     }
 
@@ -66,7 +66,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         return "barrier";
     }
 
-    public void initElementButton(E element, ItemStack elementItem) {
+    public void initElementButton(@NotNull E element, @NotNull ItemStack elementItem) {
         HumanEntity player = getPlayer();
         if (element.replaceItem(player, elementItem)) {
             return;
