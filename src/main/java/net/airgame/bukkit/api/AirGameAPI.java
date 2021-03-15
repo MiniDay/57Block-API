@@ -32,15 +32,13 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 @CommandScan("net.airgame.bukkit.api.command.preset")
 @SuppressWarnings({"unused", "UnusedReturnValue"})
@@ -97,6 +95,8 @@ public final class AirGameAPI extends JavaPlugin {
         initLogUtil();
         logUtils.info("==================================================");
         loadLibraries();
+        logUtils.info("==================================================");
+        PageConfigManager.init();
         logUtils.info("==================================================");
         CommandManager.init(getClassLoader());
         logUtils.info("==================================================");
@@ -276,8 +276,6 @@ public final class AirGameAPI extends JavaPlugin {
      */
     private void initCommand() {
         logUtils.info("开始注册命令.");
-
-        ArrayList<String> scanPackages = new ArrayList<>();
         for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
             if (!(plugin instanceof JavaPlugin)) {
                 continue;
@@ -286,62 +284,13 @@ public final class AirGameAPI extends JavaPlugin {
             if (commandScan == null) {
                 continue;
             }
-            scanPackages.addAll(Arrays.asList(commandScan.value()));
-            logUtils.info("  已添加插件 %s 需要扫描的包: %s", plugin.getName(), Arrays.asList(commandScan.value()));
-        }
-        logUtils.info("==================================================");
-
-        HashMap<Plugin, ArrayList<String>> scanPlugin = new HashMap<>();
-        try {
-            Method getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
-            getFileMethod.setAccessible(true);
-            for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
-                if (!(plugin instanceof JavaPlugin)) {
-                    continue;
-                }
-                Enumeration<JarEntry> entries = new JarFile((File) getFileMethod.invoke(plugin)).entries();
-
-                ArrayList<String> classNames = new ArrayList<>();
-
-                while (entries.hasMoreElements()) {
-                    JarEntry entry = entries.nextElement();
-                    String entryName = entry.getName();
-                    if (!entryName.endsWith(".class")) {
-                        continue;
-                    }
-                    String s = entryName.replace("/", ".");
-                    s = s.substring(0, s.length() - 6);
-                    for (String packageName : scanPackages) {
-                        if (s.startsWith(packageName)) {
-                            classNames.add(s);
-                        }
-                    }
-                }
-
-                if (classNames.isEmpty()) {
-                    continue;
-                }
-                scanPlugin.put(plugin, classNames);
+            if (commandScan.value().length < 1) {
+                continue;
             }
-        } catch (Exception e) {
-            logUtils.error(e, "从插件的Java包中扫描命令执行器时遇到了一个异常: ");
-        }
-
-        for (Map.Entry<Plugin, ArrayList<String>> entry : scanPlugin.entrySet()) {
-            Plugin plugin = entry.getKey();
-            ArrayList<String> classNames = entry.getValue();
-            logUtils.info("开始扫描插件 %s", plugin.getName());
-            for (String className : classNames) {
-                if (className.contains("$")) {
-                    continue;
-                }
-                try {
-                    CommandManager.registerCommand(plugin, className);
-                } catch (IllegalAccessException e) {
-                    AirGameAPI.getLogUtils().debug("扫描到类 %s 没有添加 CommandExecutor 注解, 取消注册该类命令!", className);
-                } catch (Exception | Error e) {
-                    logUtils.error(e, "在为插件 %s 注册命令 %s 时遇到了一个错误: ", plugin.getName(), className);
-                }
+            try {
+                CommandManager.registerPluginCommand((JavaPlugin) plugin, commandScan.value()[0]);
+            } catch (IOException | InvocationTargetException | IllegalAccessException e) {
+                logUtils.error(e, "在为插件 %s 注册命令时遇到了一个异常:", plugin.getName());
             }
         }
         logUtils.info("命令注册完成.");

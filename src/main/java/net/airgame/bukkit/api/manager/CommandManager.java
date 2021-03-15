@@ -8,24 +8,25 @@ import net.airgame.bukkit.api.command.executor.CommandMethodInvoker;
 import net.airgame.bukkit.api.util.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class CommandManager {
-    private static ClassLoader classLoader;
-    private static SimpleCommandMap commandMap;
+    private static Method getFileMethod;
+    private static Method getClassLoaderMethod;
     private static Method findClassMethod;
-
+    private static SimpleCommandMap commandMap;
 
     private CommandManager() {
     }
@@ -37,21 +38,65 @@ public class CommandManager {
      */
     public static void init(ClassLoader classLoader) {
         AirGameAPI.getLogUtils().info("开始初始化命令管理器.");
-        CommandManager.classLoader = classLoader;
-        AirGameAPI.getLogUtils().info("已设定类加载器: %s", classLoader.toString());
         try {
+            getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
+            getFileMethod.setAccessible(true);
+            AirGameAPI.getLogUtils().info("已获取 getFile 方法: %s", getFileMethod);
+
+            getClassLoaderMethod = JavaPlugin.class.getDeclaredMethod("getClassLoader");
+            getClassLoaderMethod.setAccessible(true);
+            AirGameAPI.getLogUtils().info("已获取 getClassLoader 方法: %s", getClassLoaderMethod);
+
+            findClassMethod = classLoader.getClass().getDeclaredMethod("findClass", String.class);
+            findClassMethod.setAccessible(true);
+            AirGameAPI.getLogUtils().info("已获取 findClass 方法: %s", findClassMethod);
+
             SimplePluginManager manager = (SimplePluginManager) Bukkit.getPluginManager();
             Field commandMapField = SimplePluginManager.class.getDeclaredField("commandMap");
             commandMapField.setAccessible(true);
             commandMap = (SimpleCommandMap) commandMapField.get(manager);
-            AirGameAPI.getLogUtils().info("命令管理器已挟持: %s", commandMap.toString());
-            findClassMethod = classLoader.getClass().getDeclaredMethod("findClass", String.class);
-            findClassMethod.setAccessible(true);
-            AirGameAPI.getLogUtils().info("类加载方法已初始化: %s", findClassMethod);
+            AirGameAPI.getLogUtils().info("已获取命令管理器: %s", commandMap);
         } catch (Exception e) {
             AirGameAPI.getLogUtils().error(e, "初始化命令管理器时遇到了一个错误: ");
         }
         AirGameAPI.getLogUtils().info("命令管理器初始化完成.");
+    }
+
+    public static void registerPluginCommand(JavaPlugin plugin, String packageName) throws IOException, InvocationTargetException, IllegalAccessException {
+        AirGameAPI.getLogUtils().info("扫描插件 %s 中的命令类.", plugin.getName());
+
+        Enumeration<JarEntry> entries = new JarFile((File) getFileMethod.invoke(plugin)).entries();
+
+        while (entries.hasMoreElements()) {
+            JarEntry entry = entries.nextElement();
+            String entryName = entry.getName();
+
+            if (!entryName.endsWith(".class")) {
+                continue;
+            }
+
+            // 类所在的路径
+            String classPath = entryName.replace("/", ".");
+            // 去掉 .class 后缀变成全限定类名
+            String className = classPath.substring(0, classPath.length() - 6);
+
+            // 舍弃不是以 packageName 开头的类
+            if (!className.startsWith(packageName)) {
+                continue;
+            }
+            // 跳过匿名内部类
+            if (className.contains("$")) {
+                continue;
+            }
+
+            try {
+                CommandManager.registerCommand(plugin, className);
+            } catch (IllegalAccessException e) {
+                AirGameAPI.getLogUtils().debug("扫描到类 %s 没有添加 CommandExecutor 注解, 取消注册该类命令!", className);
+            } catch (Exception | Error e) {
+                AirGameAPI.getLogUtils().error(e, "在为插件 %s 注册命令 %s 时遇到了一个错误: ", plugin.getName(), className);
+            }
+        }
     }
 
     /**
@@ -61,8 +106,8 @@ public class CommandManager {
      * @throws IllegalAccessException    如果传入的类的没有公共权限修饰符的构造方法则会抛出该错误
      * @throws InstantiationException    如果传入的类的没有无参的构造方法则会抛出该错误
      */
-    public static void registerCommand(Plugin plugin, String className) throws InvocationTargetException, IllegalAccessException, InstantiationException {
-        Class<?> clazz = (Class<?>) findClassMethod.invoke(classLoader, className);
+    public static void registerCommand(JavaPlugin plugin, String className) throws InvocationTargetException, IllegalAccessException, InstantiationException {
+        Class<?> clazz = (Class<?>) findClassMethod.invoke(getClassLoaderMethod.invoke(plugin), className);
         registerCommand(plugin, clazz);
     }
 
@@ -72,7 +117,7 @@ public class CommandManager {
      * @throws IllegalAccessException 如果传入的类的没有公共权限修饰符的构造方法则会抛出该错误
      * @throws InstantiationException 如果传入的类的没有无参的构造方法则会抛出该错误
      */
-    public static void registerCommand(Plugin plugin, Class<?> clazz) throws InstantiationException, IllegalAccessException {
+    public static void registerCommand(JavaPlugin plugin, Class<?> clazz) throws InstantiationException, IllegalAccessException {
         CommandHandler handler = generatorCommandHandler(clazz);
         commandMap.register(plugin.getName(), handler);
         AirGameAPI.getLogUtils().info("  已成功注册命令类: %s", clazz.getSimpleName());

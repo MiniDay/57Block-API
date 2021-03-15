@@ -7,19 +7,14 @@ graphic:
   - "# 1 1 1 #"
   - "<#######>"
 
-# 按钮组，把字符映射到按钮名上
 buttonGroups:
-  # 组名称，default 为默认组
   default:
-    # 字符: 按钮名称
     '#': "barrier"
     '1': "element"
     '<': "preview"
     '>': "next"
 
-# 按钮
 buttons:
-  # 按钮名称
   barrier:
     ==: org.bukkit.inventory.ItemStack
     type: STAINED_GLASS_PANE

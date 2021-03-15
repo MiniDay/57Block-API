@@ -25,12 +25,12 @@ public abstract class Conversation {
         return AirUtils.getPlayerInput(player).get();
     }
 
-    public String getPlayerInput(long time) throws InterruptedException, ExecutionException, TimeoutException {
-        return AirUtils.getPlayerInput(player).get(time, TimeUnit.SECONDS);
+    public String getPlayerInput(long timeLimitBySecond) throws InterruptedException, ExecutionException, TimeoutException {
+        return AirUtils.getPlayerInput(player).get(timeLimitBySecond, TimeUnit.SECONDS);
     }
 
-    public String getPlayerInput(long time, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return AirUtils.getPlayerInput(player).get(time, unit);
+    public String getPlayerInput(long timeLimit, TimeUnit limitUnit) throws InterruptedException, ExecutionException, TimeoutException {
+        return AirUtils.getPlayerInput(player).get(timeLimit, limitUnit);
     }
 
     public void sendMessage(String message) {

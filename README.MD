@@ -65,6 +65,26 @@
 
 ## 方便易用的箱子 GUI 系统
 
+如果要把 yml 文件放在 Java 包中（而不是 resources 文件夹下）的话  
+请在`pom.xml` 的 `build` 节点中添加以下设定:
+
+```xml
+
+<resources>
+    <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+    </resource>
+    <resource>
+        <directory>src/main/java</directory>
+        <filtering>true</filtering>
+        <includes>
+            <include>**/*.yml</include>
+        </includes>
+    </resource>
+</resources>
+```
+
 使用方法待补全...
 
 ## 基于注解的命令执行器

@@ -1,7 +1,14 @@
 loadLibraries: true
 
+# 连接池设定
 datasource:
+  # 是否启用连接池
+  # 如果关闭的话可能会导致一些依赖 AirGame-API 且使用 SQL 的插件失效
   enable: false
+  # 是否使用 HikariCP 连接池
+  # 关闭则使用 AIrGame-API 内置的连接池（运行效率非常低）
+  # 开启则需要将 HikariCP 放置在 libs 中
+  # 下载地址: http://maven.hamster3.cn/repository/maven-public/com/zaxxer/HikariCP/3.4.5/HikariCP-3.4.5.jar
   hikariCP: false
   database: "minecraft"
   tablePrefix: "AirGame_"
