@@ -66,6 +66,28 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         return "barrier";
     }
 
+    public void initElement(E element, ItemStack elementItem) {
+        HumanEntity player = getPlayer();
+        if (element.replaceItem(player, elementItem)) {
+            return;
+        }
+
+        ItemMeta meta = elementItem.getItemMeta();
+        if (meta == null) {
+            return;
+        }
+        if (element.replaceMeta(player, meta)) {
+            return;
+        }
+        if (meta.hasDisplayName()) {
+            meta.setDisplayName(element.replaceDisplayName(player, meta.getDisplayName()));
+        }
+        if (meta.hasLore()) {
+            meta.setLore(element.replaceLore(player, meta.getLore()));
+        }
+        elementItem.setItemMeta(meta);
+    }
+
     public void initPage() {
         super.initPage();
         List<E> elements = getPageElements();
@@ -95,27 +117,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
             elementSlot.put(buttonIndex, element);
 
             ItemStack elementItem = button.clone();
-            if (element.replaceItem(player, elementItem)) {
-                inventory.setItem(buttonIndex, elementItem);
-                continue;
-            }
-
-            ItemMeta meta = elementItem.getItemMeta();
-            if (meta == null) {
-                inventory.setItem(buttonIndex, elementItem);
-                continue;
-            }
-            if (element.replaceMeta(player, meta)) {
-                inventory.setItem(buttonIndex, elementItem);
-                continue;
-            }
-            if (meta.hasDisplayName()) {
-                meta.setDisplayName(element.replaceDisplayName(player, meta.getDisplayName()));
-            }
-            if (meta.hasLore()) {
-                meta.setLore(element.replaceLore(player, meta.getLore()));
-            }
-            elementItem.setItemMeta(meta);
+            initElement(element, elementItem);
             inventory.setItem(buttonIndex, elementItem);
         }
 
