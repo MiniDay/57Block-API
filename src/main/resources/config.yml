@@ -10,5 +10,3 @@ datasource:
   # 开启则需要将 HikariCP 放置在 libs 中
   # 下载地址: http://maven.hamster3.cn/repository/maven-public/com/zaxxer/HikariCP/3.4.5/HikariCP-3.4.5.jar
   hikariCP: false
-  database: "minecraft"
-  tablePrefix: "AirGame_"

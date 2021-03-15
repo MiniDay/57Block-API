@@ -29,8 +29,6 @@ public class PersistenceManager {
     private static final JsonParser parser = new JsonParser();
 
     private static DataSource dataSource;
-    private static String database;
-    private static String tablePrefix;
 
     public PersistenceManager(AirGamePlugin plugin) {
         FileConfiguration config = plugin.getConfig();
@@ -54,8 +52,6 @@ public class PersistenceManager {
                 AirGamePlugin.getLogUtils().error(e, "初始化数据库连接池时遇到了一个错误: ");
             }
         }
-        database = config.getString("datasource.database", "minecraft");
-        tablePrefix = config.getString("datasource.tablePrefix", "AirGame_");
     }
 
     public static Gson getGson() {
@@ -72,14 +68,6 @@ public class PersistenceManager {
 
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
-    }
-
-    public static String getDatabase() {
-        return database;
-    }
-
-    public static String getTablePrefix() {
-        return tablePrefix;
     }
 
     public boolean initHikariCP(Properties properties) {
