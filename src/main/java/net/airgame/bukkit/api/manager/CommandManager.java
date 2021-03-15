@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.manager;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.annotation.Command;
 import net.airgame.bukkit.api.annotation.CommandExecutor;
 import net.airgame.bukkit.api.command.executor.CommandHandler;
@@ -37,33 +37,33 @@ public class CommandManager {
      * @param classLoader JavaPluginLoader 对象
      */
     public static void init(ClassLoader classLoader) {
-        AirGameAPI.getLogUtils().info("开始初始化命令管理器.");
+        AirGamePlugin.getLogUtils().info("开始初始化命令管理器.");
         try {
             getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
             getFileMethod.setAccessible(true);
-            AirGameAPI.getLogUtils().info("已获取 getFile 方法: %s", getFileMethod);
+            AirGamePlugin.getLogUtils().info("已获取 getFile 方法: %s", getFileMethod);
 
             getClassLoaderMethod = JavaPlugin.class.getDeclaredMethod("getClassLoader");
             getClassLoaderMethod.setAccessible(true);
-            AirGameAPI.getLogUtils().info("已获取 getClassLoader 方法: %s", getClassLoaderMethod);
+            AirGamePlugin.getLogUtils().info("已获取 getClassLoader 方法: %s", getClassLoaderMethod);
 
             findClassMethod = classLoader.getClass().getDeclaredMethod("findClass", String.class);
             findClassMethod.setAccessible(true);
-            AirGameAPI.getLogUtils().info("已获取 findClass 方法: %s", findClassMethod);
+            AirGamePlugin.getLogUtils().info("已获取 findClass 方法: %s", findClassMethod);
 
             SimplePluginManager manager = (SimplePluginManager) Bukkit.getPluginManager();
             Field commandMapField = SimplePluginManager.class.getDeclaredField("commandMap");
             commandMapField.setAccessible(true);
             commandMap = (SimpleCommandMap) commandMapField.get(manager);
-            AirGameAPI.getLogUtils().info("已获取命令管理器: %s", commandMap);
+            AirGamePlugin.getLogUtils().info("已获取命令管理器: %s", commandMap);
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "初始化命令管理器时遇到了一个错误: ");
+            AirGamePlugin.getLogUtils().error(e, "初始化命令管理器时遇到了一个错误: ");
         }
-        AirGameAPI.getLogUtils().info("命令管理器初始化完成.");
+        AirGamePlugin.getLogUtils().info("命令管理器初始化完成.");
     }
 
     public static void registerPluginCommand(JavaPlugin plugin, String packageName) throws IOException, InvocationTargetException, IllegalAccessException {
-        AirGameAPI.getLogUtils().info("扫描插件 %s 中的命令类.", plugin.getName());
+        AirGamePlugin.getLogUtils().info("扫描插件 %s 中的命令类.", plugin.getName());
 
         Enumeration<JarEntry> entries = new JarFile((File) getFileMethod.invoke(plugin)).entries();
 
@@ -92,9 +92,9 @@ public class CommandManager {
             try {
                 CommandManager.registerCommand(plugin, className);
             } catch (IllegalAccessException e) {
-                AirGameAPI.getLogUtils().debug("扫描到类 %s 没有添加 CommandExecutor 注解, 取消注册该类命令!", className);
+                AirGamePlugin.getLogUtils().debug("扫描到类 %s 没有添加 CommandExecutor 注解, 取消注册该类命令!", className);
             } catch (Exception | Error e) {
-                AirGameAPI.getLogUtils().error(e, "在为插件 %s 注册命令 %s 时遇到了一个错误: ", plugin.getName(), className);
+                AirGamePlugin.getLogUtils().error(e, "在为插件 %s 注册命令 %s 时遇到了一个错误: ", plugin.getName(), className);
             }
         }
     }
@@ -120,7 +120,7 @@ public class CommandManager {
     public static void registerCommand(JavaPlugin plugin, Class<?> clazz) throws InstantiationException, IllegalAccessException {
         CommandHandler handler = generatorCommandHandler(clazz);
         commandMap.register(plugin.getName(), handler);
-        AirGameAPI.getLogUtils().info("  已成功注册命令类: %s", clazz.getSimpleName());
+        AirGamePlugin.getLogUtils().info("  已成功注册命令类: %s", clazz.getSimpleName());
     }
 
     /**
@@ -164,7 +164,7 @@ public class CommandManager {
      */
     public static ArrayList<CommandMethodInvoker> generatorClassInvokers(@NotNull Object executor, @NotNull String[] addSubName, @NotNull String[] addPermission) {
         Class<?> executorClass = executor.getClass();
-        AirGameAPI.getLogUtils().debug("  开始扫描命令类 %s", executorClass.getName());
+        AirGamePlugin.getLogUtils().debug("  开始扫描命令类 %s", executorClass.getName());
 
         ArrayList<CommandMethodInvoker> invokers = generatorMethodInvokers(executor, addSubName, addPermission);
 
@@ -174,10 +174,10 @@ public class CommandManager {
                 continue;
             }
             if (!Modifier.isStatic(innerClass.getModifiers())) {
-                AirGameAPI.getLogUtils().info("  跳过非 static 修饰的内部类: %s", innerClass.getSimpleName());
+                AirGamePlugin.getLogUtils().info("  跳过非 static 修饰的内部类: %s", innerClass.getSimpleName());
             }
             if (!Modifier.isPublic(innerClass.getModifiers())) {
-                AirGameAPI.getLogUtils().info("  跳过非 public 修饰的内部类: %s", innerClass.getSimpleName());
+                AirGamePlugin.getLogUtils().info("  跳过非 public 修饰的内部类: %s", innerClass.getSimpleName());
             }
 
             // 把 command 的 name 和 aliases 存入 commandNames 中
@@ -202,7 +202,7 @@ public class CommandManager {
                             )
                     );
                 } catch (InstantiationException | IllegalAccessException e) {
-                    AirGameAPI.getLogUtils().error(e, "构造内部类 %s 的实例时出现了一个错误: ");
+                    AirGamePlugin.getLogUtils().error(e, "构造内部类 %s 的实例时出现了一个错误: ");
                 }
             }
         }
@@ -231,7 +231,7 @@ public class CommandManager {
             if (annotation == null) {
                 continue;
             }
-            AirGameAPI.getLogUtils().debug(
+            AirGamePlugin.getLogUtils().debug(
                     "    已读取方法 %s::%s(%s);",
                     executorClass.getSimpleName(),
                     method.getName(),
@@ -256,7 +256,7 @@ public class CommandManager {
                 );
                 invokers.add(invoker);
             } catch (Exception e) {
-                AirGameAPI.getLogUtils().error(e, "  在构建命令执行器 %s 的命令 %s 时出现了一个错误: ", executorClass, method.getName());
+                AirGamePlugin.getLogUtils().error(e, "  在构建命令执行器 %s 的命令 %s 时出现了一个错误: ", executorClass, method.getName());
             }
         }
         return invokers;

@@ -11,7 +11,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.nbt.NbtBase;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.object.SignEditFuture;
 import net.airgame.bukkit.api.util.ChatTextUtils;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -35,7 +35,7 @@ public class SignEditListener extends PacketAdapter {
 
     public SignEditListener() {
         super(
-                AirGameAPI.getInstance(),
+                AirGamePlugin.getInstance(),
                 PacketType.Play.Client.UPDATE_SIGN,
                 PacketType.Play.Server.OPEN_SIGN_EDITOR,
                 PacketType.Play.Server.TILE_ENTITY_DATA,
@@ -96,7 +96,7 @@ public class SignEditListener extends PacketAdapter {
                 try {
                     protocolManager.sendServerPacket(player, updateSign);
                 } catch (InvocationTargetException e) {
-                    AirGameAPI.getLogUtils().error(e, "发送牌子编辑数据包时出现了一个异常:");
+                    AirGamePlugin.getLogUtils().error(e, "发送牌子编辑数据包时出现了一个异常:");
                 }
                 break;
             }
@@ -119,7 +119,7 @@ public class SignEditListener extends PacketAdapter {
                 try {
                     protocolManager.sendServerPacket(player, updateSign);
                 } catch (InvocationTargetException e) {
-                    AirGameAPI.getLogUtils().error(e, "发送牌子编辑数据包时出现了一个异常:");
+                    AirGamePlugin.getLogUtils().error(e, "发送牌子编辑数据包时出现了一个异常:");
                 }
             }
             return result;
@@ -130,7 +130,7 @@ public class SignEditListener extends PacketAdapter {
         try {
             protocolManager.sendServerPacket(player, openSignEditor);
         } catch (InvocationTargetException e) {
-            AirGameAPI.getLogUtils().error(e, "发送牌子编辑数据包时出现了一个异常:");
+            AirGamePlugin.getLogUtils().error(e, "发送牌子编辑数据包时出现了一个异常:");
         }
 
         internalPlayerInput(player);

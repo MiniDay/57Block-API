@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.listener;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.page.handler.PageHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,7 +34,7 @@ public class PageListener implements Listener {
         try {
             pageHandler.onClick(event);
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "执行 %s 的 onClick(event) 时遇到了一个异常: ", pageHandler.getClass().getName());
+            AirGamePlugin.getLogUtils().error(e, "执行 %s 的 onClick(event) 时遇到了一个异常: ", pageHandler.getClass().getName());
         }
         if (event.isCancelled()) {
             return;
@@ -49,12 +49,12 @@ public class PageListener implements Listener {
         try {
             pageHandler.onClickInside(event);
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "执行 %s 的 onClickInside(event) 时遇到了一个异常: ", pageHandler.getClass().getName());
+            AirGamePlugin.getLogUtils().error(e, "执行 %s 的 onClickInside(event) 时遇到了一个异常: ", pageHandler.getClass().getName());
         }
         try {
             pageHandler.onClickInside(event.getClick(), event.getAction(), index);
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e,
+            AirGamePlugin.getLogUtils().error(e,
                     "执行 %s 的 onClickInside(%s, %s, %d) 时遇到了一个异常: ",
                     pageHandler.getClass().getName(),
                     event.getClick().name(),
@@ -74,7 +74,7 @@ public class PageListener implements Listener {
         try {
             pageHandler.onDrag(event);
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "执行 %s 的 onDrag(event) 时遇到了一个异常: ", pageHandler.getClass().getName());
+            AirGamePlugin.getLogUtils().error(e, "执行 %s 的 onDrag(event) 时遇到了一个异常: ", pageHandler.getClass().getName());
         }
         if (event.isCancelled()) {
             return;

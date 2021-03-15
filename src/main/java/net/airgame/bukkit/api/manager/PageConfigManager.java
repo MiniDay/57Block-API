@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.manager;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.annotation.PageScan;
 import net.airgame.bukkit.api.page.PageConfig;
 import net.airgame.bukkit.api.page.handler.PageHandler;
@@ -30,15 +30,15 @@ public class PageConfigManager {
      * 初始化这个页面管理器
      */
     public static void init() {
-        AirGameAPI.getLogUtils().info("开始初始化页面管理器.");
+        AirGamePlugin.getLogUtils().info("开始初始化页面管理器.");
         try {
             getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
             getFileMethod.setAccessible(true);
-            AirGameAPI.getLogUtils().info("已获取 getFile 方法: %s", getFileMethod);
+            AirGamePlugin.getLogUtils().info("已获取 getFile 方法: %s", getFileMethod);
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "初始化页面管理器时遇到了一个错误: ");
+            AirGamePlugin.getLogUtils().error(e, "初始化页面管理器时遇到了一个错误: ");
         }
-        AirGameAPI.getLogUtils().info("页面管理器初始化完成.");
+        AirGamePlugin.getLogUtils().info("页面管理器初始化完成.");
     }
 
     public static void reload() {
@@ -56,14 +56,14 @@ public class PageConfigManager {
                 try {
                     PageConfigManager.registerPageConfig((JavaPlugin) plugin, packageName);
                 } catch (Exception e) {
-                    AirGameAPI.getLogUtils().error(e, "从插件 %s 的Java包中扫描界面设定时遇到了一个异常: ", plugin.getName());
+                    AirGamePlugin.getLogUtils().error(e, "从插件 %s 的Java包中扫描界面设定时遇到了一个异常: ", plugin.getName());
                 }
             }
         }
     }
 
     public static void registerPageConfig(JavaPlugin plugin, String packageName) throws IOException, InvocationTargetException, IllegalAccessException {
-        AirGameAPI.getLogUtils().info("开始扫描插件 %s 中的包 %s", plugin.getName(), packageName);
+        AirGamePlugin.getLogUtils().info("开始扫描插件 %s 中的包 %s", plugin.getName(), packageName);
         Enumeration<JarEntry> entries = new JarFile((File) getFileMethod.invoke(plugin)).entries();
 
         while (entries.hasMoreElements()) {
@@ -105,7 +105,7 @@ public class PageConfigManager {
 
     public static void registerPageConfig(@NotNull String className, @NotNull PageConfig config) {
         pageConfigs.put(className, config);
-        AirGameAPI.getLogUtils().info("已注册 %s 的界面设置.", className);
+        AirGamePlugin.getLogUtils().info("已注册 %s 的界面设置.", className);
     }
 
     public static PageConfig getPageConfig(@NotNull Class<? extends PageHandler> clazz) {
@@ -163,7 +163,7 @@ public class PageConfigManager {
         InputStream inputStream = plugin.getResource(yamlFileFolderName + yamlFileName);
         if (inputStream != null) {
             if (yamlFileFolder.mkdirs()) {
-                AirGameAPI.getLogUtils().info("为插件 %s 创建 Page 文件夹 %s.", plugin.getName(), yamlFileFolder.getName());
+                AirGamePlugin.getLogUtils().info("为插件 %s 创建 Page 文件夹 %s.", plugin.getName(), yamlFileFolder.getName());
             }
             try {
                 Files.copy(
@@ -173,7 +173,7 @@ public class PageConfigManager {
                 );
                 return YamlConfiguration.loadConfiguration(yamlFile);
             } catch (Exception e) {
-                AirGameAPI.getLogUtils().error(e, "在为插件 %s 保存文件 %s 至 %s 时出现了一个异常:", plugin.getName(), yamlFileName, yamlFileFolderName);
+                AirGamePlugin.getLogUtils().error(e, "在为插件 %s 保存文件 %s 至 %s 时出现了一个异常:", plugin.getName(), yamlFileName, yamlFileFolderName);
             }
         }
 
@@ -182,7 +182,7 @@ public class PageConfigManager {
         inputStream = plugin.getResource(packageYamlFilePath);
         if (inputStream != null) {
             if (yamlFileFolder.mkdirs()) {
-                AirGameAPI.getLogUtils().info("为插件 %s 创建 Page 文件夹 %s.", plugin.getName(), yamlFileFolder.getName());
+                AirGamePlugin.getLogUtils().info("为插件 %s 创建 Page 文件夹 %s.", plugin.getName(), yamlFileFolder.getName());
             }
             try {
                 Files.copy(
@@ -192,7 +192,7 @@ public class PageConfigManager {
                 );
                 return YamlConfiguration.loadConfiguration(yamlFile);
             } catch (Exception e) {
-                AirGameAPI.getLogUtils().error(e, "在为插件 %s 保存文件 %s 至 %s 时出现了一个异常:", plugin.getName(), yamlFileName, yamlFileFolderName);
+                AirGamePlugin.getLogUtils().error(e, "在为插件 %s 保存文件 %s 至 %s 时出现了一个异常:", plugin.getName(), yamlFileName, yamlFileFolderName);
             }
         }
 

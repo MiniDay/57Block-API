@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.command.parameter;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.annotation.Sender;
 import net.airgame.bukkit.api.command.parameter.parser.EndParser;
 import net.airgame.bukkit.api.command.parameter.parser.bukkit.CommandSenderParser;
@@ -44,7 +44,7 @@ public class ParameterParserManager {
             throw new IllegalArgumentException("ParameterParser 类必须拥有一个公共无参的构造方法!");
         }
         if (supportParameters.containsKey(parameterClass)) {
-            AirGameAPI.getLogUtils().warning(
+            AirGamePlugin.getLogUtils().warning(
                     "无法注册 %s 为 %s 类型的解析器，因为已经存在另一个解析器 %s 用于解析该类型参数了.",
                     parserClass.getName(),
                     parameterClass.getName(),
@@ -53,7 +53,7 @@ public class ParameterParserManager {
             return false;
         }
         supportParameters.put(parameterClass, parserClass);
-        AirGameAPI.getLogUtils().info(
+        AirGamePlugin.getLogUtils().info(
                 "已注册 %s 为 %s 类型参数的解析器",
                 parserClass.getSimpleName(),
                 parameterClass.getSimpleName()
@@ -72,7 +72,7 @@ public class ParameterParserManager {
         if (!supportParameters.containsKey(parameterClass)) {
             return false;
         }
-        AirGameAPI.getLogUtils().warning(
+        AirGamePlugin.getLogUtils().warning(
                 "已为参数类型 %s 注销参数解析器 %s",
                 parameterClass.getSimpleName(),
                 parserClass.getSimpleName()
@@ -94,7 +94,7 @@ public class ParameterParserManager {
         if (parserClass == null) {
             return false;
         }
-        AirGameAPI.getLogUtils().warning(
+        AirGamePlugin.getLogUtils().warning(
                 "已为参数类型 %s 注销参数解析器 %s",
                 parameterClass.getSimpleName(),
                 parserClass.getSimpleName()
@@ -144,7 +144,7 @@ public class ParameterParserManager {
             }
             return parser;
         } catch (InstantiationException | IllegalAccessException e) {
-            AirGameAPI.getLogUtils().error(e, "构建 %s 的参数解析器时出现了一个错误: ", parameterType.getSimpleName());
+            AirGamePlugin.getLogUtils().error(e, "构建 %s 的参数解析器时出现了一个错误: ", parameterType.getSimpleName());
         }
 
         return EndParser.INSTANCE;

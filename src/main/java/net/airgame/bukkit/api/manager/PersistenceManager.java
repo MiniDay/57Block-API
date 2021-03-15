@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.object.SimpleDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -32,7 +32,7 @@ public class PersistenceManager {
     private static String database;
     private static String tablePrefix;
 
-    public PersistenceManager(AirGameAPI plugin) {
+    public PersistenceManager(AirGamePlugin plugin) {
         FileConfiguration config = plugin.getConfig();
 
         File file = new File(plugin.getDataFolder(), "sql.properties");
@@ -40,18 +40,18 @@ public class PersistenceManager {
         try {
             properties.load(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "初始化数据库连接池时遇到了一个错误: ");
+            AirGamePlugin.getLogUtils().error(e, "初始化数据库连接池时遇到了一个错误: ");
             return;
         }
 
         if (config.getBoolean("datasource.hikariCP") && initHikariCP(properties)) {
-            AirGameAPI.getLogUtils().info("已使用 HikariCP 作为数据库连接池!");
+            AirGamePlugin.getLogUtils().info("已使用 HikariCP 作为数据库连接池!");
         } else {
             try {
                 dataSource = new SimpleDataSource(properties);
-                AirGameAPI.getLogUtils().info("已使用 SimpleDataSource 作为数据库连接池!");
+                AirGamePlugin.getLogUtils().info("已使用 SimpleDataSource 作为数据库连接池!");
             } catch (ClassNotFoundException e) {
-                AirGameAPI.getLogUtils().error(e, "初始化数据库连接池时遇到了一个错误: ");
+                AirGamePlugin.getLogUtils().error(e, "初始化数据库连接池时遇到了一个错误: ");
             }
         }
         database = config.getString("datasource.database", "minecraft");
@@ -89,13 +89,13 @@ public class PersistenceManager {
             dataSource = new HikariDataSource(config);
             return true;
         } catch (ClassNotFoundException e) {
-            AirGameAPI.getLogUtils().warning("未找到 HikariCP 前置依赖, 使用默认连接池!");
+            AirGamePlugin.getLogUtils().warning("未找到 HikariCP 前置依赖, 使用默认连接池!");
         }
         return false;
     }
 
     public void close() {
-        AirGameAPI.getLogUtils().info("正在关闭数据库连接池.");
+        AirGamePlugin.getLogUtils().info("正在关闭数据库连接池.");
         try {
             Method method = dataSource.getClass().getMethod("close");
             if (!Modifier.isPublic(method.getModifiers())) {
@@ -104,6 +104,6 @@ public class PersistenceManager {
             method.invoke(dataSource);
         } catch (Exception | Error ignored) {
         }
-        AirGameAPI.getLogUtils().info("数据库连接池关闭成功.");
+        AirGamePlugin.getLogUtils().info("数据库连接池关闭成功.");
     }
 }

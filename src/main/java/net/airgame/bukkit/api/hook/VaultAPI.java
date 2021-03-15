@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.hook;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -26,34 +26,34 @@ public class VaultAPI {
         permission = null;
         vaultEnabled = Bukkit.getPluginManager().isPluginEnabled("Vault");
         if (!vaultEnabled) {
-            AirGameAPI.getLogUtils().warning("未检测到 Vault 插件!");
+            AirGamePlugin.getLogUtils().warning("未检测到 Vault 插件!");
             return;
         }
-        AirGameAPI.getLogUtils().info("已连接 Vault!");
+        AirGamePlugin.getLogUtils().info("已连接 Vault!");
 
         RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServer().getServicesManager().getRegistration(Chat.class);
 
         if (chatProvider != null) {
             chat = chatProvider.getProvider();
-            AirGameAPI.getLogUtils().info("聊天系统挂接成功...");
+            AirGamePlugin.getLogUtils().info("聊天系统挂接成功...");
         } else {
-            AirGameAPI.getLogUtils().warning("未检测到聊天系统!");
+            AirGamePlugin.getLogUtils().warning("未检测到聊天系统!");
         }
 
         RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         if (economyProvider != null) {
             economy = economyProvider.getProvider();
-            AirGameAPI.getLogUtils().info("经济系统挂接成功...");
+            AirGamePlugin.getLogUtils().info("经济系统挂接成功...");
         } else {
-            AirGameAPI.getLogUtils().warning("未检测到经济系统!");
+            AirGamePlugin.getLogUtils().warning("未检测到经济系统!");
         }
 
         RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
         if (permissionProvider != null) {
             permission = permissionProvider.getProvider();
-            AirGameAPI.getLogUtils().info("权限系统挂接成功...");
+            AirGamePlugin.getLogUtils().info("权限系统挂接成功...");
         } else {
-            AirGameAPI.getLogUtils().warning("未检测到权限插件!");
+            AirGamePlugin.getLogUtils().warning("未检测到权限插件!");
         }
     }
 

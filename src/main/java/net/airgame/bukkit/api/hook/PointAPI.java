@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.hook;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
@@ -25,11 +25,11 @@ public class PointAPI {
     public static void reloadPlayerPointAPIHook() {
         Plugin plugin = Bukkit.getPluginManager().getPlugin("PlayerPoints");
         if (plugin == null) {
-            AirGameAPI.getLogUtils().warning("未检测到 PlayerPointAPI 插件...");
+            AirGamePlugin.getLogUtils().warning("未检测到 PlayerPointAPI 插件...");
             return;
         }
         playerPointsAPI = ((PlayerPoints) plugin).getAPI();
-        AirGameAPI.getLogUtils().info("PlayerPointAPI 挂接成功!");
+        AirGamePlugin.getLogUtils().info("PlayerPointAPI 挂接成功!");
     }
 
     /**

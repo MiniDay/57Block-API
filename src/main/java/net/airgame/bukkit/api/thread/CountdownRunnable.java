@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.thread;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -37,13 +37,13 @@ public abstract class CountdownRunnable implements Runnable {
         try {
             onTick(timer);
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "插件 %s 执行倒计时线程时在 %d tick 发生异常:", task.getOwner().getName(), timer);
+            AirGamePlugin.getLogUtils().error(e, "插件 %s 执行倒计时线程时在 %d tick 发生异常:", task.getOwner().getName(), timer);
         }
         if (timer == 0) {
             try {
                 onFinish();
             } catch (Exception e) {
-                AirGameAPI.getLogUtils().error(e, "插件 %s 执行倒计时线程时在 onFinish 发生异常:", task.getOwner().getName());
+                AirGamePlugin.getLogUtils().error(e, "插件 %s 执行倒计时线程时在 onFinish 发生异常:", task.getOwner().getName());
             }
             cancel();
             return;

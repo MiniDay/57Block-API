@@ -15,7 +15,7 @@ import net.airgame.bukkit.api.manager.CommandManager;
 import net.airgame.bukkit.api.manager.PageConfigManager;
 import net.airgame.bukkit.api.manager.PersistenceManager;
 import net.airgame.bukkit.api.page.handler.PageHandler;
-import net.airgame.bukkit.api.util.AirUtils;
+import net.airgame.bukkit.api.util.AirGameUtils;
 import net.airgame.bukkit.api.util.LogUtils;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
@@ -42,13 +42,13 @@ import java.net.URLClassLoader;
 
 @CommandScan("net.airgame.bukkit.api.command.preset")
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public final class AirGameAPI extends JavaPlugin {
-    private static AirGameAPI instance;
+public final class AirGamePlugin extends JavaPlugin {
+    private static AirGamePlugin instance;
     private static LogUtils logUtils;
     private static String defaultLocale;
     private PersistenceManager persistenceManager;
 
-    public static AirGameAPI getInstance() {
+    public static AirGamePlugin getInstance() {
         return instance;
     }
 
@@ -112,8 +112,8 @@ public final class AirGameAPI extends JavaPlugin {
     public void onEnable() {
         long startTime = System.currentTimeMillis();
         logUtils.info("插件正在启动...");
-        logUtils.debug("当前服务器 MC 版本: " + AirUtils.getMCVersion());
-        logUtils.debug("当前服务器 nms 包名: " + AirUtils.getNMSPackage().getName());
+        logUtils.debug("当前服务器 MC 版本: " + AirGameUtils.getMCVersion());
+        logUtils.debug("当前服务器 nms 包名: " + AirGameUtils.getNMSPackage().getName());
 
         logUtils.info("==================================================");
         VaultAPI.reloadVaultHook();
@@ -262,13 +262,13 @@ public final class AirGameAPI extends JavaPlugin {
     private void initPersistenceManager() {
         FileConfiguration config = getConfig();
         if (!config.getBoolean("datasource.enable")) {
-            AirGameAPI.getLogUtils().warning("跳过初始化持久化管理器.");
+            AirGamePlugin.getLogUtils().warning("跳过初始化持久化管理器.");
             return;
         }
-        AirGameAPI.getLogUtils().info("开始初始化持久化管理器.");
+        AirGamePlugin.getLogUtils().info("开始初始化持久化管理器.");
         saveDefaultFile("sql.properties");
         persistenceManager = new PersistenceManager(this);
-        AirGameAPI.getLogUtils().info("持久化管理器初始化完成.");
+        AirGamePlugin.getLogUtils().info("持久化管理器初始化完成.");
     }
 
     /**

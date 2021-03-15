@@ -1,10 +1,12 @@
 package net.airgame.bukkit.api.util;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.listener.ConversationListener;
 import net.airgame.bukkit.api.listener.SignEditListener;
 import net.airgame.bukkit.api.object.Calculator;
 import net.airgame.bukkit.api.object.SignEditFuture;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
@@ -21,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
  * 未分类的工具方法
  */
 @SuppressWarnings("unused")
-public class AirUtils {
+public class AirGameUtils {
     public static final String NMS_VERSION;
     private static final Calculator CALCULATOR;
 
@@ -87,7 +89,7 @@ public class AirUtils {
                 HandlerList handlerList = (HandlerList) eventClass.getMethod("getHandlerList").invoke(null);
                 handlerList.unregister(listener);
             } catch (Exception e) {
-                AirGameAPI.getLogUtils().error(e, "为监听器 %s 取消注册事件 %s 时出错!", listener, eventClass.getName());
+                AirGamePlugin.getLogUtils().error(e, "为监听器 %s 取消注册事件 %s 时出错!", listener, eventClass.getName());
             }
         }
     }
@@ -146,5 +148,15 @@ public class AirUtils {
             return false;
         }
         return location1.getBlockZ() == location2.getBlockZ();
+    }
+
+    /**
+     * 向玩家发送一条 actionBar 消息
+     *
+     * @param player  玩家
+     * @param message 要发送的消息
+     */
+    public static void sendActionBar(@NotNull Player player, @NotNull String message) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
     }
 }

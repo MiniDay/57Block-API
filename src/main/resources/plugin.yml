@@ -1,6 +1,6 @@
 name: AirGame-API
 version: ${project.version}
-main: net.airgame.bukkit.api.AirGameAPI
+main: net.airgame.bukkit.api.AirGamePlugin
 api-version: 1.16
 load: STARTUP
 

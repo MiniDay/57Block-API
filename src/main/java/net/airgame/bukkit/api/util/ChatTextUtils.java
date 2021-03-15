@@ -3,15 +3,12 @@ package net.airgame.bukkit.api.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.manager.PersistenceManager;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -19,16 +16,6 @@ import java.util.Collections;
 
 @SuppressWarnings("unused")
 public class ChatTextUtils {
-
-    /**
-     * 向玩家发送一条 actionBar 消息
-     *
-     * @param player  玩家
-     * @param message 要发送的消息
-     */
-    public static void sendActionBar(@NotNull Player player, @NotNull String message) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-    }
 
     @SuppressWarnings("deprecation")
     public static TextComponent getItemDisplayInfo(String startText, ItemStack stack, String endText) {
@@ -68,16 +55,16 @@ public class ChatTextUtils {
 
     public static BaseComponent[] getItemInfo(ItemStack stack) {
         try {
-            Class<?> nBTTagCompound = Class.forName("net.minecraft.server." + AirUtils.NMS_VERSION + ".NBTTagCompound");
+            Class<?> nBTTagCompound = Class.forName("net.minecraft.server." + AirGameUtils.NMS_VERSION + ".NBTTagCompound");
             Object nBTTag = nBTTagCompound.newInstance();
-            Class<?> craftItemStack = Class.forName("org.bukkit.craftbukkit." + AirUtils.NMS_VERSION + ".inventory.CraftItemStack");
+            Class<?> craftItemStack = Class.forName("org.bukkit.craftbukkit." + AirGameUtils.NMS_VERSION + ".inventory.CraftItemStack");
             Method asNMSCopy = craftItemStack.getMethod("asNMSCopy", ItemStack.class);
             Object nmsItem = asNMSCopy.invoke(null, stack);
             Method saveMethod = nmsItem.getClass().getMethod("save", nBTTagCompound);
             saveMethod.invoke(nmsItem, nBTTag);
             return new ComponentBuilder(nBTTag.toString()).create();
         } catch (Exception e) {
-            AirGameAPI.getLogUtils().error(e, "组建物品文本信息时出现了一个异常:");
+            AirGamePlugin.getLogUtils().error(e, "组建物品文本信息时出现了一个异常:");
         }
         return new ComponentBuilder("物品解析失败").create();
     }

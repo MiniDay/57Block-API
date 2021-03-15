@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.command.executor;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.command.parameter.ParameterParser;
 import net.airgame.bukkit.api.command.parameter.ParameterParserManager;
 import net.airgame.bukkit.api.command.parameter.parser.EndParser;
@@ -130,7 +130,7 @@ public class CommandMethodInvoker {
             method.invoke(executor, objects);
             return true;
         } catch (IllegalAccessException | InvocationTargetException e) {
-            AirGameAPI.getLogUtils().error(e, "在调用 %s 的命令方法 %s 时遇到了一个错误: ", executor.getClass(), method.getName());
+            AirGamePlugin.getLogUtils().error(e, "在调用 %s 的命令方法 %s 时遇到了一个错误: ", executor.getClass(), method.getName());
         }
         return false;
     }

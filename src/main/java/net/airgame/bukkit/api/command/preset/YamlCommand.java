@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.command.preset;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.annotation.Command;
 import net.airgame.bukkit.api.annotation.CommandExecutor;
 import net.airgame.bukkit.api.annotation.Sender;
@@ -22,7 +22,7 @@ public class YamlCommand {
 
     @Command
     public void yaml(@Sender Player player) {
-        AirGameAPI instance = AirGameAPI.getInstance();
+        AirGamePlugin instance = AirGamePlugin.getInstance();
         YamlConfiguration config = new YamlConfiguration();
 
         PlayerInventory inventory = player.getInventory();
@@ -34,13 +34,13 @@ public class YamlCommand {
             config.save(new File(instance.getDataFolder(), "test.yml"));
             player.sendMessage("§a物品已保存至 test.yml 中.");
         } catch (IOException e) {
-            AirGameAPI.getLogUtils().error(e, "保存测试 yaml 数据至文件中时发生了一个错误: ");
+            AirGamePlugin.getLogUtils().error(e, "保存测试 yaml 数据至文件中时发生了一个错误: ");
         }
     }
 
     @Command
     public void yaml(@Sender CommandSender sender, Player player) {
-        AirGameAPI instance = AirGameAPI.getInstance();
+        AirGamePlugin instance = AirGamePlugin.getInstance();
         YamlConfiguration config = new YamlConfiguration();
 
         PlayerInventory inventory = player.getInventory();
@@ -52,7 +52,7 @@ public class YamlCommand {
             config.save(new File(instance.getDataFolder(), "test.yml"));
             player.sendMessage("§a物品已保存至 test.yml 中.");
         } catch (IOException e) {
-            AirGameAPI.getLogUtils().error(e, "保存测试 yaml 数据至文件中时发生了一个错误: ");
+            AirGamePlugin.getLogUtils().error(e, "保存测试 yaml 数据至文件中时发生了一个错误: ");
         }
     }
 }

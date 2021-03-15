@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.page.handler;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.manager.PageConfigManager;
 import net.airgame.bukkit.api.page.ButtonGroup;
 import net.airgame.bukkit.api.page.PageConfig;
@@ -68,11 +68,11 @@ public abstract class PageHandler implements InventoryHolder {
         if (init) {
             initPage();
         }
-        AirGameAPI.sync(() -> player.openInventory(getInventory()));
+        AirGamePlugin.sync(() -> player.openInventory(getInventory()));
     }
 
     public void close() {
-        AirGameAPI.sync(player::closeInventory);
+        AirGamePlugin.sync(player::closeInventory);
     }
 
     @NotNull

@@ -1,6 +1,6 @@
 package net.airgame.bukkit.api.object;
 
-import net.airgame.bukkit.api.AirGameAPI;
+import net.airgame.bukkit.api.AirGamePlugin;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
@@ -24,7 +24,7 @@ public class SimpleDataSource implements DataSource {
         jdbcUrl = properties.getProperty("jdbcUrl");
         username = properties.getProperty("username");
         password = properties.getProperty("password");
-        AirGameAPI.getLogUtils().info("连接池最大连接数: %s", properties.getProperty("maximumPoolSize"));
+        AirGamePlugin.getLogUtils().info("连接池最大连接数: %s", properties.getProperty("maximumPoolSize"));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SimpleDataSource implements DataSource {
 
     @Override
     public PrintWriter getLogWriter() throws SQLException {
-        return AirGameAPI.getLogUtils().getFileWriter();
+        return AirGamePlugin.getLogUtils().getFileWriter();
     }
 
     @Override
@@ -68,6 +68,6 @@ public class SimpleDataSource implements DataSource {
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        return AirGameAPI.getLogUtils().getLogger();
+        return AirGamePlugin.getLogUtils().getLogger();
     }
 }
