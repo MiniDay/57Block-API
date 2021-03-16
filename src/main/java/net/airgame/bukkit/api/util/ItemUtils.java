@@ -253,7 +253,7 @@ public class ItemUtils {
         meta.setUnbreakable(metaConfig.getBoolean("Unbreakable"));
 
         stack.setItemMeta(meta);
-        return defaultStack;
+        return stack;
     }
 
 }
