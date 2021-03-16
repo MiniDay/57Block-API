@@ -97,7 +97,7 @@ public class PageConfigManager {
             try {
                 registerPageConfig(className, new PageConfig(config));
             } catch (Exception e) {
-                AirGamePlugin.getLogUtils().error(e, "加载类 %s 的界面设定时出现了一个异常: ", className);
+                AirGamePlugin.getLogUtils().error(e, "加载插件 %s 中 %s 的界面设定时出现了一个异常: ", className);
             }
         }
     }
