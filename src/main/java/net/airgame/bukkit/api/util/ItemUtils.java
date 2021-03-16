@@ -233,12 +233,14 @@ public class ItemUtils {
         }
 
         ConfigurationSection attributesConfig = metaConfig.getConfigurationSection("attribute-modifiers");
-        for (String key : attributesConfig.getKeys(false)) {
-            Attribute attribute = Attribute.valueOf(key);
-            List<Map<?, ?>> list = attributesConfig.getMapList(key);
-            for (Map<?, ?> map : list) {
-                AttributeModifier modifier = AttributeModifier.deserialize((Map<String, Object>) map);
-                meta.addAttributeModifier(attribute, modifier);
+        if (attributesConfig != null) {
+            for (String key : attributesConfig.getKeys(false)) {
+                Attribute attribute = Attribute.valueOf(key);
+                List<Map<?, ?>> list = attributesConfig.getMapList(key);
+                for (Map<?, ?> map : list) {
+                    AttributeModifier modifier = AttributeModifier.deserialize((Map<String, Object>) map);
+                    meta.addAttributeModifier(attribute, modifier);
+                }
             }
         }
 
