@@ -1,5 +1,6 @@
 package net.airgame.bukkit.api.page;
 
+import net.airgame.bukkit.api.util.ItemUtils;
 import net.airgame.bukkit.api.util.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -46,7 +47,7 @@ public class PageConfig implements InventoryHolder {
         buttonMap = new HashMap<>();
         ConfigurationSection buttonsConfig = config.getConfigurationSection("buttons");
         for (String key : buttonsConfig.getKeys(false)) {
-            buttonMap.put(key, buttonsConfig.getItemStack(key));
+            buttonMap.put(key, ItemUtils.deserializeItemStack(buttonsConfig.getConfigurationSection(key)));
         }
 
         buttonGroups = new ArrayList<>();

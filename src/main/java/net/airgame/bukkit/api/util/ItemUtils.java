@@ -1,12 +1,20 @@
 package net.airgame.bukkit.api.util;
 
+import net.airgame.bukkit.api.AirGamePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -181,4 +189,69 @@ public class ItemUtils {
         }
         return false;
     }
+
+    public static ItemStack deserializeItemStack(ConfigurationSection config) {
+        return deserializeItemStack(config, null);
+    }
+
+    @SuppressWarnings({"ConstantConditions", "deprecation", "unchecked"})
+    public static ItemStack deserializeItemStack(ConfigurationSection config, ItemStack defaultStack) {
+        if (config == null) {
+            return defaultStack;
+        }
+        Material material;
+        try {
+            material = Material.valueOf(config.getString("type"));
+        } catch (IllegalArgumentException e) {
+            AirGamePlugin.getLogUtils().error(e, "在反序列化 %s 时出现了一个异常:", config);
+            return defaultStack;
+        }
+        Material type;
+        ItemStack stack = new ItemStack(material, config.getInt("amount", 1));
+        ConfigurationSection metaConfig = config.getConfigurationSection("meta");
+        if (metaConfig == null) {
+            return stack;
+        }
+        ItemMeta meta = Bukkit.getItemFactory().getItemMeta(material);
+        if (meta == null) {
+            return stack;
+        }
+
+        meta.setDisplayName(metaConfig.getString("display-name"));
+        meta.setLocalizedName(metaConfig.getString("loc-name"));
+        meta.setLore(metaConfig.getStringList("lore"));
+
+        if (metaConfig.contains("custom-model-data")) {
+            meta.setCustomModelData(metaConfig.getInt("custom-model-data"));
+        }
+
+        ConfigurationSection enchantsConfig = metaConfig.getConfigurationSection("enchants");
+        if (enchantsConfig != null) {
+            for (String s : enchantsConfig.getKeys(false)) {
+                meta.addEnchant(Enchantment.getByName(s), enchantsConfig.getInt(s, 0), true);
+            }
+        }
+
+        ConfigurationSection attributesConfig = metaConfig.getConfigurationSection("attribute-modifiers");
+        for (String key : attributesConfig.getKeys(false)) {
+            Attribute attribute = Attribute.valueOf(key);
+            List<Map<?, ?>> list = attributesConfig.getMapList(key);
+            for (Map<?, ?> map : list) {
+                AttributeModifier modifier = AttributeModifier.deserialize((Map<String, Object>) map);
+                meta.addAttributeModifier(attribute, modifier);
+            }
+        }
+
+        if (metaConfig.contains("ItemFlags")) {
+            for (String itemFlags : metaConfig.getStringList("ItemFlags")) {
+                meta.addItemFlags(ItemFlag.valueOf(itemFlags));
+            }
+        }
+
+        meta.setUnbreakable(metaConfig.getBoolean("Unbreakable"));
+
+        stack.setItemMeta(meta);
+        return defaultStack;
+    }
+
 }

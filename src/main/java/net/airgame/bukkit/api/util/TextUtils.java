@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 @SuppressWarnings("unused")
-public class ChatTextUtils {
+public class TextUtils {
 
     @SuppressWarnings("deprecation")
     public static TextComponent getItemDisplayInfo(String startText, ItemStack stack, String endText) {

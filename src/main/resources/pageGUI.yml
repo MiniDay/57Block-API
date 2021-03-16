@@ -1,11 +1,12 @@
-title: "&a公会列表"
+title: "&e联盟权限 - 公共"
 
 graphic:
   - "#########"
-  - "# 1 1 1 #"
-  - "#  1 1  #"
-  - "# 1 1 1 #"
-  - "<#######>"
+  - "#       #"
+  - "# 11111 #"
+  - "# 11111 #"
+  - "#       <"
+  - "~#######>"
 
 buttonGroups:
   default:
@@ -13,36 +14,36 @@ buttonGroups:
     '1': "element"
     '<': "preview"
     '>': "next"
+    '~': "back"
 
 buttons:
   barrier:
-    ==: org.bukkit.inventory.ItemStack
     type: STAINED_GLASS_PANE
     damage: 4
     meta:
-      ==: ItemMeta
       meta-type: UNSPECIFIC
       display-name: "§c屏障"
+  element:
+    type: SKULL_ITEM
+    damage: 3
+    meta:
+      meta-type: UNSPECIFIC
+      display-name: "§a%action_name%"
+      lore:
+        - "§a当前 %action_state%"
+        - "§a%action_description%"
   preview:
-    ==: org.bukkit.inventory.ItemStack
     type: REDSTONE
     meta:
-      ==: ItemMeta
       meta-type: UNSPECIFIC
       display-name: §c上一页
   next:
-    ==: org.bukkit.inventory.ItemStack
     type: ARROW
     meta:
-      ==: ItemMeta
       meta-type: UNSPECIFIC
       display-name: §a下一页
-  element:
-    ==: org.bukkit.inventory.ItemStack
-    type: EMPTY_MAP
+  back:
+    type: REDSTONE
     meta:
-      ==: ItemMeta
       meta-type: UNSPECIFIC
-      display-name: §a%target_name%
-      lore:
-        - §a%reporter_name%
+      display-name: '§c返回上级'

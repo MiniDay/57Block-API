@@ -13,7 +13,7 @@ import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import net.airgame.bukkit.api.AirGamePlugin;
 import net.airgame.bukkit.api.object.SignEditFuture;
-import net.airgame.bukkit.api.util.ChatTextUtils;
+import net.airgame.bukkit.api.util.TextUtils;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -184,7 +184,7 @@ public class SignEditListener extends PacketAdapter {
                     lines = new String[4];
                     WrappedChatComponent[] chatComponents = packet.getChatComponentArrays().read(0);
                     for (int i = 0; i < chatComponents.length; i++) {
-                        lines[i] = new TextComponent(ChatTextUtils.parseComponentFromJson(chatComponents[i].getJson())).toLegacyText();
+                        lines[i] = new TextComponent(TextUtils.parseComponentFromJson(chatComponents[i].getJson())).toLegacyText();
                     }
                     break;
                 }

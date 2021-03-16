@@ -18,40 +18,30 @@ buttonGroups:
 buttons:
   # 按钮名称
   barrier:
-    ==: org.bukkit.inventory.ItemStack
     type: STAINED_GLASS_PANE
     damage: 4
     meta:
-      ==: ItemMeta
       meta-type: UNSPECIFIC
       display-name: "§c屏障"
   innocent:
-    ==: org.bukkit.inventory.ItemStack
     type: PAPER
     meta:
-      ==: ItemMeta
       meta-type: UNSPECIFIC
       display-name: 核实无罪
   info:
-    ==: org.bukkit.inventory.ItemStack
     type: PAPER
     meta:
-      ==: ItemMeta
       meta-type: UNSPECIFIC
       display-name: 信息
       lore:
         - ""
   guilty:
-    ==: org.bukkit.inventory.ItemStack
     type: PAPER
     meta:
-      ==: ItemMeta
       meta-type: UNSPECIFIC
       display-name: 核实有罪
   back:
-    ==: org.bukkit.inventory.ItemStack
     type: REDSTONE
     meta:
-      ==: ItemMeta
       meta-type: UNSPECIFIC
       display-name: 返回上级
