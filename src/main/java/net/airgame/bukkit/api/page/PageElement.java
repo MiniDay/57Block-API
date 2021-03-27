@@ -29,8 +29,8 @@ public interface PageElement {
         stack.setItemMeta(meta);
     }
 
-    default boolean replaceItem(HumanEntity player, ItemStack stack) {
-        return false;
+    default ItemStack getDisplayItem(HumanEntity player) {
+        return null;
     }
 
     default boolean replaceMeta(HumanEntity player, ItemMeta meta) {
@@ -51,5 +51,7 @@ public interface PageElement {
         return lore;
     }
 
-    String replacePlaceholder(HumanEntity player, String string);
+    default String replacePlaceholder(HumanEntity player, String string) {
+        return string;
+    }
 }
