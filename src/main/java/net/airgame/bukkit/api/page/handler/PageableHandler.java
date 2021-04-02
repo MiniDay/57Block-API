@@ -9,7 +9,6 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -66,23 +65,9 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         return getElementButtonName();
     }
 
-    public void initElementButton(@NotNull E element, @NotNull ItemStack elementItem) {
+    public void initElementButton(@NotNull E element, @NotNull ItemStack displayItem) {
         HumanEntity player = getPlayer();
-
-        ItemMeta meta = elementItem.getItemMeta();
-        if (meta == null) {
-            return;
-        }
-        if (element.replaceMeta(player, meta)) {
-            return;
-        }
-        if (meta.hasDisplayName()) {
-            meta.setDisplayName(element.replaceDisplayName(player, meta.getDisplayName()));
-        }
-        if (meta.hasLore()) {
-            meta.setLore(element.replaceLore(player, meta.getLore()));
-        }
-        elementItem.setItemMeta(meta);
+        element.replaceButtonInfo(player, displayItem);
     }
 
     public void initPage() {
@@ -105,17 +90,18 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
             }
 
             E element = elements.get(elementIndex);
-            ItemStack button = group.getButton(getElementButtonName(element));
-            if (button == null) {
-                inventory.setItem(buttonIndex, null);
-                continue;
-            }
-
             elementSlot.put(buttonIndex, element);
 
             ItemStack elementDisplayItem = element.getDisplayItem(player);
             if (elementDisplayItem != null) {
+                element.replaceButtonInfo(player, elementDisplayItem);
                 inventory.setItem(buttonIndex, elementDisplayItem);
+                continue;
+            }
+
+            ItemStack button = group.getButton(getElementButtonName(element));
+            if (button == null) {
+                inventory.setItem(buttonIndex, null);
                 continue;
             }
 

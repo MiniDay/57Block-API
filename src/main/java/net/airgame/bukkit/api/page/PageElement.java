@@ -4,8 +4,10 @@ import net.airgame.bukkit.api.page.handler.PageableHandler;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @see PageableHandler#initPage()
@@ -13,7 +15,19 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface PageElement {
 
-    default void replaceInfo(HumanEntity player, ItemStack stack) {
+    /**
+     * 获取展示物品
+     * <p>
+     * 若返回 null 则使用 config 中的全局设置值
+     *
+     * @param player 占位符显示的目标玩家
+     * @return 展示物品
+     */
+    default ItemStack getDisplayItem(HumanEntity player) {
+        return null;
+    }
+
+    default void replaceButtonInfo(HumanEntity player, ItemStack stack) {
         if (stack == null) {
             return;
         }
@@ -21,20 +35,58 @@ public interface PageElement {
         if (meta == null) {
             return;
         }
-        meta.setDisplayName(replaceDisplayName(player, meta.getDisplayName()));
+
+        Map<String, String> replacer = getReplacer(player);
+        if (replacer == null) {
+            return;
+        }
+
+        String displayName = meta.getDisplayName();
+        for (Map.Entry<String, String> entry : replacer.entrySet()) {
+            displayName = displayName.replace(entry.getKey(), entry.getValue());
+        }
+
         List<String> lore = meta.getLore();
         if (lore != null) {
-            meta.setLore(replaceLore(player, lore));
+            for (int i = 0; i < lore.size(); i++) {
+                String s = lore.get(i);
+                for (Map.Entry<String, String> entry : replacer.entrySet()) {
+                    s = s.replace(entry.getKey(), entry.getValue());
+                }
+                lore.set(i, s);
+            }
+            meta.setLore(lore);
         }
+
         stack.setItemMeta(meta);
     }
 
-    default ItemStack getDisplayItem(HumanEntity player) {
-        return null;
-    }
+    default void replaceMeta(HumanEntity player, ItemMeta meta) {
+        if (meta == null) {
+            return;
+        }
 
-    default boolean replaceMeta(HumanEntity player, ItemMeta meta) {
-        return false;
+        Map<String, String> replacer = getReplacer(player);
+        if (replacer == null) {
+            return;
+        }
+
+        String displayName = meta.getDisplayName();
+        for (Map.Entry<String, String> entry : replacer.entrySet()) {
+            displayName = displayName.replace(entry.getKey(), entry.getValue());
+        }
+
+        List<String> lore = meta.getLore();
+        if (lore != null) {
+            for (int i = 0; i < lore.size(); i++) {
+                String s = lore.get(i);
+                for (Map.Entry<String, String> entry : replacer.entrySet()) {
+                    s = s.replace(entry.getKey(), entry.getValue());
+                }
+                lore.set(i, s);
+            }
+            meta.setLore(lore);
+        }
     }
 
     default String replaceDisplayName(HumanEntity player, String displayName) {
@@ -45,13 +97,34 @@ public interface PageElement {
         if (lore == null) {
             return null;
         }
+        Map<String, String> replacer = getReplacer(player);
+        if (replacer == null) {
+            return lore;
+        }
         for (int i = 0; i < lore.size(); i++) {
-            lore.set(i, replacePlaceholder(player, lore.get(i)));
+            String s = lore.get(i);
+            for (Map.Entry<String, String> entry : replacer.entrySet()) {
+                s = s.replace(entry.getKey(), entry.getValue());
+            }
+            lore.set(i, s);
         }
         return lore;
     }
 
     default String replacePlaceholder(HumanEntity player, String string) {
+        Map<String, String> replacer = getReplacer(player);
+        if (replacer == null) {
+            return string;
+        }
+        for (Map.Entry<String, String> entry : replacer.entrySet()) {
+            string = string.replace(entry.getKey(), entry.getValue());
+        }
         return string;
     }
+
+    @Nullable
+    default Map<String, String> getReplacer(HumanEntity player) {
+        return null;
+    }
+
 }
