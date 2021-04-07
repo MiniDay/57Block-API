@@ -1,6 +1,7 @@
 package net.airgame.bukkit.api.page;
 
 import net.airgame.bukkit.api.page.handler.PageableHandler;
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,6 +29,18 @@ public interface PageElement {
     }
 
     /**
+     * 获取展示物品的显示材质
+     * <p>
+     * 若返回 null 则使用 config 中的全局设置值
+     *
+     * @param player 占位符显示的目标玩家
+     * @return 展示物品的显示材质
+     */
+    default Material getMaterial(HumanEntity player) {
+        return null;
+    }
+
+    /**
      * 替换物品的信息
      *
      * @param player 玩家
@@ -37,6 +50,11 @@ public interface PageElement {
         if (stack == null) {
             return;
         }
+        Material type = getMaterial(player);
+        if (type != null) {
+            stack.setType(type);
+        }
+
         ItemMeta meta = stack.getItemMeta();
         if (meta == null) {
             return;
