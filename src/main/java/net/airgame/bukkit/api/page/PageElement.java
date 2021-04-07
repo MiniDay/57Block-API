@@ -27,7 +27,13 @@ public interface PageElement {
         return null;
     }
 
-    default void replaceButtonInfo(HumanEntity player, ItemStack stack) {
+    /**
+     * 替换物品的信息
+     *
+     * @param player 玩家
+     * @param stack  物品
+     */
+    default void replaceItemInfo(HumanEntity player, ItemStack stack) {
         if (stack == null) {
             return;
         }
@@ -36,32 +42,18 @@ public interface PageElement {
             return;
         }
 
-        Map<String, String> replacer = getReplacer(player);
-        if (replacer == null) {
-            return;
-        }
-
-        String displayName = meta.getDisplayName();
-        for (Map.Entry<String, String> entry : replacer.entrySet()) {
-            displayName = displayName.replace(entry.getKey(), entry.getValue());
-        }
-
-        List<String> lore = meta.getLore();
-        if (lore != null) {
-            for (int i = 0; i < lore.size(); i++) {
-                String s = lore.get(i);
-                for (Map.Entry<String, String> entry : replacer.entrySet()) {
-                    s = s.replace(entry.getKey(), entry.getValue());
-                }
-                lore.set(i, s);
-            }
-            meta.setLore(lore);
-        }
+        replaceMetaInfo(player, meta);
 
         stack.setItemMeta(meta);
     }
 
-    default void replaceMeta(HumanEntity player, ItemMeta meta) {
+    /**
+     * 替换物品的信息
+     *
+     * @param player 玩家
+     * @param meta   物品信息
+     */
+    default void replaceMetaInfo(HumanEntity player, ItemMeta meta) {
         if (meta == null) {
             return;
         }

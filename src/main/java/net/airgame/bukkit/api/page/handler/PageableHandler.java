@@ -67,7 +67,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
 
     public void initElementButton(@NotNull E element, @NotNull ItemStack displayItem) {
         HumanEntity player = getPlayer();
-        element.replaceButtonInfo(player, displayItem);
+        element.replaceItemInfo(player, displayItem);
     }
 
     public void initPage() {
@@ -94,7 +94,8 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
 
             ItemStack elementDisplayItem = element.getDisplayItem(player);
             if (elementDisplayItem != null) {
-                element.replaceButtonInfo(player, elementDisplayItem);
+                elementDisplayItem = elementDisplayItem.clone();
+                element.replaceItemInfo(player, elementDisplayItem);
                 inventory.setItem(buttonIndex, elementDisplayItem);
                 continue;
             }
