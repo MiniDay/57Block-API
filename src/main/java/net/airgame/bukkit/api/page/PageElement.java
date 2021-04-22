@@ -5,8 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,14 +77,12 @@ public interface PageElement {
         }
 
         Map<String, String> replacer = getReplacer(player);
-        if (replacer == null) {
-            return;
-        }
 
         String displayName = meta.getDisplayName();
         for (Map.Entry<String, String> entry : replacer.entrySet()) {
             displayName = displayName.replace(entry.getKey(), entry.getValue());
         }
+        meta.setDisplayName(displayName);
 
         List<String> lore = meta.getLore();
         if (lore != null) {
@@ -108,9 +106,6 @@ public interface PageElement {
             return null;
         }
         Map<String, String> replacer = getReplacer(player);
-        if (replacer == null) {
-            return lore;
-        }
         for (int i = 0; i < lore.size(); i++) {
             String s = lore.get(i);
             for (Map.Entry<String, String> entry : replacer.entrySet()) {
@@ -123,18 +118,14 @@ public interface PageElement {
 
     default String replacePlaceholder(HumanEntity player, String string) {
         Map<String, String> replacer = getReplacer(player);
-        if (replacer == null) {
-            return string;
-        }
         for (Map.Entry<String, String> entry : replacer.entrySet()) {
             string = string.replace(entry.getKey(), entry.getValue());
         }
         return string;
     }
 
-    @Nullable
     default Map<String, String> getReplacer(HumanEntity player) {
-        return null;
+        return new HashMap<>();
     }
 
 }
