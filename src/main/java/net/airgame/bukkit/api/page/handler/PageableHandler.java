@@ -25,6 +25,11 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
     private int page;
     private HashMap<Integer, E> elementSlot;
 
+    private String previewButtonName;
+    private String nextButtonName;
+    private String barrierButtonName;
+    private String elementButtonName;
+
     public PageableHandler(@NotNull HumanEntity player, int page) {
         super(player);
         this.page = page;
@@ -40,29 +45,10 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
 
     public abstract void onClickElement(@NotNull ClickType clickType, @NotNull InventoryAction action, @NotNull E element);
 
-    @NotNull
-    public String getPreviewButtonName() {
-        return "preview";
-    }
-
-    @NotNull
-    public String getNextButtonName() {
-        return "next";
-    }
-
-    @NotNull
-    public String getBarrierButtonName() {
-        return "barrier";
-    }
-
-    @NotNull
-    public String getElementButtonName() {
-        return "element";
-    }
 
     @NotNull
     public String getElementButtonName(@NotNull E element) {
-        return getElementButtonName();
+        return elementButtonName;
     }
 
     public void initElementButton(@NotNull E element, @NotNull ItemStack displayItem) {
@@ -77,7 +63,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         Inventory inventory = getInventory();
         HumanEntity player = getPlayer();
 
-        ArrayList<Integer> buttonIndexes = group.getButtonAllIndex(getElementButtonName());
+        ArrayList<Integer> buttonIndexes = group.getButtonAllIndex(previewButtonName);
         int pageSize = buttonIndexes.size(); // 一页有多少个按钮
         elementSlot = new HashMap<>();
         for (int i = 0; i < pageSize; i++) {
@@ -113,11 +99,11 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
 
         if (page == 0) {
             // 如果页面已在首页则撤掉上一页按钮
-            inventory.setItem(group.getButtonIndex(getPreviewButtonName()), group.getButton(getBarrierButtonName()));
+            inventory.setItem(group.getButtonIndex(previewButtonName), group.getButton(barrierButtonName));
         }
         if (elements.size() <= (page + 1) * pageSize) {
             // 如果页面显示超出已有元素数量则撤掉下一页按钮
-            inventory.setItem(group.getButtonIndex(getNextButtonName()), group.getButton(getBarrierButtonName()));
+            inventory.setItem(group.getButtonIndex(nextButtonName), group.getButton(barrierButtonName));
         }
     }
 
@@ -131,11 +117,11 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
             return;
         }
         String name = getPageConfig().getButtonName(event.getCurrentItem());
-        if (name.equalsIgnoreCase(getNextButtonName())) {
+        if (name.equalsIgnoreCase(nextButtonName)) {
             showNextPage();
             return;
         }
-        if (name.equalsIgnoreCase(getPreviewButtonName())) {
+        if (name.equalsIgnoreCase(previewButtonName)) {
             showPreviewPage();
         }
     }
@@ -150,12 +136,32 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         show();
     }
 
+    @NotNull
+    public HashMap<Integer, E> getElementSlot() {
+        return elementSlot;
+    }
+
     public int getPage() {
         return page;
     }
 
-    @NotNull
-    public HashMap<Integer, E> getElementSlot() {
-        return elementSlot;
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public void setPreviewButtonName(String previewButtonName) {
+        this.previewButtonName = previewButtonName;
+    }
+
+    public void setNextButtonName(String nextButtonName) {
+        this.nextButtonName = nextButtonName;
+    }
+
+    public void setBarrierButtonName(String barrierButtonName) {
+        this.barrierButtonName = barrierButtonName;
+    }
+
+    public void setElementButtonName(String elementButtonName) {
+        this.elementButtonName = elementButtonName;
     }
 }
