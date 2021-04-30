@@ -54,6 +54,47 @@ public class ButtonGroup {
     }
 
     /**
+     * 获取按钮在 GUI 中的第一个索引位置
+     *
+     * @param buttonName 按钮名称
+     * @return 按钮在 GUI 中的第一个索引位置
+     */
+    public int getButtonIndex(String buttonName) {
+        Character graphicKey = getGraphicKey(buttonName);
+        List<String> graphic = config.getGraphic();
+        for (int i = 0; i < graphic.size(); i++) {
+            char[] chars = graphic.get(i).toCharArray();
+            for (int j = 0; j < chars.length; j++) {
+                if (chars[j] == graphicKey) {
+                    return i * 9 + j;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 获得按钮在 GUI 中全部的索引位置
+     *
+     * @param buttonName 按钮名称
+     * @return 按钮在 GUI 中全部的索引位置
+     */
+    public ArrayList<Integer> getButtonAllIndex(String buttonName) {
+        Character graphicKey = getGraphicKey(buttonName);
+        List<String> graphic = config.getGraphic();
+        ArrayList<Integer> integers = new ArrayList<>();
+        for (int i = 0; i < graphic.size(); i++) {
+            char[] chars = graphic.get(i).toCharArray();
+            for (int j = 0; j < chars.length; j++) {
+                if (chars[j] == graphicKey) {
+                    integers.add(i * 9 + j);
+                }
+            }
+        }
+        return integers;
+    }
+
+    /**
      * 以按钮名称来获取图形字符
      *
      * @param buttonName 按钮名称
@@ -90,41 +131,6 @@ public class ButtonGroup {
             stack = stack.clone();
         }
         return stack;
-    }
-
-    public int getButtonIndex(String buttonName) {
-        Character graphicKey = getGraphicKey(buttonName);
-        List<String> graphic = config.getGraphic();
-        for (int i = 0; i < graphic.size(); i++) {
-            char[] chars = graphic.get(i).toCharArray();
-            for (int j = 0; j < chars.length; j++) {
-                if (chars[j] == graphicKey) {
-                    return i * 9 + j;
-                }
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * 获得按钮在GUI中全部的索引位置
-     *
-     * @param buttonName 按钮名称
-     * @return 索引位置
-     */
-    public ArrayList<Integer> getButtonAllIndex(String buttonName) {
-        Character graphicKey = getGraphicKey(buttonName);
-        List<String> graphic = config.getGraphic();
-        ArrayList<Integer> integers = new ArrayList<>();
-        for (int i = 0; i < graphic.size(); i++) {
-            char[] chars = graphic.get(i).toCharArray();
-            for (int j = 0; j < chars.length; j++) {
-                if (chars[j] == graphicKey) {
-                    integers.add(i * 9 + j);
-                }
-            }
-        }
-        return integers;
     }
 
     /**

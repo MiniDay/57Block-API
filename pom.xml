@@ -142,12 +142,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>3.4.5</version>
+            <version>4.0.3</version>
             <scope>provided</scope>
         </dependency>
+
 
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
