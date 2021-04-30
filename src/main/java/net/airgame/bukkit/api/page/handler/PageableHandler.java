@@ -25,10 +25,10 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
     private int page;
     private HashMap<Integer, E> elementSlot;
 
-    private String previewButtonName;
-    private String nextButtonName;
-    private String barrierButtonName;
-    private String elementButtonName;
+    private String previewButtonName = "preview";
+    private String nextButtonName = "next";
+    private String barrierButtonName = "barrier";
+    private String elementButtonName = "element";
 
     public PageableHandler(@NotNull HumanEntity player, int page) {
         super(player);
@@ -62,7 +62,7 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         Inventory inventory = getInventory();
         HumanEntity player = getPlayer();
 
-        ArrayList<Integer> buttonIndexes = group.getButtonAllIndex(previewButtonName);
+        ArrayList<Integer> buttonIndexes = group.getButtonAllIndex(elementButtonName);
         int pageSize = buttonIndexes.size(); // 一页有多少个按钮
         elementSlot = new HashMap<>();
         for (int i = 0; i < pageSize; i++) {
