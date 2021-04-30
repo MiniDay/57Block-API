@@ -18,6 +18,8 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings({"unused"})
 public class LogUtils {
+    public static final String DIVIDING_LINE = "==================================================";
+
     public static final ArrayList<LogUtils> ALL_INSTANCES = new ArrayList<>();
     public static YamlConfiguration DEFAULT_CONFIG;
 
@@ -70,9 +72,14 @@ public class LogUtils {
     @SuppressWarnings("ConstantConditions")
     private void init(@NotNull ConfigurationSection config) {
         usePluginLogger = config.getBoolean("usePluginLogger", false);
+
+        info("==================================================");
+        info("开始初始化 日志器.");
+        info("==================================================");
         if (config.getBoolean("usePluginLogger", false)) {
             info("使用Bukkit自带日志器, 日志将会打印至控制台.");
         }
+
         debug = config.getBoolean("debug", false);
         if (debug) {
             info("已启用调试信息输出.");
@@ -90,7 +97,7 @@ public class LogUtils {
             if (logFolderLocation.exists() || logFolderLocation.mkdirs()) {
                 logFolder = new File(logFolderLocation, plugin.getName());
             } else {
-                warning("配置文件中的日志存储位置不可用, 更改至插件目录内...");
+                warning("配置文件中的日志存储位置不可用, 更改至插件目录内!");
                 logFolder = new File(plugin.getDataFolder(), "logs");
             }
         } else {
@@ -120,9 +127,9 @@ public class LogUtils {
         } catch (IOException e) {
             error(e, "初始化日志器时出现了一个错误: ");
         }
+
         dateFormat = new SimpleDateFormat(config.getString("dateFormat", "yyyy-MM-dd HH:mm:ss:SSS"));
 
-        info("日志器初始化完成...");
         info("当前时间戳: " + now);
         info("当前日志输出信息: %s-%s", plugin.getName(), plugin.getDescription().getVersion());
         info("工作路径: " + new File("./").getAbsolutePath());
@@ -140,6 +147,9 @@ public class LogUtils {
             }
         }
         ALL_INSTANCES.add(this);
+        info("==================================================");
+        info("成功初始化 日志器.");
+        info("==================================================");
     }
 
     /**

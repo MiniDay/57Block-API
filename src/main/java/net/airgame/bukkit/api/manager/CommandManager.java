@@ -37,7 +37,6 @@ public class CommandManager {
      * @param classLoader JavaPluginLoader 对象
      */
     public static void init(ClassLoader classLoader) {
-        AirGamePlugin.getLogUtils().info("开始初始化命令管理器.");
         try {
             getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
             getFileMethod.setAccessible(true);
@@ -59,12 +58,9 @@ public class CommandManager {
         } catch (Exception e) {
             AirGamePlugin.getLogUtils().error(e, "初始化命令管理器时遇到了一个错误: ");
         }
-        AirGamePlugin.getLogUtils().info("命令管理器初始化完成.");
     }
 
     public static void registerPluginCommand(JavaPlugin plugin, String packageName) throws IOException, InvocationTargetException, IllegalAccessException {
-        AirGamePlugin.getLogUtils().info("扫描插件 %s 中的命令类.", plugin.getName());
-
         Enumeration<JarEntry> entries = new JarFile((File) getFileMethod.invoke(plugin)).entries();
 
         while (entries.hasMoreElements()) {
@@ -91,12 +87,13 @@ public class CommandManager {
 
             try {
                 CommandManager.registerCommand(plugin, className);
-            } catch (IllegalAccessException e) {
+            } catch (IllegalArgumentException e) {
                 AirGamePlugin.getLogUtils().debug("扫描到类 %s 没有添加 CommandExecutor 注解, 取消注册该类命令!", className);
             } catch (Exception | Error e) {
                 AirGamePlugin.getLogUtils().error(e, "在为插件 %s 注册命令 %s 时遇到了一个错误: ", plugin.getName(), className);
             }
         }
+        AirGamePlugin.getLogUtils().info("已注册插件 %s 中的命令.", plugin.getName());
     }
 
     /**
@@ -108,6 +105,7 @@ public class CommandManager {
      */
     public static void registerCommand(JavaPlugin plugin, String className) throws InvocationTargetException, IllegalAccessException, InstantiationException {
         Class<?> clazz = (Class<?>) findClassMethod.invoke(getClassLoaderMethod.invoke(plugin), className);
+        AirGamePlugin.getLogUtils().debug("  开始注册命令类: %s", clazz.getSimpleName());
         registerCommand(plugin, clazz);
     }
 
@@ -120,7 +118,6 @@ public class CommandManager {
     public static void registerCommand(JavaPlugin plugin, Class<?> clazz) throws InstantiationException, IllegalAccessException {
         CommandHandler handler = generatorCommandHandler(clazz);
         commandMap.register(plugin.getName(), handler);
-        AirGamePlugin.getLogUtils().info("  已成功注册命令类: %s", clazz.getSimpleName());
     }
 
     /**
@@ -164,7 +161,6 @@ public class CommandManager {
      */
     public static ArrayList<CommandMethodInvoker> generatorClassInvokers(@NotNull Object executor, @NotNull String[] addSubName, @NotNull String[] addPermission) {
         Class<?> executorClass = executor.getClass();
-        AirGamePlugin.getLogUtils().debug("  开始扫描命令类 %s", executorClass.getName());
 
         ArrayList<CommandMethodInvoker> invokers = generatorMethodInvokers(executor, addSubName, addPermission);
 
@@ -194,6 +190,7 @@ public class CommandManager {
                 permission.addAll(Arrays.asList(annotation.permission()));
 
                 try {
+                    // 扫描内部类
                     invokers.addAll(
                             generatorClassInvokers(
                                     innerClass.newInstance(),
@@ -201,7 +198,7 @@ public class CommandManager {
                                     permission.toArray(new String[0])
                             )
                     );
-                } catch (InstantiationException | IllegalAccessException e) {
+                } catch (Exception e) {
                     AirGamePlugin.getLogUtils().error(e, "构造内部类 %s 的实例时出现了一个错误: ");
                 }
             }

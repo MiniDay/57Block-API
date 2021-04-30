@@ -32,7 +32,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -94,23 +93,35 @@ public final class AirGamePlugin extends JavaPlugin {
 
         initLogUtil();
         logUtils.info("==================================================");
+        logUtils.info("开始加载第三方库文件.");
         loadLibraries();
+        logUtils.info("已加载第三方库文件.");
         logUtils.info("==================================================");
+        logUtils.info("开始初始化 PageConfigManager.");
         PageConfigManager.init();
+        logUtils.info("成功初始化 PageConfigManager.");
         logUtils.info("==================================================");
-        CommandManager.init(getClassLoader());
-        logUtils.info("==================================================");
-        initParameterParser();
-        logUtils.info("==================================================");
+        logUtils.info("开始初始化 PersistenceManager.");
         initPersistenceManager();
+        logUtils.info("成功初始化 PersistenceManager.");
+        logUtils.info("==================================================");
+        logUtils.info("开始初始化 CommandManager.");
+        CommandManager.init(getClassLoader());
+        logUtils.info("成功初始化 CommandManager.");
+        logUtils.info("==================================================");
+        logUtils.info("开始初始化 PresetParameterParser.");
+        initPresetParameterParser();
+        logUtils.info("成功初始化 PresetParameterParser.");
         logUtils.info("==================================================");
 
         logUtils.info("插件载入完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
+        logUtils.info("==================================================");
     }
 
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
+        logUtils.info("==================================================");
         logUtils.info("插件正在启动...");
         logUtils.debug("当前服务器 MC 版本: " + AirGameUtils.getMCVersion());
         logUtils.debug("当前服务器 nms 包名: " + AirGameUtils.getNMSPackage().getName());
@@ -119,17 +130,22 @@ public final class AirGamePlugin extends JavaPlugin {
         VaultAPI.reloadVaultHook();
         PointAPI.reloadPlayerPointAPIHook();
         logUtils.info("==================================================");
+        logUtils.info("开始初始化 所有插件的命令设定.");
         initCommand();
+        logUtils.info("成功初始化 所有插件的命令设定.");
         logUtils.info("==================================================");
-        initPageConfig();
+        logUtils.info("开始初始化 所有插件的界面设定.");
+        PageConfigManager.reload();
+        logUtils.info("成功初始化 所有插件的界面设定.");
         logUtils.info("==================================================");
 
         Bukkit.getPluginManager().registerEvents(new PageListener(), this);
-        logUtils.info("已注册 GUI 相关监听器.");
+        logUtils.info("已注册 PageListener.");
         Bukkit.getPluginManager().registerEvents(new PluginHookListener(), this);
-        logUtils.info("已注册插件挂接监听器.");
+        logUtils.info("已注册 PluginHookListener.");
         Bukkit.getPluginManager().registerEvents(new ConversationListener(), this);
-        logUtils.info("已注册玩家会话监听器.");
+        logUtils.info("已注册 ConversationListener.");
+        logUtils.info("==================================================");
 
         if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
             // 这里只能用反射的方式实例化 SignEditListener
@@ -145,6 +161,7 @@ public final class AirGamePlugin extends JavaPlugin {
         }
 
         logUtils.info("插件启动完成. 总共耗时 %d 毫秒!", System.currentTimeMillis() - startTime);
+        logUtils.info("==================================================");
     }
 
     @Override
@@ -190,10 +207,9 @@ public final class AirGamePlugin extends JavaPlugin {
      */
     private void loadLibraries() {
         if (!getConfig().getBoolean("loadLibraries", true)) {
-            logUtils.warning("跳过加载第三方库.");
+            logUtils.warning("检测到 config 中关闭了第三方库加载.");
             return;
         }
-        logUtils.info("开始加载第三方库.");
         File libFolder = new File(getDataFolder(), "libs");
         if (libFolder.mkdirs()) {
             logUtils.info("创建第三方库存放文件夹...");
@@ -219,14 +235,12 @@ public final class AirGamePlugin extends JavaPlugin {
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | MalformedURLException e) {
             logUtils.error(e, "加载第三方库时遇到了一个错误: ");
         }
-        logUtils.info("第三方库加载完成.");
     }
 
     /**
      * 初始化本 API 自带的一些命令参数解析器
      */
-    private void initParameterParser() {
-        logUtils.info("开始注册默认命令参数解析器.");
+    private void initPresetParameterParser() {
         ParameterParserManager.registerParser(boolean.class, BooleanParser.class);
         ParameterParserManager.registerParser(Boolean.class, BooleanParser.class);
 
@@ -256,7 +270,6 @@ public final class AirGamePlugin extends JavaPlugin {
         ParameterParserManager.registerParser(Sound.class, SoundParser.class);
         ParameterParserManager.registerParser(CommandSender.class, CommandSenderParser.class);
         ParameterParserManager.registerParser(World.class, WorldParser.class);
-        logUtils.info("默认命令参数解析器注册完成.");
     }
 
     private void initPersistenceManager() {
@@ -265,17 +278,14 @@ public final class AirGamePlugin extends JavaPlugin {
             AirGamePlugin.getLogUtils().warning("跳过初始化持久化管理器.");
             return;
         }
-        AirGamePlugin.getLogUtils().info("开始初始化持久化管理器.");
         saveDefaultFile("sql.properties");
         persistenceManager = new PersistenceManager(this);
-        AirGamePlugin.getLogUtils().info("持久化管理器初始化完成.");
     }
 
     /**
      * 初始化命令
      */
     private void initCommand() {
-        logUtils.info("开始注册命令.");
         for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
             if (!(plugin instanceof JavaPlugin)) {
                 continue;
@@ -289,22 +299,10 @@ public final class AirGamePlugin extends JavaPlugin {
             }
             try {
                 CommandManager.registerPluginCommand((JavaPlugin) plugin, commandScan.value()[0]);
-            } catch (IOException | InvocationTargetException | IllegalAccessException e) {
+            } catch (Exception e) {
                 logUtils.error(e, "在为插件 %s 注册命令时遇到了一个异常:", plugin.getName());
             }
         }
-        logUtils.info("命令注册完成.");
-    }
-
-    /**
-     * 初始化界面
-     */
-    private void initPageConfig() {
-        logUtils.info("开始注册界面设定.");
-
-        PageConfigManager.reload();
-
-        logUtils.info("界面设定注册完成.");
     }
 
     /**

@@ -30,7 +30,6 @@ public class PageConfigManager {
      * 初始化这个页面管理器
      */
     public static void init() {
-        AirGamePlugin.getLogUtils().info("开始初始化页面管理器.");
         try {
             getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
             getFileMethod.setAccessible(true);
@@ -38,7 +37,6 @@ public class PageConfigManager {
         } catch (Exception e) {
             AirGamePlugin.getLogUtils().error(e, "初始化页面管理器时遇到了一个错误: ");
         }
-        AirGamePlugin.getLogUtils().info("页面管理器初始化完成.");
     }
 
     public static void reload() {
@@ -52,18 +50,20 @@ public class PageConfigManager {
             if (pageScan == null) {
                 continue;
             }
+
             for (String packageName : pageScan.value()) {
                 try {
+                    AirGamePlugin.getLogUtils().debug("  开始扫描插件 %s 的包路径 %s", plugin.getName(), packageName);
                     PageConfigManager.registerPageConfig((JavaPlugin) plugin, packageName);
                 } catch (Exception e) {
                     AirGamePlugin.getLogUtils().error(e, "从插件 %s 的Java包中扫描界面设定时遇到了一个异常: ", plugin.getName());
                 }
             }
+            AirGamePlugin.getLogUtils().info("成功初始化 插件 %s 的界面配置.", plugin.getName());
         }
     }
 
     public static void registerPageConfig(JavaPlugin plugin, String packageName) throws IOException, InvocationTargetException, IllegalAccessException {
-        AirGamePlugin.getLogUtils().info("开始扫描插件 %s 中的包 %s", plugin.getName(), packageName);
         Enumeration<JarEntry> entries = new JarFile((File) getFileMethod.invoke(plugin)).entries();
 
         while (entries.hasMoreElements()) {
@@ -96,10 +96,12 @@ public class PageConfigManager {
 
             try {
                 registerPageConfig(className, new PageConfig(config));
+                AirGamePlugin.getLogUtils().debug("  已注册界面设置: %s", className);
             } catch (Exception e) {
                 AirGamePlugin.getLogUtils().error(e, "加载插件 %s 中 %s 的界面设定时出现了一个异常: ", className);
             }
         }
+
     }
 
     @SuppressWarnings("unused")
@@ -109,7 +111,6 @@ public class PageConfigManager {
 
     public static void registerPageConfig(@NotNull String className, @NotNull PageConfig config) {
         pageConfigs.put(className, config);
-        AirGamePlugin.getLogUtils().info("已注册 %s 的界面设置.", className);
     }
 
     public static PageConfig getPageConfig(@NotNull Class<? extends PageHandler> clazz) {
@@ -117,7 +118,7 @@ public class PageConfigManager {
     }
 
     /**
-     * 从插件中获取 Page 类的配置文件
+     * 获取插件的 Page 类的配置文件
      *
      * @param plugin      插件对象
      * @param packageName 插件所在的包名

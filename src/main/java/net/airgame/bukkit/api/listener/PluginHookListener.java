@@ -16,8 +16,7 @@ public class PluginHookListener implements Listener {
         Plugin plugin = event.getPlugin();
         if (plugin.getName().equals("Vault")) {
             VaultAPI.reloadVaultHook();
-        }
-        if (plugin.getName().equals("PlayerPoints")) {
+        } else if (plugin.getName().equals("PlayerPoints")) {
             PointAPI.reloadPlayerPointAPIHook();
         }
     }
@@ -27,19 +26,24 @@ public class PluginHookListener implements Listener {
         Plugin plugin = event.getPlugin();
         if (plugin.getName().equals("Vault")) {
             VaultAPI.reloadVaultHook();
-        }
-        if (plugin.getName().equals("PlayerPoints")) {
+        } else if (plugin.getName().equals("PlayerPoints")) {
             PointAPI.reloadPlayerPointAPIHook();
         }
     }
 
     @EventHandler(ignoreCancelled = true)
+    @SuppressWarnings("SpellCheckingInspection")
     public void onServiceRegister(ServiceRegisterEvent event) {
-        VaultAPI.reloadVaultHook();
+        if (event.getProvider().getService().getName().contains("net.milkbowl.vault")) {
+            VaultAPI.reloadVaultHook();
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
+    @SuppressWarnings("SpellCheckingInspection")
     public void onServiceUnregister(ServiceUnregisterEvent event) {
-        VaultAPI.reloadVaultHook();
+        if (event.getProvider().getService().getName().contains("net.milkbowl.vault")) {
+            VaultAPI.reloadVaultHook();
+        }
     }
 }

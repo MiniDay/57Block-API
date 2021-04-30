@@ -35,7 +35,7 @@ public class VaultAPI {
 
         if (chatProvider != null) {
             chat = chatProvider.getProvider();
-            AirGamePlugin.getLogUtils().info("聊天系统挂接成功...");
+            AirGamePlugin.getLogUtils().info("聊天系统挂接成功.");
         } else {
             AirGamePlugin.getLogUtils().warning("未检测到聊天系统!");
         }
@@ -43,7 +43,7 @@ public class VaultAPI {
         RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         if (economyProvider != null) {
             economy = economyProvider.getProvider();
-            AirGamePlugin.getLogUtils().info("经济系统挂接成功...");
+            AirGamePlugin.getLogUtils().info("经济系统挂接成功.");
         } else {
             AirGamePlugin.getLogUtils().warning("未检测到经济系统!");
         }
@@ -51,7 +51,7 @@ public class VaultAPI {
         RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
         if (permissionProvider != null) {
             permission = permissionProvider.getProvider();
-            AirGamePlugin.getLogUtils().info("权限系统挂接成功...");
+            AirGamePlugin.getLogUtils().info("权限系统挂接成功.");
         } else {
             AirGamePlugin.getLogUtils().warning("未检测到权限插件!");
         }

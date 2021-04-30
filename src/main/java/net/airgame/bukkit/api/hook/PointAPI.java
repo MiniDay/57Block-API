@@ -25,7 +25,7 @@ public class PointAPI {
     public static void reloadPlayerPointAPIHook() {
         Plugin plugin = Bukkit.getPluginManager().getPlugin("PlayerPoints");
         if (plugin == null) {
-            AirGamePlugin.getLogUtils().warning("未检测到 PlayerPointAPI 插件...");
+            AirGamePlugin.getLogUtils().warning("未检测到 PlayerPointAPI 插件!");
             return;
         }
         playerPointsAPI = ((PlayerPoints) plugin).getAPI();
