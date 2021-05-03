@@ -93,15 +93,15 @@
 
     <repositories>
         <repository>
-            <id>hamster3</id>
-            <url>http://maven.hamster3.cn/repository/maven-public/</url>
+            <id>hamster-repo</id>
+            <url>http://maven.hamster3.cn/maven-public</url>
         </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
-            <id>airgame-repo</id>
-            <url>http://maven.hamster3.cn/repository/miniday-repo/</url>
+            <id>hamster-repo</id>
+            <url>http://maven.hamster3.cn/hamster-repo</url>
         </repository>
     </distributionManagement>
 
@@ -122,7 +122,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.MilkBowl</groupId>
+            <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
             <scope>provided</scope>
@@ -149,7 +149,6 @@
             <version>4.0.3</version>
             <scope>provided</scope>
         </dependency>
-
 
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
