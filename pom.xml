@@ -12,38 +12,14 @@
     <name>AirGame-Bukkit-API</name>
 
     <description>五彩方块服务器的Bukkit-API</description>
+    <url>https://www.airgame.net/</url>
+
     <properties>
         <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <url>https://www.airgame.net/</url>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <classifier>javadoc</classifier>
-                    <outputDirectory>${project.basedir}/docs</outputDirectory>
-                    <links>
-                        <link>https://bukkit.windit.net/javadoc/</link>
-                        <link>http://milkbowl.github.io/VaultAPI/</link>
-                        <link>https://ci.dmulloy2.net/job/ProtocolLib/javadoc</link>
-                        <link>https://javadoc.io/doc/org.jetbrains/annotations/</link>
-                    </links>
-                    <detectJavaApiLink>true</detectJavaApiLink>
-                </configuration>
-                <!--                <executions>-->
-                <!--                    <execution>-->
-                <!--                        <phase>install</phase>-->
-                <!--                        <goals>-->
-                <!--                            <goal>jar</goal>-->
-                <!--                        </goals>-->
-                <!--                    </execution>-->
-                <!--                </executions>-->
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -65,22 +41,6 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <resources>
