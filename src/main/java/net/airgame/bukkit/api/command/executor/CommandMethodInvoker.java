@@ -80,7 +80,7 @@ public class CommandMethodInvoker {
 //
 //         相关链接 https://my.oschina.net/nixi0608/blog/724343
 //
-//         但我并未对这些信息进行过测试，具体能提升多少还不得而知
+//         但我并未对这些信息进行过测试，具体能提升多少尚不清楚
         method.setAccessible(true);
 
         for (int i = 0; i < this.subName.length; i++) {

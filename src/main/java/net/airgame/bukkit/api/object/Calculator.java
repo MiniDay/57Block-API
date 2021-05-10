@@ -116,11 +116,7 @@ public class Calculator {
      * @return 如果是peek优先级高于cur，返回true，默认都是peek优先级要低
      */
     private boolean compare(char cur, char peek) {
-        boolean result = false;
-        if (operaPriority[(peek) - 40] >= operaPriority[(cur) - 40]) {
-            result = true;
-        }
-        return result;
+        return operaPriority[(peek) - 40] >= operaPriority[(cur) - 40];
     }
 
     /**

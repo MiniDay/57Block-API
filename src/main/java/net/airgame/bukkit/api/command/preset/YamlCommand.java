@@ -94,10 +94,16 @@ public class YamlCommand {
         meta.setDisplayName("test item");
         meta.setLore(lore);
         meta.setUnbreakable(true);
-        meta.setCustomModelData(1);
+        try {
+            meta.setCustomModelData(1);
+        } catch (Exception | Error ignored) {
+        }
         meta.setLocalizedName("LocalizedName");
-        meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier("test1", 10, AttributeModifier.Operation.ADD_NUMBER));
-        meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "test2", 10, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND));
+        try {
+            meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier("test1", 10, AttributeModifier.Operation.ADD_NUMBER));
+            meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "test2", 10, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND));
+        } catch (Exception | Error ignored) {
+        }
 
         meta.addItemFlags(ItemFlag.values());
         stack.setItemMeta(meta);

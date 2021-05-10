@@ -152,7 +152,7 @@ public final class AirGamePlugin extends JavaPlugin {
             // 否则在没有安装 ProtocolLib 的服务器上会由于类加载器异常而导致插件无法启动
             try {
                 ProtocolLibrary.getProtocolManager().addPacketListener(
-                        (PacketListener) Class.forName("net.airgame.bukkit.api.listener.SignEditListener.SignEditListener").newInstance()
+                        (PacketListener) Class.forName("net.airgame.bukkit.api.listener.SignEditListener").newInstance()
                 );
                 logUtils.info("已启用 ProtocolLib 支持: SignEditAPI.");
             } catch (Exception e) {

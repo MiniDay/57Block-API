@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Stack;
 
 public class BlockFaceParser extends ParameterParser {
-
     @Override
     public boolean parser(@NotNull Stack<Object> parameters, @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args, int index) {
         if (index + 1 > args.length) {
