@@ -67,6 +67,7 @@ public class CommandHandler extends Command {
     @NotNull
     @Override
     public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args, @Nullable Location location) {
+        //todo 如果 CommandExecutor 有 tab 方法则优先调用
         long startTime = System.currentTimeMillis();
 
         // 把所有的 invoker 生成的补全列表保存起来
@@ -110,6 +111,7 @@ public class CommandHandler extends Command {
                 return;
             }
         }
+        // todo 找不到命令时返回命令帮助
         sender.sendMessage(usageMessage);
     }
 

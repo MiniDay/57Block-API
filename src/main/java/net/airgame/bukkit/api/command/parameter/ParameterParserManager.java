@@ -138,6 +138,7 @@ public class ParameterParserManager {
         }
         Class<?> parameterType = parameter.getType();
         try {
+            // todo 更改成注册时就实例化对象，优化性能
             ParameterParser parser = parserClass.newInstance();
             if (parser instanceof CommandSenderParser) {
                 ((CommandSenderParser) parser).setSenderType(parameterType);

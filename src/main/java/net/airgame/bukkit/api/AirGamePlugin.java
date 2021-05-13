@@ -23,6 +23,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -263,12 +264,13 @@ public final class AirGamePlugin extends JavaPlugin {
         ParameterParserManager.registerParser(String[].class, StringArrayParser.class);
 
         ParameterParserManager.registerParser(BlockFace.class, BlockFaceParser.class);
+        ParameterParserManager.registerParser(CommandSender.class, CommandSenderParser.class);
+        ParameterParserManager.registerParser(EntityType.class, EntityTypeParser.class);
         ParameterParserManager.registerParser(GameMode.class, GameModeParser.class);
         ParameterParserManager.registerParser(Location.class, LocationParser.class);
         ParameterParserManager.registerParser(OfflinePlayer.class, OfflinePlayerParser.class);
         ParameterParserManager.registerParser(Player.class, PlayerParser.class);
         ParameterParserManager.registerParser(Sound.class, SoundParser.class);
-        ParameterParserManager.registerParser(CommandSender.class, CommandSenderParser.class);
         ParameterParserManager.registerParser(World.class, WorldParser.class);
     }
 
