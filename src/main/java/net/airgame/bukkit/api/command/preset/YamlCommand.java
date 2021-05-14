@@ -32,7 +32,7 @@ import java.util.UUID;
 @SuppressWarnings({"unused", "ConstantConditions"})
 public class YamlCommand {
 
-    @Command
+    @Command(priority = 9)
     public void yaml(@Sender Player player) {
         YamlConfiguration config = new YamlConfiguration();
 

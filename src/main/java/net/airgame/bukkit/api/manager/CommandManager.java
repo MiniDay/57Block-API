@@ -18,7 +18,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -218,12 +221,9 @@ public class CommandManager {
      */
     public static ArrayList<CommandMethodInvoker> generatorMethodInvokers(@NotNull Object executor, @NotNull String[] addSubName, @NotNull String[] addPermission) {
         Class<?> executorClass = executor.getClass();
-
-        List<Method> methods = Arrays.asList(executorClass.getDeclaredMethods());
-        Collections.reverse(methods);
-
         ArrayList<CommandMethodInvoker> invokers = new ArrayList<>();
-        for (Method method : methods) {
+
+        for (Method method : executorClass.getDeclaredMethods()) {
             Command annotation = method.getAnnotation(Command.class);
             if (annotation == null) {
                 continue;
@@ -243,11 +243,11 @@ public class CommandManager {
             permission.addAll(Arrays.asList(addPermission));
             permission.addAll(Arrays.asList(annotation.permission()));
 
-
             try {
                 CommandMethodInvoker invoker = new CommandMethodInvoker(
                         executor,
                         method,
+                        annotation.priority(),
                         subName.toArray(new String[0]),
                         permission.toArray(new String[0])
                 );
@@ -256,6 +256,7 @@ public class CommandManager {
                 AirGamePlugin.getLogUtils().error(e, "  在构建命令执行器 %s 的命令 %s 时出现了一个错误: ", executorClass, method.getName());
             }
         }
+        invokers.sort(CommandMethodInvoker::compareTo);
         return invokers;
     }
 

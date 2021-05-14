@@ -20,18 +20,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
-public class CommandMethodInvoker {
+public class CommandMethodInvoker implements Comparable<CommandMethodInvoker> {
     private final Object executor;
     private final Method method;
+    private final int priority;
 
     private final String[] subName;
     private final String[] permissions;
 
     private ParameterParser parameterParser;
 
-    public CommandMethodInvoker(Object executor, Method method, String[] subName, String[] permissions) {
+    public CommandMethodInvoker(Object executor, Method method, int priority, String[] subName, String[] permissions) {
         this.executor = executor;
         this.method = method;
+        this.priority = priority;
 
         this.subName = subName;
         this.permissions = permissions;
@@ -155,6 +157,11 @@ public class CommandMethodInvoker {
         }
 
         return parameterParser.tabComplete(sender, command, alias, args, location, subName.length);
+    }
+
+    @Override
+    public int compareTo(@NotNull CommandMethodInvoker o) {
+        return Integer.compare(priority, o.priority);
     }
 
     @Override
