@@ -29,10 +29,23 @@ public abstract class PageHandler implements InventoryHolder {
         inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), pageConfig.getTitle());
     }
 
+    public PageHandler(@NotNull HumanEntity player, @NotNull String title) {
+        pageConfig = PageConfigManager.getPageConfig(getClass());
+        if (pageConfig == null) {
+            throw new IllegalArgumentException("未注册的界面设定!");
+        }
+        this.player = player;
+        inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), title);
+    }
+
     public PageHandler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player) {
+        this(pageConfig, pageConfig.getTitle(), player);
+    }
+
+    public PageHandler(@NotNull PageConfig pageConfig, @NotNull String title, @NotNull HumanEntity player) {
         this.pageConfig = pageConfig;
         this.player = player;
-        inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), pageConfig.getTitle());
+        inventory = Bukkit.createInventory(this, pageConfig.getInventory().getSize(), title);
     }
 
     public abstract void initPage();

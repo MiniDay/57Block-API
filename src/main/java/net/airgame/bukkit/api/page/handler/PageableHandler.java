@@ -35,8 +35,18 @@ public abstract class PageableHandler<E extends PageElement> extends FixedPageHa
         this.page = page;
     }
 
+    public PageableHandler(@NotNull HumanEntity player, @NotNull String title, int page) {
+        super(player, title);
+        this.page = page;
+    }
+
     public PageableHandler(@NotNull PageConfig pageConfig, @NotNull HumanEntity player, int page) {
         super(pageConfig, player);
+        this.page = page;
+    }
+
+    public PageableHandler(@NotNull PageConfig pageConfig, @NotNull String title, @NotNull HumanEntity player, int page) {
+        super(pageConfig, title, player);
         this.page = page;
     }
 
