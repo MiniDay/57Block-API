@@ -3,6 +3,7 @@ package net.airgame.bukkit.api.page;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -61,6 +62,9 @@ public class ButtonGroup {
      */
     public int getButtonIndex(String buttonName) {
         Character graphicKey = getGraphicKey(buttonName);
+        if (graphicKey == null) {
+            return -1;
+        }
         List<String> graphic = config.getGraphic();
         for (int i = 0; i < graphic.size(); i++) {
             char[] chars = graphic.get(i).toCharArray();
@@ -80,18 +84,23 @@ public class ButtonGroup {
      * @return 按钮在 GUI 中全部的索引位置
      */
     public ArrayList<Integer> getButtonAllIndex(String buttonName) {
+        ArrayList<Integer> list = new ArrayList<>();
+
         Character graphicKey = getGraphicKey(buttonName);
+        if (graphicKey == null) {
+            return list;
+        }
+
         List<String> graphic = config.getGraphic();
-        ArrayList<Integer> integers = new ArrayList<>();
         for (int i = 0; i < graphic.size(); i++) {
             char[] chars = graphic.get(i).toCharArray();
             for (int j = 0; j < chars.length; j++) {
                 if (chars[j] == graphicKey) {
-                    integers.add(i * 9 + j);
+                    list.add(i * 9 + j);
                 }
             }
         }
-        return integers;
+        return list;
     }
 
     /**
@@ -100,6 +109,7 @@ public class ButtonGroup {
      * @param buttonName 按钮名称
      * @return 图形中的字符
      */
+    @Nullable
     public Character getGraphicKey(String buttonName) {
         for (Map.Entry<Character, String> entry : buttonNameMap.entrySet()) {
             if (entry.getValue().equalsIgnoreCase(buttonName)) {
